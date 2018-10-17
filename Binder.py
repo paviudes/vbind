@@ -398,16 +398,23 @@ def WriteMatrixToFile(fname, mat, appendMode, sparse = 0, binary = 0):
 
 if __name__ == '__main__':
 	# Complete the binding mechanism by pattern matching batches of the sRNA nucleotides with the PSTVd sequence. The batches are taken such that no batch is greater in size than MAXCONCURRENT and all the batches together constitute all the nucleotides in the sRNA pool.
-	interfaceFile = "input.txt"
-	nCores = int(sys.argv[1])
 	# Initialization of the Binder object and its attributes
 	rnas = Binder()
-	Load(rnas, interfaceFile)
+	# Reading the gene, pool files and tolerance.
+	with open(sys.argv[1], "r") as fp:
+		for (l, line) in enumerate(fp):
+			if (l == int(sys.argv[2])):
+				linecontents = map(ln.strip("\n").strip(" "), line.split())
+				rnas.pstvdFname = linecontents[0]
+				rnas.sRNAPoolFname = linecontents[1]
+				rnas.tolerance = int(linecontents[2])
+				nCores = int(linecontents[3])
+	
 	ComputeDerivedParameters(rnas)
 	breakpoints = SetBreakPoints(rnas)
 	nBreaks = len(breakpoints)
 
-	print("nBreaks = %d" % nBreaks)
+	# print("nBreaks = %d" % nBreaks)
 
 	print("\033[93mMatching with %d sRNA nucleotides and a PSTVd sequence of length %d. Maximum length of a nucleotide sequence is %d.\033[0m" % (rnas.totalNucleotides, rnas.pstvdLen, rnas.maxNucleotideLength))
 	startTime = time.time()
