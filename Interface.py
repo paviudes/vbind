@@ -11,7 +11,6 @@ class Submission():
 		self.cores = 4
 		self.mem = 4096
 		self.datestamp = time.strftime("%d/%m/%Y %H:%M:%S").translate(None, "/: ")
-		self.datestamp = ""
 		self.job = "JOB"
 		self.queue = "qwork"
 		self.wall = 0
@@ -73,9 +72,9 @@ def ConsoleInput():
 	print("\033[93m>>\033[0m"),
 	submit.wall = int(raw_input().strip("\n").strip(" "))
 
-	print("\033[93mName of the queue into which the submission must be launched.\nSelect one from '"'qwork'"', '"'qtest'"', '"'qfbb'"', '"'qfat256'"', '"'qfat512'"'.\nDefault is '"'qwork'"'.\033[0m")
-	print("\033[93m>>\033[0m"),
-	submit.queue = raw_input().strip("\n").strip(" ")
+	#print("\033[93mName of the queue into which the submission must be launched.\nSelect one from '"'qwork'"', '"'qtest'"', '"'qfbb'"', '"'qfat256'"', '"'qfat512'"'.\nDefault is '"'qwork'"'.\033[0m")
+	#print("\033[93m>>\033[0m"),
+	#submit.queue = raw_input().strip("\n").strip(" ")
 
 	return submit
 
@@ -89,7 +88,7 @@ def WriteToSlurm(submit):
 	#SBATCH --cpus-per-task=submit.cores
 	#SBATCH --nodes=1
 	#SBATCH --ntasks=1
-	#SBATCH --time=submit.wall:00
+	#SBATCH --time=submit.wall:00:00
 	#SBATCH --mem=submit.mem
 	#SBATCH --jobname=submit.job
 	python Binder.py pairs_submit.datestamp 2>&1 | tee -a log.txt
@@ -97,7 +96,7 @@ def WriteToSlurm(submit):
 	'''
 	with open("pairs_%s.txt" % (submit.datestamp), "w") as fp:
 		for i in range(len(submit.bindingPairs)):
-			fp.write("%s %s %d %d\n" % (submit.bindingPairs[0], submit.bindingPairs[1], submit.bindingPairs[2], submit.cores))
+			fp.write("%s %s %d %d\n" % (submit.bindingPairs[i][0], submit.bindingPairs[i][1], submit.bindingPairs[i][2], submit.cores))
 
 	launchfile = ("launch_%s.sh" % (submit.datestamp))
 	with open(launchfile, 'w') as lf:
@@ -106,7 +105,7 @@ def WriteToSlurm(submit):
 		lf.write("#SBATCH --cpus-per-task=%d\n" % (submit.cores))
 		lf.write("#SBATCH --mem=%d\n" % (submit.mem))
 		lf.write("#SBATCH --nodes=1\n#SBATCH --ntasks=1\n")
-		lf.write("#SBATCH --time=%d:00\n" % (submit.wall))
+		lf.write("#SBATCH --time=%d:00:00\n" % (submit.wall))
 		lf.write("python Binder.py pairs_%s.txt $SLURM_ARRAY_TASK_ID 2>&1 | tee -a log.txt" % (submit.datestamp))
 	return None
 
@@ -186,5 +185,5 @@ def WriteToBQSubmit(submit):
 if __name__ == '__main__':
 	submitObj = ConsoleInput()
 	# WriteToBQSubmit(submitObj)
-	WriteToSlurm(submit)
+	WriteToSlurm(submitObj)
 	submitObj.Display()

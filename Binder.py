@@ -404,7 +404,7 @@ if __name__ == '__main__':
 	with open(sys.argv[1], "r") as fp:
 		for (l, line) in enumerate(fp):
 			if (l == int(sys.argv[2])):
-				linecontents = map(ln.strip("\n").strip(" "), line.split())
+				linecontents = map(lambda ln: ln.strip("\n").strip(" "), line.split())
 				rnas.pstvdFname = linecontents[0]
 				rnas.sRNAPoolFname = linecontents[1]
 				rnas.tolerance = int(linecontents[2])
