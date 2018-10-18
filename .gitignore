@@ -6,5 +6,6 @@
 !*.sh
 !*.md
 !zips.txt
+!PSTVd_RG.txt
 # ...even if they are in subdirectories
 !*/
