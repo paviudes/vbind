@@ -63,7 +63,7 @@ class Binder():
 		self.runtime = 0
 
 		self.pstvdLen = 0
-		self.MAXCONCURRENT = 100000
+		self.MAXCONCURRENT = 100000000
 		self.totalNucleotides = 0
 		self.tolerance = 0
 		self.maxNucleotideLength = 0
