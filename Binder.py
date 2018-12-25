@@ -454,9 +454,9 @@ if __name__ == '__main__':
 					rnas.forwardMatches[:,1:] = np.add(rnas.forwardMatches[:,1:], localResults[0])
 					rnas.forwardMatchCounts = np.add(rnas.forwardMatchCounts, localResults[1])
 				else:
-				        localResults = localMatchQueue.get()
+					localResults = localMatchQueue.get()
 					rnas.reverseMatches[:,1:] = np.add(rnas.reverseMatches[:,1:], localResults[0])
-				        rnas.reverseMatchCounts = np.add(rnas.reverseMatchCounts, localResults[1])
+					rnas.reverseMatchCounts = np.add(rnas.reverseMatchCounts, localResults[1])
 					pass
 
 			for pi in range(launchNow):
