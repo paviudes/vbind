@@ -125,10 +125,10 @@ def NucleotideEncoder(nucleotide, blockSize, reverse):
 
 	if reverse == 0:
 		for ci in range(nucLen):
-			binaryNucleotide[4*ci:4*(ci + 1)] = map(int, encoding[nucleotide[ci]])
+			binaryNucleotide[4*ci:4*(ci + 1)] = list(map(int, encoding[nucleotide[ci]]))
 	else:
 		for ci in range(nucLen):
-			binaryNucleotide[4*((nucLen - ci) - 1): 4 * (nucLen - ci)] = map(int, reverseEncoding[nucleotide[ci]])
+			binaryNucleotide[4*((nucLen - ci) - 1): 4 * (nucLen - ci)] = list(map(int, reverseEncoding[nucleotide[ci]]))
 
 	if DEBUG > 1:
 		print("\033[95mNucleotide sequence: %s and encoding produced for direction %d:" % (nucleotide, reverse))
