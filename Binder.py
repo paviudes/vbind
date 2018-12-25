@@ -132,7 +132,7 @@ def NucleotideEncoder(nucleotide, blockSize, reverse):
 
 	if DEBUG > 1:
 		print("\033[95mNucleotide sequence: %s and encoding produced for direction %d:" % (nucleotide, reverse))
-		print binaryNucleotide
+		print(binaryNucleotide)
 
 
 	return binaryNucleotide
@@ -182,7 +182,7 @@ def ComputeDerivedParameters(bindObj):
 		bindObj.pstvdMatrix[:, si] = NucleotideEncoder(StringSlice(bindObj.pstvdSeq, si, bindObj.maxNucleotideLength), bindObj.maxNucleotideLength, 0)
 	
 	if DEBUG > 1:
-		print bindObj.pstvdMatrix
+		print(bindObj.pstvdMatrix)
 	
 	bindObj.rawForwMatchFname = ("raw_forward_matchings_%s_%s_tol%d.txt" % (bindObj.sRNAPoolFname[:-4], bindObj.pstvdFname[:-4], bindObj.tolerance))
 	with open(bindObj.rawForwMatchFname, 'w') as rawFid:
@@ -282,9 +282,9 @@ def PartialBinding(localMatchQueue, bindObj, nSkip, startSeq, numSeqs, reverse):
 
 	if DEBUG > 1:
 		print("sRNA subpool encoding matrix in the direction %d." % reverse)
-		print sRNAPoolMatrix.shape
+		print(sRNAPoolMatrix.shape)
 		print("sRNA sequence length matrix")
-		print sRNASeqLengths.shape
+		print(sRNASeqLengths.shape)
 
 	
 	# Compute the frequency of matchings in the sRNA pool with every continuous PSTVd subsequence.
@@ -442,7 +442,6 @@ if __name__ == '__main__':
 				linesToSkip = breakpoints[completed + pi][0]
 				seqsReadSoFar = breakpoints[completed + pi][1]
 				seqsToRead = breakpoints[completed + pi][2]
-				
 				processes.append(Process(target = PartialBinding, args = (localMatchQueue, rnas, linesToSkip, seqsReadSoFar, seqsToRead, di)))
 
 			for pi in range(launchNow):
@@ -455,9 +454,9 @@ if __name__ == '__main__':
 					rnas.forwardMatches[:,1:] = np.add(rnas.forwardMatches[:,1:], localResults[0])
 					rnas.forwardMatchCounts = np.add(rnas.forwardMatchCounts, localResults[1])
 				else:
-				        localResults = localMatchQueue.get() ## NOTE REMOVE # TO GET REVERSE MATCHES
-					rnas.reverseMatches[:,1:] = np.add(rnas.reverseMatches[:,1:], localResults[0]) ##  NOTE REMOVE # TO GET REVERSE MATCHES
-				        rnas.reverseMatchCounts = np.add(rnas.reverseMatchCounts, localResults[1]) ## NOTE REMOVE # TO GET REVERSE MATCHES
+				        localResults = localMatchQueue.get()
+					rnas.reverseMatches[:,1:] = np.add(rnas.reverseMatches[:,1:], localResults[0])
+				        rnas.reverseMatchCounts = np.add(rnas.reverseMatchCounts, localResults[1])
 					pass
 
 			for pi in range(launchNow):

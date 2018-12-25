@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-
+import string
 class Submission():
 	"""All the parameters required for a submission"""
 	def __init__(self):
@@ -10,7 +10,8 @@ class Submission():
 		self.tolerance = 0
 		self.cores = 4
 		self.mem = 4096
-		self.datestamp = time.strftime("%d/%m/%Y %H:%M:%S").translate(None, "/: ")
+		maketrans = str.maketrans("", "", "/:")
+		self.datestamp = time.strftime("%d/%m/%Y%H:%M:%S").translate(maketrans)
 		self.job = "JOB"
 		self.queue = "qwork"
 		self.wall = 0
@@ -44,7 +45,7 @@ def ConsoleInput():
 	nPairs = 0
 	while (done == 0):
 		print("\033[93m>>%d).\033[0m" % (nPairs + 1)),
-		userInput = raw_input().strip("\n").strip(" ")
+		userInput = input().strip("\n").strip(" ")
 		if (userInput.lower() == "done"):
 			done = 1
 		else:
@@ -58,23 +59,23 @@ def ConsoleInput():
 
 	print("\033[93mNumber of cores to be used at each node (default = 24).\033[0m")
 	print("\033[93m>>\033[0m"),
-	submit.cores = int(raw_input().strip("\n").strip(" "))
+	submit.cores = int(input().strip("\n").strip(" "))
 
 	print("\033[93mMemory required for each matching task (enter in MB, default = 4096).\033[0m")
 	print("\033[93m>>\033[0m"),
-	submit.mem = int(raw_input().strip("\n").strip(" "))
+	submit.mem = int(input().strip("\n").strip(" "))
 
 	print("\033[93mGive a name to the submission.\033[0m")
 	print("\033[93m>>\033[0m"),
-	submit.job = raw_input().strip("\n").strip(" ")
+	submit.job = input().strip("\n").strip(" ")
 
 	print("\033[93mMaximum walltime per node in hours.\033[0m")
 	print("\033[93m>>\033[0m"),
-	submit.wall = int(raw_input().strip("\n").strip(" "))
+	submit.wall = int(input().strip("\n").strip(" "))
 
 	#print("\033[93mName of the queue into which the submission must be launched.\nSelect one from '"'qwork'"', '"'qtest'"', '"'qfbb'"', '"'qfat256'"', '"'qfat512'"'.\nDefault is '"'qwork'"'.\033[0m")
 	#print("\033[93m>>\033[0m"),
-	#submit.queue = raw_input().strip("\n").strip(" ")
+	#submit.queue = input().strip("\n").strip(" ")
 
 	return submit
 
@@ -84,13 +85,14 @@ def WriteToSlurm(submit):
 	'''
 	The launch file is saved as: launch_<submit.datestamp>.sh
 	The file is formatted as follows.
+	#!/bin/bash
 	#SBATCH --array=0-len(submit.bindingPairs)
 	#SBATCH --cpus-per-task=submit.cores
 	#SBATCH --nodes=1
 	#SBATCH --ntasks=1
 	#SBATCH --time=submit.wall:00:00
 	#SBATCH --mem=submit.mem
-	#SBATCH --jobname=submit.job
+	#SBATCH --job-name=submit.job
 	python Binder.py pairs_submit.datestamp 2>&1 | tee -a log.txt
 	where pairs_submit.datestamp.txt is formatted as a text file with columns: <gene.txt> <pool.txt> <tol> <cores>.
 	'''
@@ -100,13 +102,15 @@ def WriteToSlurm(submit):
 
 	launchfile = ("launch_%s.sh" % (submit.datestamp))
 	with open(launchfile, 'w') as lf:
-		lf.write("#SBATCH --jobname=%s\n" % (submit.job))
+		lf.write("#!/bin/bash\n")
+		lf.write("#SBATCH --job-name=%s\n" % (submit.job))
 		lf.write("#SBATCH --array=0-%d\n" % (len(submit.bindingPairs)))
 		lf.write("#SBATCH --cpus-per-task=%d\n" % (submit.cores))
 		lf.write("#SBATCH --mem=%d\n" % (submit.mem))
 		lf.write("#SBATCH --nodes=1\n#SBATCH --ntasks=1\n")
 		lf.write("#SBATCH --time=%d:00:00\n" % (submit.wall))
-		lf.write("python Binder.py pairs_%s.txt $SLURM_ARRAY_TASK_ID 2>&1 | tee -a log.txt" % (submit.datestamp))
+		lf.write("python Binder.py pairs_%s.txt $SLURM_ARRAY_TASK_ID 2>&1 | tee -a log.txt" % 
+(submit.datestamp))
 	return None
 
 
