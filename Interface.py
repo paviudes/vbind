@@ -86,7 +86,7 @@ def WriteToSlurm(submit):
 	The launch file is saved as: launch_<submit.datestamp>.sh
 	The file is formatted as follows.
 	#!/bin/bash
-	#SBATCH --array=0-len(submit.bindingPairs)
+	#SBATCH --array=0-len(submit.bindingPairs)-1
 	#SBATCH --cpus-per-task=submit.cores
 	#SBATCH --nodes=1
 	#SBATCH --ntasks=1
@@ -104,7 +104,7 @@ def WriteToSlurm(submit):
 	with open(launchfile, 'w') as lf:
 		lf.write("#!/bin/bash\n")
 		lf.write("#SBATCH --job-name=%s\n" % (submit.job))
-		lf.write("#SBATCH --array=0-%d\n" % (len(submit.bindingPairs)))
+		lf.write("#SBATCH --array=0-%d\n" % (len(submit.bindingPairs) - 1))
 		lf.write("#SBATCH --cpus-per-task=%d\n" % (submit.cores))
 		lf.write("#SBATCH --mem=%d\n" % (submit.mem))
 		lf.write("#SBATCH --nodes=1\n#SBATCH --ntasks=1\n")

@@ -63,7 +63,7 @@ class Binder():
 		self.runtime = 0
 
 		self.pstvdLen = 0
-		self.MAXCONCURRENT = 1000
+		self.MAXCONCURRENT = 100000
 		self.totalNucleotides = 0
 		self.tolerance = 0
 		self.maxNucleotideLength = 0
@@ -239,7 +239,7 @@ def SetBreakPoints(bindObj):
 		if (breakpoints[-1][-1] == 0):
 			breakpoints[-1][-1] = nSeqsPartialPool
 
-	print("nSeqsPartialPool = {}, breakpoints = {}".format(nSeqsPartialPool, breakpoints))
+	#print("nSeqsPartialPool = {}, breakpoints = {}".format(nSeqsPartialPool, breakpoints))
 	return breakpoints
 
 
@@ -400,11 +400,13 @@ def WriteMatrixToFile(fname, mat, appendMode, sparse = 0, binary = 0):
 if __name__ == '__main__':
 	# Complete the binding mechanism by pattern matching batches of the sRNA nucleotides with the PSTVd sequence. The batches are taken such that no batch is greater in size than MAXCONCURRENT and all the batches together constitute all the nucleotides in the sRNA pool.
 	# Initialization of the Binder object and its attributes
+	#print("Received signal: {}".format(sys.argv))
 	rnas = Binder()
 	# Reading the gene, pool files and tolerance.
 	with open(sys.argv[1], "r") as fp:
 		for (l, line) in enumerate(fp):
 			if (l == int(sys.argv[2])):
+				#print("Found relevant input in line: {}".format(line))
 				linecontents = list(map(lambda ln: ln.strip("\n").strip(" "), line.split()))
 				rnas.pstvdFname = linecontents[0]
 				rnas.sRNAPoolFname = linecontents[1]
