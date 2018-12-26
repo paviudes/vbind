@@ -63,7 +63,7 @@ class Binder():
 		self.runtime = 0
 
 		self.pstvdLen = 0
-		self.MAXCONCURRENT = 100000000
+		self.MAXCONCURRENT = 1000
 		self.totalNucleotides = 0
 		self.tolerance = 0
 		self.maxNucleotideLength = 0
@@ -239,6 +239,7 @@ def SetBreakPoints(bindObj):
 		if (breakpoints[-1][-1] == 0):
 			breakpoints[-1][-1] = nSeqsPartialPool
 
+	print("nSeqsPartialPool = {}, breakpoints = {}".format(nSeqsPartialPool, breakpoints))
 	return breakpoints
 
 
@@ -404,7 +405,7 @@ if __name__ == '__main__':
 	with open(sys.argv[1], "r") as fp:
 		for (l, line) in enumerate(fp):
 			if (l == int(sys.argv[2])):
-				linecontents = map(lambda ln: ln.strip("\n").strip(" "), line.split())
+				linecontents = list(map(lambda ln: ln.strip("\n").strip(" "), line.split()))
 				rnas.pstvdFname = linecontents[0]
 				rnas.sRNAPoolFname = linecontents[1]
 				rnas.tolerance = int(linecontents[2])
