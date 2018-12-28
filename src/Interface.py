@@ -93,7 +93,7 @@ def WriteToSlurm(submit):
 	#SBATCH --time=submit.wall:00:00
 	#SBATCH --mem=submit.mem
 	#SBATCH --job-name=submit.job
-	python Binder.py pairs_submit.datestamp 2>&1 | tee -a log.txt
+	python Binder.py pairs_submit.datestamp 2>&1 | tee -a log_<job-name>.txt
 	where pairs_submit.datestamp.txt is formatted as a text file with columns: <gene.txt> <pool.txt> <tol> <cores>.
 	'''
 	with open("pairs_%s.txt" % (submit.datestamp), "w") as fp:
@@ -105,12 +105,12 @@ def WriteToSlurm(submit):
 		lf.write("#!/bin/bash\n")
 		lf.write("#SBATCH --job-name=%s\n" % (submit.job))
 		lf.write("#SBATCH --array=0-%d\n" % (len(submit.bindingPairs) - 1))
-		lf.write("#SBATCH --cpus-per-task=%d\n" % (submit.cores))
+		# lf.write("#SBATCH --cpus-per-task=%d\n" % (submit.cores))
+		lf.write("#SBATCH --ntasks-per-node=%d\n" % (submit.cores))
 		lf.write("#SBATCH --mem=%d\n" % (submit.mem))
-		lf.write("#SBATCH --nodes=1\n#SBATCH --ntasks=1\n")
+		lf.write("#SBATCH --nodes=1\n")
 		lf.write("#SBATCH --time=%d:00:00\n" % (submit.wall))
-		lf.write("python Binder.py pairs_%s.txt $SLURM_ARRAY_TASK_ID 2>&1 | tee -a log.txt" % 
-(submit.datestamp))
+		lf.write("python Binder.py pairs_%s.txt $SLURM_ARRAY_TASK_ID 2>&1 | tee -a log_%s.txt" % (submit.datestamp, submit.datestamp))
 	return None
 
 
