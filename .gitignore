@@ -1,11 +1,2 @@
-# Ignore everything
-*
-# But not these files...
-!.gitignore
-!*.py
-!*.sh
-!*.md
-!zips.txt
-!PSTVd_RG.txt
-# ...even if they are in subdirectories
-!*/
+# Ignore all fastq files since they're insanely big
+data/input/*.fastq
