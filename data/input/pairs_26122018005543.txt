@@ -1,0 +1,2 @@
+PSTVd_RG.txt IIIweekCtrl_S4_R1_001-TR.fastq 0 6
+PSTVd_RG.txt IIIweekCtrl_S4_R1_001-TR.fastq 1 6
