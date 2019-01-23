@@ -53,7 +53,7 @@ def ConsoleInput():
 			nucFile = "./../data/input/%s" % (nucFile)
 			poolFile = "./../data/input/%s" % (poolFile)
 			# Check if the files exist
-			if (os.path.isfile(nucFile) and os.path.isfile(poolFile)):
+			if (os.path.isfile("./../data/input/%s" % nucFile) and os.path.isfile("./../data/input/%s" % poolFile)):
 				submit.bindingPairs.append([nucFile, poolFile, int(tol)])
 				nPairs = nPairs + 1
 			else:

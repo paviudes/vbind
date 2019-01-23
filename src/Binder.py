@@ -145,7 +145,7 @@ def ComputeDerivedParameters(bindObj):
 	# 2. total number of nucleotides in the pool.
 	
 	# Read the pstvd sequence and compute its length
-	with open(bindObj.pstvdFname, 'r') as pstvdFid:
+	with open(("./../data/input/%s" % bindObj.pstvdFname), 'r') as pstvdFid:
 		bindObj.pstvdSeq = pstvdFid.readline().strip("\n")
 	
 	bindObj.pstvdLen = len(bindObj.pstvdSeq)
@@ -154,7 +154,7 @@ def ComputeDerivedParameters(bindObj):
 	nNucs = 0
 	maxSeqLen = 0
 	bindObj.nSequencesByLengths = np.zeros(bindObj.pstvdLen, dtype = int)
-	with open(bindObj.sRNAPoolFname, 'r') as sRNAFid:
+	with open(("./../data/input/%s" % bindObj.sRNAPoolFname), 'r') as sRNAFid:
 		for (lNo, line) in enumerate(sRNAFid):
 			if ((lNo % 4) == 1):
 				nNucs = nNucs + 1
@@ -219,7 +219,7 @@ def SetBreakPoints(bindObj):
 	nSeqsPartialPool = 0
 	nSeqsRead = 0
 	breakpoints = [[0,0,0]]
-	with open(bindObj.sRNAPoolFname, 'r') as sRNAFid:
+	with open(("./../data/input/%s" % bindObj.sRNAPoolFname), 'r') as sRNAFid:
 		for (lNo, line) in enumerate(sRNAFid):
 			sRNASeq = line.strip("\n")
 			# every 4th line contains a nucleotide sequence. Others contain data irrelevant to this algorithm
@@ -255,7 +255,7 @@ def PartialBinding(localMatchQueue, bindObj, nSkip, startSeq, numSeqs, reverse):
 	if (((QUIET == 0)) or (DEBUG > 0)):
 		print("\033[2mLoading the next %d sequences, starting at index %d, in the sRNA pool for %s pattern matching...\033[0m" % (numSeqs, startSeq, directions[reverse]))
 
-	with open(bindObj.sRNAPoolFname, 'r') as sRNAFid:
+	with open(("./../data/input/%s" % bindObj.sRNAPoolFname), 'r') as sRNAFid:
 		nSkipped = 0
 		nRead = 0
 		completed = 1
