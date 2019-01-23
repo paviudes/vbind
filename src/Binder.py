@@ -450,6 +450,9 @@ if __name__ == '__main__':
 			for pi in range(launchNow):
 				processes[pi].start()
 
+			for pi in range(launchNow):
+				processes[pi].join()
+			
 			# Gathering results
 			for pi in range(launchNow):
 				if (di == 0):
@@ -460,10 +463,6 @@ if __name__ == '__main__':
 					localResults = localMatchQueue.get()
 					rnas.reverseMatches[:,1:] = np.add(rnas.reverseMatches[:,1:], localResults[0])
 					rnas.reverseMatchCounts = np.add(rnas.reverseMatchCounts, localResults[1])
-					pass
-
-			for pi in range(launchNow):
-				processes[pi].join()
 
 			completed = completed + launchNow
 
