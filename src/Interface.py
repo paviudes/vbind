@@ -50,8 +50,6 @@ def ConsoleInput():
 			done = 1
 		else:
 			(nucFile, poolFile, tol) = userInput.split(",")
-			nucFile = "./../data/input/%s" % (nucFile)
-			poolFile = "./../data/input/%s" % (poolFile)
 			# Check if the files exist
 			if (os.path.isfile("./../data/input/%s" % nucFile) and os.path.isfile("./../data/input/%s" % poolFile)):
 				submit.bindingPairs.append([nucFile, poolFile, int(tol)])

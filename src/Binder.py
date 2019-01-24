@@ -1,5 +1,5 @@
 import sys
-from multiprocessing import Queue, Process
+from multiprocessing import Process, Array
 import os
 import time
 import numpy as np
@@ -120,21 +120,16 @@ def NucleotideEncoder(nucleotide, blockSize, reverse):
 	encoding = {'A':'1000', 'T':'0100', 'G':'0010', 'C':'0001'}
 	reverseEncoding = {'A':'0100', 'T':'1000', 'G': '0001', 'C':'0010'}
 	nucLen = len(nucleotide)
-
 	binaryNucleotide = np.zeros(4*blockSize, dtype = int)
-
 	if reverse == 0:
 		for ci in range(nucLen):
 			binaryNucleotide[4*ci:4*(ci + 1)] = list(map(int, encoding[nucleotide[ci]]))
 	else:
 		for ci in range(nucLen):
 			binaryNucleotide[4*((nucLen - ci) - 1): 4 * (nucLen - ci)] = list(map(int, reverseEncoding[nucleotide[ci]]))
-
 	if DEBUG > 1:
 		print("\033[95mNucleotide sequence: %s and encoding produced for direction %d:" % (nucleotide, reverse))
 		print(binaryNucleotide)
-
-
 	return binaryNucleotide
 
 
@@ -154,35 +149,27 @@ def ComputeDerivedParameters(bindObj):
 	nNucs = 0
 	maxSeqLen = 0
 	bindObj.nSequencesByLengths = np.zeros(bindObj.pstvdLen, dtype = int)
+	bindObj.ordering = (-1) * np.ones(bindObj.pstvdLen, dtype = int)
+	nzlen = 0
 	with open(("./../data/input/%s" % bindObj.sRNAPoolFname), 'r') as sRNAFid:
 		for (lNo, line) in enumerate(sRNAFid):
 			if ((lNo % 4) == 1):
 				nNucs = nNucs + 1
 				seqLen = len(line.strip("\n").strip(" "))
-
 				bindObj.nSequencesByLengths[seqLen] = bindObj.nSequencesByLengths[seqLen] + 1
-
+				if (bindObj.ordering[seqLen] == -1):
+					bindObj.ordering[seqLen] = nzlen
+					nzlen = nzlen + 1
 				if seqLen > maxSeqLen:
 					maxSeqLen = seqLen
-
 	bindObj.totalNucleotides = nNucs
 	bindObj.maxNucleotideLength = maxSeqLen
 
 	# Construct the relevant arrays
 	bindObj.pstvdMatrix = np.zeros((4 * bindObj.maxNucleotideLength, bindObj.pstvdLen), dtype = int)
 	
-	if (((QUIET == 0)) or (DEBUG > 0)):
-		print("\033[94mComputing the PSTVd encoding matrix.\033[0m")
-	
-	for si in range(bindObj.pstvdLen):
-		
-		if DEBUG > 1:
-			print("\033[95mSlicing from %d to %d.\033[0m" % (si, si + bindObj.maxNucleotideLength))
-
-		bindObj.pstvdMatrix[:, si] = NucleotideEncoder(StringSlice(bindObj.pstvdSeq, si, bindObj.maxNucleotideLength), bindObj.maxNucleotideLength, 0)
-	
-	if DEBUG > 1:
-		print(bindObj.pstvdMatrix)
+	for i in range(bindObj.pstvdLen):
+		bindObj.pstvdMatrix[:, i] = NucleotideEncoder(StringSlice(bindObj.pstvdSeq, i, bindObj.maxNucleotideLength), bindObj.maxNucleotideLength, 0)
 	
 	bindObj.rawForwMatchFname = ("raw_forward_matchings_%s_%s_tol%d.txt" % (bindObj.sRNAPoolFname[:-4], bindObj.pstvdFname[:-4], bindObj.tolerance))
 	with open(bindObj.rawForwMatchFname, 'w') as rawFid:
@@ -218,6 +205,7 @@ def SetBreakPoints(bindObj):
 	# Each chunk will have at most MAXCONCURRENT nucleotides can be read by a core of the machine.
 	nSeqsPartialPool = 0
 	nSeqsRead = 0
+	ninvalid = 0
 	breakpoints = [[0,0,0]]
 	with open(("./../data/input/%s" % bindObj.sRNAPoolFname), 'r') as sRNAFid:
 		for (lNo, line) in enumerate(sRNAFid):
@@ -225,7 +213,7 @@ def SetBreakPoints(bindObj):
 			# every 4th line contains a nucleotide sequence. Others contain data irrelevant to this algorithm
 			if (lNo % 4 == 1):
 				if ('N' in sRNASeq):
-					continue
+					ninvalid = ninvalid + 1
 				else:
 					if (nSeqsPartialPool < bindObj.MAXCONCURRENT):
 						nSeqsPartialPool = nSeqsPartialPool + 1
@@ -235,25 +223,19 @@ def SetBreakPoints(bindObj):
 						# Start a new pool
 						nSeqsPartialPool = 0
 						breakpoints.append([lNo, nSeqsRead, 0])
-
 		if (breakpoints[-1][-1] == 0):
 			breakpoints[-1][-1] = nSeqsPartialPool
-
-	#print("nSeqsPartialPool = {}, breakpoints = {}".format(nSeqsPartialPool, breakpoints))
+	# print("nSeqsPartialPool = {}, nSeqsRead = {}, ninvalid = {}, breakpoints = {}".format(nSeqsPartialPool, nSeqsRead, ninvalid, breakpoints))
 	return breakpoints
 
 
-def PartialBinding(localMatchQueue, bindObj, nSkip, startSeq, numSeqs, reverse):
+def PartialBinding(bindObj, nSkip, startSeq, numSeqs, reverse, matches, counts):
 	# Partially load the sRNA pool with either the remaining or the next MAXCONCURRENT nucleotides, from the main pool, whichever is lesser.
 	# The number of nucleotide sequences to be read can be less than the above estimate -- because valid nucleotide sequences should not have 'N' in them.
 	sRNAPoolMatrix = np.zeros((numSeqs, 4 * bindObj.maxNucleotideLength), dtype = int)
 	seqLenOffsets = np.zeros((numSeqs, bindObj.pstvdLen), dtype = int)
 	sRNASeqLengths = np.zeros(numSeqs, dtype = int)
-	
 	directions = ["forward", "reverse"]
-
-	if (((QUIET == 0)) or (DEBUG > 0)):
-		print("\033[2mLoading the next %d sequences, starting at index %d, in the sRNA pool for %s pattern matching...\033[0m" % (numSeqs, startSeq, directions[reverse]))
 
 	with open(("./../data/input/%s" % bindObj.sRNAPoolFname), 'r') as sRNAFid:
 		nSkipped = 0
@@ -267,27 +249,16 @@ def PartialBinding(localMatchQueue, bindObj, nSkip, startSeq, numSeqs, reverse):
 				continue
 			else:
 				if ((lNo % 4) == 1):
-					sRNASeq = line.strip("\n")
+					sRNASeq = line.strip("\n").strip(" ")
 					if ('N' in sRNASeq):
-						if DEBUG > 1:
-							print("\033[94mSkipping sequence %s.\033[0m" % sRNASeq)
+						pass
 					else:
 						if (nRead < numSeqs):
-							if DEBUG > 1:
-								print("\033[95mReading sequence %s.\033[0m" % sRNASeq)
-
-							sRNAPoolMatrix[nRead, :] = NucleotideEncoder(StringSlice(sRNASeq, 0, len(sRNASeq)), bindObj.maxNucleotideLength, reverse)
+							sRNAPoolMatrix[nRead, :] = NucleotideEncoder(sRNASeq, bindObj.maxNucleotideLength, reverse)
 							sRNASeqLengths[nRead] = len(sRNASeq)
 							seqLenOffsets[nRead, :] = (len(sRNASeq) - bindObj.tolerance) * np.ones(bindObj.pstvdLen, dtype = int)
 							nRead = nRead + 1
 
-	if DEBUG > 1:
-		print("sRNA subpool encoding matrix in the direction %d." % reverse)
-		print(sRNAPoolMatrix.shape)
-		print("sRNA sequence length matrix")
-		print(sRNASeqLengths.shape)
-
-	
 	# Compute the frequency of matchings in the sRNA pool with every continuous PSTVd subsequence.
 	# First, compute the Pattern matchings by matrix multiplication of the sRNA sequence encoding matrix with the PSTVd sequences encoding matrix.
 	# If there was a perfect matching between a PSTVd subsequene and the sRNA nucleotide in the pool, the corresponding element generated in the product will be equal to the length of the sRNA nucleotide.
@@ -298,25 +269,10 @@ def PartialBinding(localMatchQueue, bindObj, nSkip, startSeq, numSeqs, reverse):
 	matchings = np.dot(sRNAPoolMatrix, bindObj.pstvdMatrix)
 	# reducedToTolerance = matrix whose i,j entry is 1 if the ith nucleotide matched with the pstvd sequence (of length L) starting at index j.	
 	reducedToTolerance = np.greater_equal(matchings, seqLenOffsets)
-
 	(localNucIndices, pstvdIndices) = np.nonzero(reducedToTolerance)
-	lengthCounts = np.bincount(sRNASeqLengths[localNucIndices], minlength = bindObj.pstvdLen)
-
-	rawMatchingInfo = np.transpose(np.vstack((localNucIndices + startSeq * np.ones_like(localNucIndices), pstvdIndices)))
-	if reverse == 0:
-		WriteMatrixToFile(bindObj.rawForwMatchFname, rawMatchingInfo, 1, 0, 0)
-	else:
-		WriteMatrixToFile(bindObj.rawRevMatchFname, rawMatchingInfo, 1, 0, 0)
-
-	localMatches = np.zeros((np.count_nonzero(bindObj.nSequencesByLengths), bindObj.pstvdLen), dtype = int)
-	nzLen = 0
-	
-	for li in range(bindObj.pstvdLen):
-		if (bindObj.nSequencesByLengths[li] > 0):
-			localMatches[nzLen, :] = np.sum(reducedToTolerance * np.repeat(np.array(sRNASeqLengths == li, dtype = int)[:, np.newaxis], bindObj.pstvdLen, axis = 1), axis = 0)
-			nzLen = nzLen + 1
-
-	localMatchQueue.put([localMatches, lengthCounts])
+	for i in range(localNucIndices.shape[0]):
+		matches[bindObj.ordering[sRNASeqLengths[localNucIndices[i]]] * i + pstvdIndices[i]] += 1
+		counts[sRNASeqLengths[localNucIndices[i]]] += 1
 	return None
 
 
@@ -345,37 +301,22 @@ def LogBinding(bindObj):
 		logFid.write("-------\n")
 		logFid.write("Total:\t%d\t%d\t%d\n\n" % (bindObj.totalNucleotides, np.sum(bindObj.forwardMatchCounts), np.sum(bindObj.reverseMatchCounts)))
 
-		# logFid.write("Forward matching data:\n")
-
-	# WriteMatrixToFile(logFile, bindObj.forwardMatches, 1, 0, 0)
-	
-	# with open(logFile, 'a') as logFid:
-		# logFid.write("Reverse matching data:\n")
-	
-	# WriteMatrixToFile(logFile, bindObj.reverseMatches, 1, 0, 0)
-
 	with open(logFile, 'a') as logFid:
 		logFid.write("\n\n")
-
 		logFid.write("Total simulation time: %d seconds." % bindObj.runtime)
-
 		logFid.write("\n***************************************\n")
-
 	return None
 
 
 def WriteMatrixToFile(fname, mat, appendMode, sparse = 0, binary = 0):
 	# Write a matrix to file
 	(nRows, nCols) = mat.shape
-	
 	if appendMode == 0:
 		if os.path.isfile(fname):
 			os.remove(fname)
-
 	with open(fname, 'a') as matFid:	
 		if appendMode == 0:
 			matFid.write("%d %d\n" % (nRows, nCols))
-		
 		for ri in range(nRows):
 			for ci in range(nCols):
 				if ((sparse == 1) and (binary == 1)):
@@ -391,9 +332,7 @@ def WriteMatrixToFile(fname, mat, appendMode, sparse = 0, binary = 0):
 							matFid.write("%d %d" % (ci, mat[ri, ci]))
 					else:
 						matFid.write("%d " % (mat[ri, ci]))
-
 			matFid.write("\n")
-
 	return None
 
 
@@ -412,7 +351,6 @@ if __name__ == '__main__':
 				rnas.sRNAPoolFname = linecontents[1]
 				rnas.tolerance = int(linecontents[2])
 				nCores = int(linecontents[3])
-	
 	ComputeDerivedParameters(rnas)
 	breakpoints = SetBreakPoints(rnas)
 	nBreaks = len(breakpoints)
@@ -421,21 +359,26 @@ if __name__ == '__main__':
 
 	print("\033[93mMatching with %d sRNA nucleotides and a PSTVd sequence of length %d. Maximum length of a nucleotide sequence is %d.\033[0m" % (rnas.totalNucleotides, rnas.pstvdLen, rnas.maxNucleotideLength))
 	startTime = time.time()
-	
+	matches = Array('i', rnas.forwardMatches.size - rnas.forwardMatches.shape[0])
+	counts = Array('i', rnas.forwardMatchCounts.size)
 	for di in range(2):
 		# change above 'range (2)' to have both forward and reverse matching
 		if (di == 0):
 			print("\033[94mForward matchings:")
 		else:
 			print("\033[94mReverse matchings:")
-
 		completed = 0
 		while (completed < nBreaks):
-			iterationStartTime = time.time()
+			start = time.time()
 			launchNow = min(nBreaks - completed, nCores)
-			localMatchQueue = Queue()
-			processes = []
+			
+			# Reset the counts and the matches arrays
+			for i in range(rnas.forwardMatchCounts.size):
+				counts[i] = 0
+			for i in range(rnas.forwardMatches.size - rnas.forwardMatches.shape[0]):
+				matches[i] = 0
 
+			processes = []
 			if ((QUIET == 0)):
 				print("\033[93mGoing to launch %d cores at a time.\033[0m" % launchNow)
 				if (launchNow == 0):
@@ -445,7 +388,7 @@ if __name__ == '__main__':
 				linesToSkip = breakpoints[completed + pi][0]
 				seqsReadSoFar = breakpoints[completed + pi][1]
 				seqsToRead = breakpoints[completed + pi][2]
-				processes.append(Process(target = PartialBinding, args = (localMatchQueue, rnas, linesToSkip, seqsReadSoFar, seqsToRead, di)))
+				processes.append(Process(target = PartialBinding, args = (rnas, linesToSkip, seqsReadSoFar, seqsToRead, di, matches, counts)))
 
 			for pi in range(launchNow):
 				processes[pi].start()
@@ -454,28 +397,34 @@ if __name__ == '__main__':
 				processes[pi].join()
 			
 			# Gathering results
-			for pi in range(launchNow):
-				if (di == 0):
-					localResults = localMatchQueue.get()
-					rnas.forwardMatches[:,1:] = np.add(rnas.forwardMatches[:,1:], localResults[0])
-					rnas.forwardMatchCounts = np.add(rnas.forwardMatchCounts, localResults[1])
-				else:
-					localResults = localMatchQueue.get()
-					rnas.reverseMatches[:,1:] = np.add(rnas.reverseMatches[:,1:], localResults[0])
-					rnas.reverseMatchCounts = np.add(rnas.reverseMatchCounts, localResults[1])
+			if (di == 0):
+				# for i in range(rnas.forwardMatches.shape[0]):
+				# 	for j in range(rnas.pstvdLen):
+				# 		print("matches[%d][%d] = %d" % (i, j, matches[i * (rnas.forwardMatches.shape[1] - 1) + j]))
+				for i in range(rnas.forwardMatches.shape[0]):
+					for j in range(rnas.pstvdLen):
+						rnas.forwardMatches[i, j + 1] += matches[i * (rnas.forwardMatches.shape[1] - 1) + j]
+				for i in range(rnas.pstvdLen):
+					rnas.forwardMatchCounts[i] += counts[i]
+			else:
+				for i in range(rnas.reverseMatches.shape[0]):
+					for j in range(rnas.pstvdLen):
+						rnas.reverseMatches[i, j + 1] += matches[i * (rnas.reverseMatches.shape[1] - 1) + j]
+				for i in range(rnas.pstvdLen):
+					rnas.reverseMatchCounts[i] += counts[i]
 
 			completed = completed + launchNow
 
 			iterationEndTime = time.time()
-			iterationTime = iterationEndTime - iterationStartTime
+			runtime = iterationEndTime - start
 			# Predict the remaining time to finish all the matching: remaining = time taken for single iteration x number of iterations left
 			# The time taken for a single iteration can be measured in the first iterationa and the number of iterations left is at most the total number of sequences in the pool divided by the number of sequences read in a chunk.
-			remainingTime = iterationTime * (nBreaks - completed)
+			remaining = runtime * (nBreaks - completed)
 
 			if (QUIET == 0):
-				print("\033[95m ......... %d%% done, about %d minutes %d seconds left\033[0m" % (100 * completed/float(nBreaks), (remainingTime/60), (int(remainingTime) % 60)))
+				print("\033[95m ......... %d%% done, about %d minutes %d seconds left\033[0m" % (100 * completed/float(nBreaks), (remaining/60), (int(remaining) % 60)))
 			else:
-				print("\r\033[95m ......... %d%% done, about %d minutes %d seconds left\033[0m" % (100 * completed/float(nBreaks), (remainingTime/60), (int(remainingTime) % 60))),
+				print("\r\033[95m ......... %d%% done, about %d minutes %d seconds left\033[0m" % (100 * completed/float(nBreaks), (remaining/60), (int(remaining) % 60))),
 				sys.stdout.flush()
 
 		if (QUIET > 0):
