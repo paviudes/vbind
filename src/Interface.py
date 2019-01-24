@@ -96,11 +96,11 @@ def WriteToSlurm(submit):
 	python Binder.py pairs_submit.datestamp 2>&1 | tee -a log_<job-name>.txt
 	where pairs_submit.datestamp.txt is formatted as a text file with columns: <gene.txt> <pool.txt> <tol> <cores>.
 	'''
-	with open("pairs_%s.txt" % (submit.datestamp), "w") as fp:
+	with open("./../data/input/pairs_%s.txt" % (submit.datestamp), "w") as fp:
 		for i in range(len(submit.bindingPairs)):
 			fp.write("%s %s %d %d\n" % (submit.bindingPairs[i][0], submit.bindingPairs[i][1], submit.bindingPairs[i][2], submit.cores))
 
-	launchfile = ("launch_%s.sh" % (submit.datestamp))
+	launchfile = ("./../cluster/launch_%s.sh" % (submit.datestamp))
 	with open(launchfile, 'w') as lf:
 		lf.write("#!/bin/bash\n")
 		lf.write("#SBATCH --job-name=%s\n" % (submit.job))
@@ -110,7 +110,7 @@ def WriteToSlurm(submit):
 		lf.write("#SBATCH --mem=%d\n" % (submit.mem))
 		lf.write("#SBATCH --nodes=1\n")
 		lf.write("#SBATCH --time=%d:00:00\n" % (submit.wall))
-		lf.write("python Binder.py pairs_%s.txt $SLURM_ARRAY_TASK_ID 2>&1 | tee -a log_%s.txt" % (submit.datestamp, submit.datestamp))
+		lf.write("python Binder.py ./../data/input/pairs_%s.txt $SLURM_ARRAY_TASK_ID 2>&1 | tee -a log_%s.txt" % (submit.datestamp, submit.datestamp))
 	return None
 
 
