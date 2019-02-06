@@ -1,0 +1,68 @@
+/var/spool/slurmd/job901971/slurm_script: line 8: cd: vbind/src/: No such file or directory
+[93mMatching with 26633192 sRNA nucleotides and a PSTVd sequence of length 359. Maximum length of a nucleotide sequence is 50.[0m
+[94mForward matchings:
+[95m ......... 8% done, about 619 minutes 6 seconds left[0m
+[95m ......... 17% done, about 531 minutes 15 seconds left[0m
+[95m ......... 26% done, about 456 minutes 4 seconds left[0m
+[95m ......... 35% done, about 390 minutes 57 seconds left[0m
+[95m ......... 44% done, about 320 minutes 25 seconds left[0m
+[95m ......... 53% done, about 258 minutes 13 seconds left[0m
+[95m ......... 62% done, about 201 minutes 16 seconds left[0m
+[95m ......... 71% done, about 144 minutes 22 seconds left[0m
+[95m ......... 80% done, about 94 minutes 47 seconds left[0m
+[95m ......... 89% done, about 48 minutes 30 seconds left[0m
+[95m ......... 98% done, about 5 minutes 6 seconds left[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[94mReverse matchings:
+[95m ......... 8% done, about 619 minutes 35 seconds left[0m
+[95m ......... 17% done, about 537 minutes 37 seconds left[0m
+[95m ......... 26% done, about 464 minutes 18 seconds left[0m
+[95m ......... 35% done, about 391 minutes 6 seconds left[0m
+[95m ......... 44% done, about 322 minutes 46 seconds left[0m
+[95m ......... 53% done, about 257 minutes 37 seconds left[0m
+[95m ......... 62% done, about 199 minutes 51 seconds left[0m
+[95m ......... 71% done, about 143 minutes 21 seconds left[0m
+[95m ......... 80% done, about 94 minutes 52 seconds left[0m
+[95m ......... 89% done, about 47 minutes 14 seconds left[0m
+[95m ......... 98% done, about 5 minutes 6 seconds left[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[92m_/ Matching was completed in 2967 seconds on each of 24 cores.[0m
+[92mSummary:[0m
+[92mLength	In pool	Foward	Reverse[0m
+[92m17	1	0	0[0m
+[92m18	2	0	0[0m
+[92m19	102	0	0[0m
+[92m20	650	0	0[0m
+[92m21	109	0	0[0m
+[92m22	241293	2	1[0m
+[92m23	332738	1	3[0m
+[92m24	682770	8	5[0m
+[92m25	303514	5	1[0m
+[92m26	383011	0	1[0m
+[92m27	704850	0	1[0m
+[92m28	939615	0	0[0m
+[92m29	4667135	3	0[0m
+[92m30	3579926	0	1[0m
+[92m31	2465610	0	0[0m
+[92m32	10325684	0	0[0m
+[92m33	371396	0	0[0m
+[92m34	73974	0	0[0m
+[92m35	61527	0	0[0m
+[92m36	61766	0	0[0m
+[92m37	65946	0	0[0m
+[92m38	81567	0	0[0m
+[92m39	85101	0	0[0m
+[92m40	114719	0	0[0m
+[92m41	84824	0	0[0m
+[92m42	113216	0	0[0m
+[92m43	69283	0	1[0m
+[92m44	69454	0	0[0m
+[92m45	34636	0	0[0m
+[92m46	35864	0	0[0m
+[92m47	47874	0	0[0m
+[92m48	82183	0	0[0m
+[92m49	150070	0	0[0m
+[92m50	402782	0	1[0m
+[92m--------------[0m
+[92mTotal:	26633192	19	15[0m
+[93mSummary written to forward_matchings_IIweekRDR_S3_R1_001-TR.f_PSTVd_RG_tol0.txt and reverse_matchings_IIweekRDR_S3_R1_001-TR.f_PSTVd_RG_tol0.txt.[0m

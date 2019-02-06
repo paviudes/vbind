@@ -1,0 +1,111 @@
+/var/spool/slurmd/job901974/slurm_script: line 8: cd: vbind/src: No such file or directory
+[93mMatching with 77193647 sRNA nucleotides and a PSTVd sequence of length 359. Maximum length of a nucleotide sequence is 50.[0m
+[94mForward matchings:
+[95m ......... 3% done, about 4395 minutes 36 seconds left[0m
+[95m ......... 6% done, about 4154 minutes 19 seconds left[0m
+[95m ......... 9% done, about 3952 minutes 53 seconds left[0m
+[95m ......... 12% done, about 3974 minutes 26 seconds left[0m
+[95m ......... 15% done, about 3598 minutes 31 seconds left[0m
+[95m ......... 18% done, about 3363 minutes 0 seconds left[0m
+[95m ......... 21% done, about 3236 minutes 7 seconds left[0m
+[95m ......... 24% done, about 3035 minutes 3 seconds left[0m
+[95m ......... 27% done, about 2922 minutes 44 seconds left[0m
+[95m ......... 31% done, about 2693 minutes 5 seconds left[0m
+[95m ......... 34% done, about 2529 minutes 1 seconds left[0m
+[95m ......... 37% done, about 2354 minutes 28 seconds left[0m
+[95m ......... 40% done, about 2198 minutes 48 seconds left[0m
+[95m ......... 43% done, about 2051 minutes 52 seconds left[0m
+[95m ......... 46% done, about 1903 minutes 50 seconds left[0m
+[95m ......... 49% done, about 1741 minutes 58 seconds left[0m
+[95m ......... 52% done, about 1603 minutes 2 seconds left[0m
+[95m ......... 55% done, about 1470 minutes 31 seconds left[0m
+[95m ......... 59% done, about 1350 minutes 9 seconds left[0m
+[95m ......... 62% done, about 1216 minutes 33 seconds left[0m
+[95m ......... 65% done, about 1097 minutes 35 seconds left[0m
+[95m ......... 68% done, about 973 minutes 14 seconds left[0m
+[95m ......... 71% done, about 856 minutes 4 seconds left[0m
+[95m ......... 74% done, about 742 minutes 35 seconds left[0m
+[95m ......... 77% done, about 643 minutes 4 seconds left[0m
+[95m ......... 80% done, about 538 minutes 35 seconds left[0m
+[95m ......... 83% done, about 442 minutes 22 seconds left[0m
+[95m ......... 87% done, about 349 minutes 56 seconds left[0m
+[95m ......... 90% done, about 254 minutes 32 seconds left[0m
+[95m ......... 93% done, about 170 minutes 41 seconds left[0m
+[95m ......... 96% done, about 92 minutes 38 seconds left[0m
+[95m ......... 99% done, about 12 minutes 24 seconds left[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[94mReverse matchings:
+[95m ......... 3% done, about 4377 minutes 56 seconds left[0m
+[95m ......... 6% done, about 4169 minutes 23 seconds left[0m
+[95m ......... 9% done, about 3985 minutes 21 seconds left[0m
+[95m ......... 12% done, about 3749 minutes 49 seconds left[0m
+[95m ......... 15% done, about 3567 minutes 24 seconds left[0m
+[95m ......... 18% done, about 3374 minutes 29 seconds left[0m
+[95m ......... 21% done, about 3207 minutes 50 seconds left[0m
+[95m ......... 24% done, about 3059 minutes 55 seconds left[0m
+[95m ......... 27% done, about 2864 minutes 30 seconds left[0m
+[95m ......... 31% done, about 2706 minutes 42 seconds left[0m
+[95m ......... 34% done, about 2538 minutes 48 seconds left[0m
+[95m ......... 37% done, about 2366 minutes 2 seconds left[0m
+[95m ......... 40% done, about 2201 minutes 16 seconds left[0m
+[95m ......... 43% done, about 2057 minutes 56 seconds left[0m
+[95m ......... 46% done, about 1908 minutes 35 seconds left[0m
+[95m ......... 49% done, about 1747 minutes 42 seconds left[0m
+[95m ......... 52% done, about 1611 minutes 55 seconds left[0m
+[95m ......... 55% done, about 1481 minutes 20 seconds left[0m
+[95m ......... 59% done, about 1361 minutes 27 seconds left[0m
+[95m ......... 62% done, about 1215 minutes 43 seconds left[0m
+[95m ......... 65% done, about 1094 minutes 13 seconds left[0m
+[95m ......... 68% done, about 967 minutes 20 seconds left[0m
+[95m ......... 71% done, about 866 minutes 41 seconds left[0m
+[95m ......... 74% done, about 752 minutes 45 seconds left[0m
+[95m ......... 77% done, about 647 minutes 54 seconds left[0m
+[95m ......... 80% done, about 535 minutes 43 seconds left[0m
+[95m ......... 83% done, about 440 minutes 16 seconds left[0m
+[95m ......... 87% done, about 351 minutes 9 seconds left[0m
+[95m ......... 90% done, about 259 minutes 32 seconds left[0m
+[95m ......... 93% done, about 169 minutes 39 seconds left[0m
+[95m ......... 96% done, about 88 minutes 27 seconds left[0m
+[95m ......... 99% done, about 12 minutes 16 seconds left[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[92m_/ Matching was completed in 17589 seconds on each of 24 cores.[0m
+[92mSummary:[0m
+[92mLength	In pool	Foward	Reverse[0m
+[92m16	2	0	0[0m
+[92m17	65	0	0[0m
+[92m18	91	0	0[0m
+[92m19	3444	0	0[0m
+[92m20	1191	0	0[0m
+[92m21	1268	0	0[0m
+[92m22	411278	0	0[0m
+[92m23	632607	0	0[0m
+[92m24	948817	0	0[0m
+[92m25	705495	0	0[0m
+[92m26	923628	0	0[0m
+[92m27	1560188	1	0[0m
+[92m28	2387161	0	0[0m
+[92m29	12561522	0	0[0m
+[92m30	8545534	0	0[0m
+[92m31	8206087	0	0[0m
+[92m32	35638226	0	0[0m
+[92m33	1111659	0	0[0m
+[92m34	193343	0	0[0m
+[92m35	157220	0	0[0m
+[92m36	146921	0	0[0m
+[92m37	161252	0	0[0m
+[92m38	182671	0	0[0m
+[92m39	174430	0	0[0m
+[92m40	200052	0	0[0m
+[92m41	154490	0	0[0m
+[92m42	157613	0	0[0m
+[92m43	125272	0	0[0m
+[92m44	161055	0	0[0m
+[92m45	80989	0	0[0m
+[92m46	85546	0	0[0m
+[92m47	112335	0	0[0m
+[92m48	183109	0	0[0m
+[92m49	330706	0	0[0m
+[92m50	948380	0	0[0m
+[92m--------------[0m
+[92mTotal:	77193647	1	0[0m
+[93mSummary written to forward_matchings_IIIweekCtrl_S4_R1_001-TR.f_PSTVd_RG_tol1.txt and reverse_matchings_IIIweekCtrl_S4_R1_001-TR.f_PSTVd_RG_tol1.txt.[0m

@@ -1,0 +1,4 @@
+PSTVd_RG.txt IIIweekEV_S5_R1_001-TR.fastq 0 24
+PSTVd_RG.txt IIIweekEV_S5_R1_001-TR.fastq 1 24
+PSTVd_RG.txt IIIweekRDR_S6_R1_001-TR.fastq 0 24
+PSTVd_RG.txt IIIweekRDR_S6_R1_001-TR.fastq 1 24

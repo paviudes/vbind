@@ -1,2 +1,0 @@
-PSTVd_RG.txt IIweekRDR_S3_R1_001-TR.fastq 0 24
-PSTVd_RG.txt IIweekRDR_S3_R1_001-TR.fastq 1 24

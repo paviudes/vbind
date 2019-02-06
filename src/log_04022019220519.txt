@@ -1,0 +1,488 @@
+[93mMatching with 77193647 sRNA nucleotides and a PSTVd sequence of length 359. Maximum length of a nucleotide sequence is 50.[0m
+[94mForward matchings:
+[93mMatching with 77193647 sRNA nucleotides and a PSTVd sequence of length 359. Maximum length of a nucleotide sequence is 50.[0m
+[94mForward matchings:
+[93mMatching with 108017177 sRNA nucleotides and a PSTVd sequence of length 359. Maximum length of a nucleotide sequence is 50.[0m
+[94mForward matchings:
+[93mMatching with 108017177 sRNA nucleotides and a PSTVd sequence of length 359. Maximum length of a nucleotide sequence is 50.[0m
+[94mForward matchings:
+[95m ......... 3% done, about 4395 minutes 36 seconds left[0m
+[95m ......... 3% done, about 4655 minutes 33 seconds left[0m
+[95m ......... 6% done, about 4154 minutes 19 seconds left[0m
+[95m ......... 6% done, about 4209 minutes 50 seconds left[0m
+[95m ......... 2% done, about 8889 minutes 58 seconds left[0m
+[95m ......... 2% done, about 9423 minutes 34 seconds left[0m
+[95m ......... 9% done, about 3952 minutes 53 seconds left[0m
+[95m ......... 9% done, about 4311 minutes 32 seconds left[0m
+[95m ......... 4% done, about 8850 minutes 0 seconds left[0m
+[95m ......... 4% done, about 9282 minutes 31 seconds left[0m
+[95m ......... 12% done, about 3974 minutes 26 seconds left[0m
+[95m ......... 12% done, about 3739 minutes 52 seconds left[0m
+[95m ......... 15% done, about 3598 minutes 31 seconds left[0m
+[95m ......... 15% done, about 3960 minutes 33 seconds left[0m
+[95m ......... 6% done, about 8601 minutes 26 seconds left[0m
+[95m ......... 6% done, about 8977 minutes 12 seconds left[0m
+[95m ......... 18% done, about 3363 minutes 0 seconds left[0m
+[95m ......... 18% done, about 3634 minutes 46 seconds left[0m
+[95m ......... 8% done, about 8204 minutes 56 seconds left[0m
+[95m ......... 21% done, about 3236 minutes 7 seconds left[0m
+[95m ......... 8% done, about 8351 minutes 33 seconds left[0m
+[95m ......... 21% done, about 3480 minutes 40 seconds left[0m
+[95m ......... 24% done, about 3035 minutes 3 seconds left[0m
+[95m ......... 24% done, about 3031 minutes 57 seconds left[0m
+[95m ......... 11% done, about 7844 minutes 31 seconds left[0m
+[95m ......... 11% done, about 7936 minutes 20 seconds left[0m
+[95m ......... 27% done, about 2922 minutes 44 seconds left[0m
+[95m ......... 27% done, about 2872 minutes 33 seconds left[0m
+[95m ......... 31% done, about 2693 minutes 5 seconds left[0m
+[95m ......... 13% done, about 7544 minutes 45 seconds left[0m
+[95m ......... 13% done, about 7636 minutes 5 seconds left[0m
+[95m ......... 31% done, about 2696 minutes 31 seconds left[0m
+[95m ......... 34% done, about 2529 minutes 1 seconds left[0m
+[95m ......... 34% done, about 2533 minutes 1 seconds left[0m
+[95m ......... 15% done, about 7238 minutes 54 seconds left[0m
+[95m ......... 37% done, about 2354 minutes 28 seconds left[0m
+[95m ......... 15% done, about 7475 minutes 39 seconds left[0m
+[95m ......... 37% done, about 2356 minutes 31 seconds left[0m
+[95m ......... 40% done, about 2198 minutes 48 seconds left[0m
+[95m ......... 17% done, about 6989 minutes 34 seconds left[0m
+[95m ......... 40% done, about 2200 minutes 19 seconds left[0m
+[95m ......... 17% done, about 7073 minutes 11 seconds left[0m
+[95m ......... 43% done, about 2051 minutes 52 seconds left[0m
+[95m ......... 43% done, about 2039 minutes 45 seconds left[0m
+[95m ......... 20% done, about 6761 minutes 25 seconds left[0m
+[95m ......... 46% done, about 1903 minutes 50 seconds left[0m
+[95m ......... 46% done, about 1882 minutes 49 seconds left[0m
+[95m ......... 20% done, about 6790 minutes 51 seconds left[0m
+[95m ......... 49% done, about 1741 minutes 58 seconds left[0m
+[95m ......... 49% done, about 1759 minutes 16 seconds left[0m
+[95m ......... 22% done, about 6445 minutes 54 seconds left[0m
+[95m ......... 52% done, about 1603 minutes 2 seconds left[0m
+[95m ......... 22% done, about 6605 minutes 59 seconds left[0m
+[95m ......... 52% done, about 1735 minutes 47 seconds left[0m
+[95m ......... 55% done, about 1470 minutes 31 seconds left[0m
+[95m ......... 24% done, about 6174 minutes 1 seconds left[0m
+[95m ......... 55% done, about 1479 minutes 0 seconds left[0m
+[95m ......... 59% done, about 1350 minutes 9 seconds left[0m
+[95m ......... 24% done, about 6353 minutes 15 seconds left[0m
+[95m ......... 59% done, about 1351 minutes 27 seconds left[0m
+[95m ......... 62% done, about 1216 minutes 33 seconds left[0m
+[95m ......... 26% done, about 5938 minutes 26 seconds left[0m
+[95m ......... 62% done, about 1220 minutes 50 seconds left[0m
+[95m ......... 26% done, about 5984 minutes 44 seconds left[0m
+[95m ......... 65% done, about 1097 minutes 35 seconds left[0m
+[95m ......... 65% done, about 1097 minutes 58 seconds left[0m
+[95m ......... 68% done, about 973 minutes 14 seconds left[0m
+[95m ......... 28% done, about 5671 minutes 50 seconds left[0m
+[95m ......... 68% done, about 970 minutes 53 seconds left[0m
+[95m ......... 28% done, about 5849 minutes 57 seconds left[0m
+[95m ......... 71% done, about 856 minutes 4 seconds left[0m
+[95m ......... 71% done, about 857 minutes 1 seconds left[0m
+[95m ......... 31% done, about 5406 minutes 0 seconds left[0m
+[95m ......... 74% done, about 742 minutes 35 seconds left[0m
+[95m ......... 74% done, about 751 minutes 28 seconds left[0m
+[95m ......... 31% done, about 5537 minutes 53 seconds left[0m
+[95m ......... 77% done, about 643 minutes 4 seconds left[0m
+[95m ......... 77% done, about 644 minutes 26 seconds left[0m
+[95m ......... 33% done, about 5213 minutes 11 seconds left[0m
+[95m ......... 80% done, about 538 minutes 35 seconds left[0m
+[95m ......... 80% done, about 541 minutes 55 seconds left[0m
+[95m ......... 33% done, about 5335 minutes 37 seconds left[0m
+[95m ......... 83% done, about 442 minutes 22 seconds left[0m
+[95m ......... 83% done, about 441 minutes 16 seconds left[0m
+[95m ......... 35% done, about 5002 minutes 58 seconds left[0m
+[95m ......... 87% done, about 349 minutes 56 seconds left[0m
+[95m ......... 87% done, about 354 minutes 36 seconds left[0m
+[95m ......... 35% done, about 5058 minutes 30 seconds left[0m
+[95m ......... 90% done, about 254 minutes 32 seconds left[0m
+[95m ......... 90% done, about 262 minutes 21 seconds left[0m
+[95m ......... 93% done, about 170 minutes 41 seconds left[0m
+[95m ......... 37% done, about 4733 minutes 59 seconds left[0m
+[95m ......... 93% done, about 181 minutes 41 seconds left[0m
+[95m ......... 96% done, about 92 minutes 38 seconds left[0m
+[95m ......... 37% done, about 4866 minutes 36 seconds left[0m
+[95m ......... 96% done, about 95 minutes 36 seconds left[0m
+[95m ......... 99% done, about 12 minutes 24 seconds left[0m
+[95m ......... 40% done, about 4468 minutes 0 seconds left[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[94mReverse matchings:
+[95m ......... 99% done, about 13 minutes 16 seconds left[0m
+[95m ......... 40% done, about 4655 minutes 20 seconds left[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[94mReverse matchings:
+[95m ......... 42% done, about 4277 minutes 39 seconds left[0m
+[95m ......... 3% done, about 4377 minutes 56 seconds left[0m
+[95m ......... 42% done, about 4386 minutes 15 seconds left[0m
+[95m ......... 3% done, about 4664 minutes 32 seconds left[0m
+[95m ......... 44% done, about 3980 minutes 36 seconds left[0m
+[95m ......... 6% done, about 4169 minutes 23 seconds left[0m
+[95m ......... 44% done, about 4112 minutes 43 seconds left[0m
+[95m ......... 6% done, about 4434 minutes 3 seconds left[0m
+[95m ......... 9% done, about 3985 minutes 21 seconds left[0m
+[95m ......... 46% done, about 3797 minutes 59 seconds left[0m
+[95m ......... 9% done, about 3946 minutes 41 seconds left[0m
+[95m ......... 46% done, about 3900 minutes 54 seconds left[0m
+[95m ......... 12% done, about 3749 minutes 49 seconds left[0m
+[95m ......... 48% done, about 3635 minutes 3 seconds left[0m
+[95m ......... 12% done, about 3744 minutes 3 seconds left[0m
+[95m ......... 15% done, about 3567 minutes 24 seconds left[0m
+[95m ......... 48% done, about 3774 minutes 4 seconds left[0m
+[95m ......... 51% done, about 3395 minutes 51 seconds left[0m
+[95m ......... 15% done, about 3557 minutes 53 seconds left[0m
+[95m ......... 18% done, about 3374 minutes 29 seconds left[0m
+[95m ......... 51% done, about 3536 minutes 3 seconds left[0m
+[95m ......... 53% done, about 3276 minutes 53 seconds left[0m
+[95m ......... 18% done, about 3372 minutes 3 seconds left[0m
+[95m ......... 21% done, about 3207 minutes 50 seconds left[0m
+[95m ......... 53% done, about 3389 minutes 27 seconds left[0m
+[95m ......... 21% done, about 3267 minutes 50 seconds left[0m
+[95m ......... 55% done, about 3033 minutes 10 seconds left[0m
+[95m ......... 24% done, about 3059 minutes 55 seconds left[0m
+[95m ......... 24% done, about 3081 minutes 5 seconds left[0m
+[95m ......... 55% done, about 3194 minutes 23 seconds left[0m
+[95m ......... 27% done, about 2864 minutes 30 seconds left[0m
+[95m ......... 57% done, about 2858 minutes 13 seconds left[0m
+[95m ......... 27% done, about 3003 minutes 43 seconds left[0m
+[95m ......... 31% done, about 2706 minutes 42 seconds left[0m
+[95m ......... 57% done, about 2984 minutes 28 seconds left[0m
+[95m ......... 60% done, about 2688 minutes 2 seconds left[0m
+[95m ......... 31% done, about 2844 minutes 24 seconds left[0m
+[95m ......... 34% done, about 2538 minutes 48 seconds left[0m
+[95m ......... 60% done, about 2788 minutes 25 seconds left[0m
+[95m ......... 62% done, about 2452 minutes 43 seconds left[0m
+[95m ......... 34% done, about 2585 minutes 53 seconds left[0m
+[95m ......... 37% done, about 2366 minutes 2 seconds left[0m
+[95m ......... 64% done, about 2297 minutes 24 seconds left[0m
+[95m ......... 62% done, about 2532 minutes 17 seconds left[0m
+[95m ......... 40% done, about 2201 minutes 16 seconds left[0m
+[95m ......... 37% done, about 2532 minutes 34 seconds left[0m
+[95m ......... 43% done, about 2057 minutes 56 seconds left[0m
+[95m ......... 40% done, about 2198 minutes 54 seconds left[0m
+[95m ......... 66% done, about 2139 minutes 58 seconds left[0m
+[95m ......... 64% done, about 2342 minutes 48 seconds left[0m
+[95m ......... 46% done, about 1908 minutes 35 seconds left[0m
+[95m ......... 43% done, about 2054 minutes 46 seconds left[0m
+[95m ......... 68% done, about 1937 minutes 43 seconds left[0m
+[95m ......... 66% done, about 2185 minutes 6 seconds left[0m
+[95m ......... 49% done, about 1747 minutes 42 seconds left[0m
+[95m ......... 46% done, about 1933 minutes 51 seconds left[0m
+[95m ......... 71% done, about 1809 minutes 12 seconds left[0m
+[95m ......... 68% done, about 2026 minutes 19 seconds left[0m
+[95m ......... 52% done, about 1611 minutes 55 seconds left[0m
+[95m ......... 49% done, about 1822 minutes 4 seconds left[0m
+[95m ......... 73% done, about 1636 minutes 19 seconds left[0m
+[95m ......... 55% done, about 1481 minutes 20 seconds left[0m
+[95m ......... 71% done, about 1906 minutes 19 seconds left[0m
+[95m ......... 52% done, about 1667 minutes 1 seconds left[0m
+[95m ......... 59% done, about 1361 minutes 27 seconds left[0m
+[95m ......... 75% done, about 1472 minutes 48 seconds left[0m
+[95m ......... 55% done, about 1536 minutes 38 seconds left[0m
+[95m ......... 73% done, about 1712 minutes 39 seconds left[0m
+[95m ......... 62% done, about 1215 minutes 43 seconds left[0m
+[95m ......... 59% done, about 1368 minutes 14 seconds left[0m
+[95m ......... 77% done, about 1329 minutes 27 seconds left[0m
+[95m ......... 65% done, about 1094 minutes 13 seconds left[0m
+[95m ......... 75% done, about 1568 minutes 18 seconds left[0m
+[95m ......... 62% done, about 1238 minutes 35 seconds left[0m
+[95m ......... 80% done, about 1199 minutes 12 seconds left[0m
+[95m ......... 68% done, about 967 minutes 20 seconds left[0m
+[95m ......... 65% done, about 1097 minutes 6 seconds left[0m
+[95m ......... 77% done, about 1381 minutes 29 seconds left[0m
+[95m ......... 71% done, about 866 minutes 41 seconds left[0m
+[95m ......... 82% done, about 1032 minutes 26 seconds left[0m
+[95m ......... 68% done, about 976 minutes 20 seconds left[0m
+[95m ......... 80% done, about 1200 minutes 42 seconds left[0m
+[95m ......... 74% done, about 752 minutes 45 seconds left[0m
+[95m ......... 71% done, about 865 minutes 58 seconds left[0m
+[95m ......... 84% done, about 898 minutes 6 seconds left[0m
+[95m ......... 77% done, about 647 minutes 54 seconds left[0m
+[95m ......... 82% done, about 1059 minutes 30 seconds left[0m
+[95m ......... 74% done, about 755 minutes 21 seconds left[0m
+[95m ......... 80% done, about 535 minutes 43 seconds left[0m
+[95m ......... 86% done, about 752 minutes 19 seconds left[0m
+[95m ......... 77% done, about 666 minutes 45 seconds left[0m
+[95m ......... 84% done, about 905 minutes 47 seconds left[0m
+[95m ......... 83% done, about 440 minutes 16 seconds left[0m
+[95m ......... 88% done, about 621 minutes 48 seconds left[0m
+[95m ......... 80% done, about 574 minutes 45 seconds left[0m
+[95m ......... 87% done, about 351 minutes 9 seconds left[0m
+[95m ......... 86% done, about 777 minutes 18 seconds left[0m
+[95m ......... 83% done, about 462 minutes 6 seconds left[0m
+[95m ......... 90% done, about 259 minutes 32 seconds left[0m
+[95m ......... 91% done, about 486 minutes 43 seconds left[0m
+[95m ......... 87% done, about 369 minutes 45 seconds left[0m
+[95m ......... 93% done, about 169 minutes 39 seconds left[0m
+[95m ......... 88% done, about 628 minutes 55 seconds left[0m
+[95m ......... 93% done, about 360 minutes 57 seconds left[0m
+[95m ......... 96% done, about 88 minutes 27 seconds left[0m
+[95m ......... 90% done, about 264 minutes 55 seconds left[0m
+[95m ......... 91% done, about 503 minutes 17 seconds left[0m
+[95m ......... 99% done, about 12 minutes 16 seconds left[0m
+[95m ......... 93% done, about 174 minutes 39 seconds left[0m
+[95m ......... 95% done, about 232 minutes 8 seconds left[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[92m_/ Matching was completed in 17589 seconds on each of 24 cores.[0m
+[92mSummary:[0m
+[92mLength	In pool	Foward	Reverse[0m
+[92m16	2	0	0[0m
+[92m17	65	0	0[0m
+[92m18	91	0	0[0m
+[92m19	3444	0	0[0m
+[92m20	1191	0	0[0m
+[92m21	1268	0	0[0m
+[92m22	411278	0	0[0m
+[92m23	632607	0	0[0m
+[92m24	948817	0	0[0m
+[92m25	705495	0	0[0m
+[92m26	923628	0	0[0m
+[92m27	1560188	1	0[0m
+[92m28	2387161	0	0[0m
+[92m29	12561522	0	0[0m
+[92m30	8545534	0	0[0m
+[92m31	8206087	0	0[0m
+[92m32	35638226	0	0[0m
+[92m33	1111659	0	0[0m
+[92m34	193343	0	0[0m
+[92m35	157220	0	0[0m
+[92m36	146921	0	0[0m
+[92m37	161252	0	0[0m
+[92m38	182671	0	0[0m
+[92m39	174430	0	0[0m
+[92m40	200052	0	0[0m
+[92m41	154490	0	0[0m
+[92m42	157613	0	0[0m
+[92m43	125272	0	0[0m
+[92m44	161055	0	0[0m
+[92m45	80989	0	0[0m
+[92m46	85546	0	0[0m
+[92m47	112335	0	0[0m
+[92m48	183109	0	0[0m
+[92m49	330706	0	0[0m
+[92m50	948380	0	0[0m
+[92m--------------[0m
+[92mTotal:	77193647	1	0[0m
+[93mSummary written to forward_matchings_IIIweekCtrl_S4_R1_001-TR.f_PSTVd_RG_tol1.txt and reverse_matchings_IIIweekCtrl_S4_R1_001-TR.f_PSTVd_RG_tol1.txt.[0m
+[95m ......... 96% done, about 92 minutes 22 seconds left[0m
+[95m ......... 93% done, about 367 minutes 41 seconds left[0m
+[95m ......... 97% done, about 113 minutes 57 seconds left[0m
+[95m ......... 99% done, about 12 minutes 44 seconds left[0m
+[95m ......... 95% done, about 241 minutes 29 seconds left[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[92m_/ Matching was completed in 17994 seconds on each of 24 cores.[0m
+[92mSummary:[0m
+[92mLength	In pool	Foward	Reverse[0m
+[92m16	2	0	0[0m
+[92m17	65	0	0[0m
+[92m18	91	0	0[0m
+[92m19	3444	0	0[0m
+[92m20	1191	0	0[0m
+[92m21	1268	0	0[0m
+[92m22	411278	0	0[0m
+[92m23	632607	0	0[0m
+[92m24	948817	0	0[0m
+[92m25	705495	0	0[0m
+[92m26	923628	0	0[0m
+[92m27	1560188	0	0[0m
+[92m28	2387161	0	0[0m
+[92m29	12561522	0	0[0m
+[92m30	8545534	0	0[0m
+[92m31	8206087	0	0[0m
+[92m32	35638226	0	0[0m
+[92m33	1111659	0	0[0m
+[92m34	193343	0	0[0m
+[92m35	157220	0	0[0m
+[92m36	146921	0	0[0m
+[92m37	161252	0	0[0m
+[92m38	182671	0	0[0m
+[92m39	174430	0	0[0m
+[92m40	200052	0	0[0m
+[92m41	154490	0	0[0m
+[92m42	157613	0	0[0m
+[92m43	125272	0	0[0m
+[92m44	161055	0	0[0m
+[92m45	80989	0	0[0m
+[92m46	85546	0	0[0m
+[92m47	112335	0	0[0m
+[92m48	183109	0	0[0m
+[92m49	330706	0	0[0m
+[92m50	948380	0	0[0m
+[92m--------------[0m
+[92mTotal:	77193647	0	0[0m
+[93mSummary written to forward_matchings_IIIweekCtrl_S4_R1_001-TR.f_PSTVd_RG_tol0.txt and reverse_matchings_IIIweekCtrl_S4_R1_001-TR.f_PSTVd_RG_tol0.txt.[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[94mReverse matchings:
+[95m ......... 97% done, about 119 minutes 47 seconds left[0m
+[95m ......... 2% done, about 8328 minutes 51 seconds left[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[94mReverse matchings:
+[95m ......... 4% done, about 8292 minutes 23 seconds left[0m
+[95m ......... 2% done, about 8693 minutes 7 seconds left[0m
+[95m ......... 6% done, about 8153 minutes 25 seconds left[0m
+[95m ......... 4% done, about 8630 minutes 31 seconds left[0m
+[95m ......... 8% done, about 8091 minutes 20 seconds left[0m
+[95m ......... 6% done, about 8452 minutes 53 seconds left[0m
+[95m ......... 11% done, about 7895 minutes 18 seconds left[0m
+[95m ......... 8% done, about 8275 minutes 15 seconds left[0m
+[95m ......... 13% done, about 7652 minutes 4 seconds left[0m
+[95m ......... 11% done, about 7973 minutes 27 seconds left[0m
+[95m ......... 15% done, about 7315 minutes 45 seconds left[0m
+[95m ......... 13% done, about 7733 minutes 13 seconds left[0m
+[95m ......... 17% done, about 6931 minutes 30 seconds left[0m
+[95m ......... 15% done, about 7419 minutes 37 seconds left[0m
+[95m ......... 20% done, about 6718 minutes 2 seconds left[0m
+[95m ......... 17% done, about 7175 minutes 2 seconds left[0m
+[95m ......... 22% done, about 6380 minutes 13 seconds left[0m
+[95m ......... 20% done, about 6906 minutes 56 seconds left[0m
+[95m ......... 24% done, about 6208 minutes 24 seconds left[0m
+[95m ......... 22% done, about 6588 minutes 3 seconds left[0m
+[95m ......... 26% done, about 5914 minutes 29 seconds left[0m
+[95m ......... 24% done, about 6410 minutes 11 seconds left[0m
+[95m ......... 28% done, about 5699 minutes 27 seconds left[0m
+[95m ......... 26% done, about 6148 minutes 3 seconds left[0m
+[95m ......... 31% done, about 5525 minutes 46 seconds left[0m
+[95m ......... 28% done, about 5907 minutes 39 seconds left[0m
+[95m ......... 33% done, about 5292 minutes 55 seconds left[0m
+[95m ......... 31% done, about 5606 minutes 47 seconds left[0m
+[95m ......... 35% done, about 4968 minutes 55 seconds left[0m
+[95m ......... 33% done, about 5433 minutes 6 seconds left[0m
+[95m ......... 37% done, about 4826 minutes 20 seconds left[0m
+[95m ......... 35% done, about 5196 minutes 5 seconds left[0m
+[95m ......... 40% done, about 4534 minutes 21 seconds left[0m
+[95m ......... 37% done, about 4967 minutes 5 seconds left[0m
+[95m ......... 42% done, about 4330 minutes 37 seconds left[0m
+[95m ......... 40% done, about 4662 minutes 28 seconds left[0m
+[95m ......... 44% done, about 4141 minutes 56 seconds left[0m
+[95m ......... 42% done, about 4470 minutes 29 seconds left[0m
+[95m ......... 46% done, about 3929 minutes 14 seconds left[0m
+[95m ......... 48% done, about 3663 minutes 30 seconds left[0m
+[95m ......... 44% done, about 4273 minutes 52 seconds left[0m
+[95m ......... 51% done, about 3500 minutes 58 seconds left[0m
+[95m ......... 46% done, about 3953 minutes 7 seconds left[0m
+[95m ......... 53% done, about 3300 minutes 24 seconds left[0m
+[95m ......... 48% done, about 3812 minutes 49 seconds left[0m
+[95m ......... 55% done, about 3116 minutes 53 seconds left[0m
+[95m ......... 51% done, about 3612 minutes 44 seconds left[0m
+[95m ......... 57% done, about 2952 minutes 48 seconds left[0m
+[95m ......... 53% done, about 3375 minutes 2 seconds left[0m
+[95m ......... 60% done, about 2715 minutes 30 seconds left[0m
+[95m ......... 55% done, about 3188 minutes 5 seconds left[0m
+[95m ......... 62% done, about 2550 minutes 9 seconds left[0m
+[95m ......... 57% done, about 3013 minutes 22 seconds left[0m
+[95m ......... 64% done, about 2372 minutes 16 seconds left[0m
+[95m ......... 60% done, about 2849 minutes 42 seconds left[0m
+[95m ......... 66% done, about 2213 minutes 37 seconds left[0m
+[95m ......... 62% done, about 2634 minutes 11 seconds left[0m
+[95m ......... 68% done, about 2013 minutes 35 seconds left[0m
+[95m ......... 64% done, about 2472 minutes 6 seconds left[0m
+[95m ......... 71% done, about 1820 minutes 34 seconds left[0m
+[95m ......... 66% done, about 2274 minutes 47 seconds left[0m
+[95m ......... 73% done, about 1681 minutes 16 seconds left[0m
+[95m ......... 68% done, about 2102 minutes 11 seconds left[0m
+[95m ......... 75% done, about 1520 minutes 14 seconds left[0m
+[95m ......... 71% done, about 1888 minutes 43 seconds left[0m
+[95m ......... 77% done, about 1360 minutes 22 seconds left[0m
+[95m ......... 73% done, about 1694 minutes 47 seconds left[0m
+[95m ......... 80% done, about 1203 minutes 22 seconds left[0m
+[95m ......... 75% done, about 1557 minutes 16 seconds left[0m
+[95m ......... 82% done, about 1065 minutes 56 seconds left[0m
+[95m ......... 77% done, about 1384 minutes 46 seconds left[0m
+[95m ......... 84% done, about 905 minutes 29 seconds left[0m
+[95m ......... 86% done, about 765 minutes 12 seconds left[0m
+[95m ......... 80% done, about 1230 minutes 30 seconds left[0m
+[95m ......... 88% done, about 632 minutes 49 seconds left[0m
+[95m ......... 82% done, about 1054 minutes 1 seconds left[0m
+[95m ......... 91% done, about 496 minutes 18 seconds left[0m
+[95m ......... 84% done, about 942 minutes 11 seconds left[0m
+[95m ......... 93% done, about 365 minutes 59 seconds left[0m
+[95m ......... 86% done, about 806 minutes 6 seconds left[0m
+[95m ......... 95% done, about 243 minutes 49 seconds left[0m
+[95m ......... 88% done, about 648 minutes 29 seconds left[0m
+[95m ......... 97% done, about 117 minutes 45 seconds left[0m
+[95m ......... 91% done, about 517 minutes 15 seconds left[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[92m_/ Matching was completed in 35590 seconds on each of 24 cores.[0m
+[92mSummary:[0m
+[92mLength	In pool	Foward	Reverse[0m
+[92m16	4	0	0[0m
+[92m17	91	0	0[0m
+[92m18	144	0	0[0m
+[92m19	4840	0	0[0m
+[92m20	1637	0	0[0m
+[92m21	1751	0	0[0m
+[92m22	870312	0	0[0m
+[92m23	1197266	0	0[0m
+[92m24	2641266	0	0[0m
+[92m25	1189485	0	0[0m
+[92m26	1580487	0	0[0m
+[92m27	2808678	0	0[0m
+[92m28	3988863	0	0[0m
+[92m29	19995532	0	0[0m
+[92m30	14230664	0	0[0m
+[92m31	10973445	0	0[0m
+[92m32	42762703	0	0[0m
+[92m33	1449613	0	0[0m
+[92m34	274712	0	0[0m
+[92m35	220893	0	0[0m
+[92m36	217573	0	0[0m
+[92m37	218927	0	0[0m
+[92m38	244148	0	0[0m
+[92m39	246861	0	0[0m
+[92m40	350061	0	0[0m
+[92m41	242925	0	0[0m
+[92m42	273098	0	0[0m
+[92m43	167673	0	0[0m
+[92m44	185401	0	0[0m
+[92m45	93687	0	0[0m
+[92m46	93359	0	0[0m
+[92m47	116859	0	0[0m
+[92m48	182271	0	0[0m
+[92m49	313509	0	0[0m
+[92m50	878439	0	0[0m
+[92m--------------[0m
+[92mTotal:	108017177	0	0[0m
+[93mSummary written to forward_matchings_IIweekCtrl_S1_R1_001-TR.f_PSTVd_RG_tol1.txt and reverse_matchings_IIweekCtrl_S1_R1_001-TR.f_PSTVd_RG_tol1.txt.[0m
+[95m ......... 93% done, about 382 minutes 49 seconds left[0m
+[95m ......... 95% done, about 248 minutes 8 seconds left[0m
+[95m ......... 97% done, about 121 minutes 42 seconds left[0m
+[95m ......... 100% done, about 0 minutes 0 seconds left[0m
+[92m_/ Matching was completed in 36657 seconds on each of 24 cores.[0m
+[92mSummary:[0m
+[92mLength	In pool	Foward	Reverse[0m
+[92m16	4	0	0[0m
+[92m17	91	0	0[0m
+[92m18	144	0	0[0m
+[92m19	4840	0	0[0m
+[92m20	1637	0	0[0m
+[92m21	1751	0	0[0m
+[92m22	870312	0	0[0m
+[92m23	1197266	0	0[0m
+[92m24	2641266	0	0[0m
+[92m25	1189485	0	0[0m
+[92m26	1580487	0	0[0m
+[92m27	2808678	0	0[0m
+[92m28	3988863	0	0[0m
+[92m29	19995532	0	0[0m
+[92m30	14230664	0	0[0m
+[92m31	10973445	0	0[0m
+[92m32	42762703	0	0[0m
+[92m33	1449613	0	0[0m
+[92m34	274712	0	0[0m
+[92m35	220893	0	0[0m
+[92m36	217573	0	0[0m
+[92m37	218927	0	0[0m
+[92m38	244148	0	0[0m
+[92m39	246861	0	0[0m
+[92m40	350061	0	0[0m
+[92m41	242925	0	0[0m
+[92m42	273098	0	0[0m
+[92m43	167673	0	0[0m
+[92m44	185401	0	0[0m
+[92m45	93687	0	0[0m
+[92m46	93359	0	0[0m
+[92m47	116859	0	0[0m
+[92m48	182271	0	0[0m
+[92m49	313509	0	0[0m
+[92m50	878439	0	0[0m
+[92m--------------[0m
+[92mTotal:	108017177	0	0[0m
+[93mSummary written to forward_matchings_IIweekCtrl_S1_R1_001-TR.f_PSTVd_RG_tol0.txt and reverse_matchings_IIweekCtrl_S1_R1_001-TR.f_PSTVd_RG_tol0.txt.[0m

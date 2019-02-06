@@ -30,7 +30,7 @@ class Binder():
 	MAXCONCURRENT = 100,000
 	totalNucleotides = number of nucleotides (of all lengths) in the sRNA pool. The sRNA pool is the one that is currently being matched for. This will be limited to a maximum of MAXCONCURRENT. To handle a pool of a larger size, we must repeat the matching separately for smaller pools and gather the matching data.
 	tolerance = maximum number of mismatches authorized to validate a matching.
-	
+
 	floating types
 	runtime = total running time of the pattern matching algorithm
 
@@ -53,10 +53,10 @@ class Binder():
 		self.pstvdFname = "NAN"
 		self.matchFrequencyFname = "NAN"
 		self.dateStamp = ""
-		
+
 		self.rawForwMatchFname = ""
 		self.rawRevMatchFname = ""
-		
+
 		self.forwardMatchFname = ""
 		self.reverseMatchFname = ""
 
@@ -138,28 +138,23 @@ def ComputeDerivedParameters(bindObj):
 	# Based on the computed parameters, intialize the respective arrays
 	# 1. maximum length of the pstvd sequence
 	# 2. total number of nucleotides in the pool.
-	
+
 	# Read the pstvd sequence and compute its length
 	with open(("./../data/input/%s" % bindObj.pstvdFname), 'r') as pstvdFid:
 		bindObj.pstvdSeq = pstvdFid.readline().strip("\n")
-	
+
 	bindObj.pstvdLen = len(bindObj.pstvdSeq)
 
 	# Compute the total number of nucleotides and the maximum length of a nucleotide sequence
 	nNucs = 0
 	maxSeqLen = 0
 	bindObj.nSequencesByLengths = np.zeros(bindObj.pstvdLen, dtype = int)
-	bindObj.ordering = (-1) * np.ones(bindObj.pstvdLen, dtype = int)
-	nzlen = 0
 	with open(("./../data/input/%s" % bindObj.sRNAPoolFname), 'r') as sRNAFid:
 		for (lNo, line) in enumerate(sRNAFid):
 			if ((lNo % 4) == 1):
 				nNucs = nNucs + 1
 				seqLen = len(line.strip("\n").strip(" "))
 				bindObj.nSequencesByLengths[seqLen] = bindObj.nSequencesByLengths[seqLen] + 1
-				if (bindObj.ordering[seqLen] == -1):
-					bindObj.ordering[seqLen] = nzlen
-					nzlen = nzlen + 1
 				if seqLen > maxSeqLen:
 					maxSeqLen = seqLen
 	bindObj.totalNucleotides = nNucs
@@ -167,25 +162,31 @@ def ComputeDerivedParameters(bindObj):
 
 	# Construct the relevant arrays
 	bindObj.pstvdMatrix = np.zeros((4 * bindObj.maxNucleotideLength, bindObj.pstvdLen), dtype = int)
-	
 	for i in range(bindObj.pstvdLen):
 		bindObj.pstvdMatrix[:, i] = NucleotideEncoder(StringSlice(bindObj.pstvdSeq, i, bindObj.maxNucleotideLength), bindObj.maxNucleotideLength, 0)
-	
-	bindObj.rawForwMatchFname = ("raw_forward_matchings_%s_%s_tol%d.txt" % (bindObj.sRNAPoolFname[:-4], bindObj.pstvdFname[:-4], bindObj.tolerance))
+
+	bindObj.rawForwMatchFname = ("./../data/output/raw_forward_matchings_%s_%s_tol%d.txt" % (bindObj.sRNAPoolFname[:-4], bindObj.pstvdFname[:-4], bindObj.tolerance))
 	with open(bindObj.rawForwMatchFname, 'w') as rawFid:
 		rawFid.write("%d %d\n" % (bindObj.totalNucleotides, bindObj.pstvdLen))
 
-	bindObj.rawRevMatchFname = ("raw_reverse_matchings_%s_%s_tol%d.txt" % (bindObj.sRNAPoolFname[:-4], bindObj.pstvdFname[:-4], bindObj.tolerance))
+	bindObj.rawRevMatchFname = ("./../data/output/raw_reverse_matchings_%s_%s_tol%d.txt" % (bindObj.sRNAPoolFname[:-4], bindObj.pstvdFname[:-4], bindObj.tolerance))
 	with open(bindObj.rawForwMatchFname, 'w') as rawFid:
 		rawFid.write("%d %d\n" % (bindObj.totalNucleotides, bindObj.pstvdLen))
 
-	bindObj.forwardMatchFname = ("forward_matchings_%s_%s_tol%d.txt" % (bindObj.sRNAPoolFname[:-4], bindObj.pstvdFname[:-4], bindObj.tolerance))
+	bindObj.forwardMatchFname = ("./../data/output/forward_matchings_%s_%s_tol%d.txt" % (bindObj.sRNAPoolFname[:-4], bindObj.pstvdFname[:-4], bindObj.tolerance))
 	bindObj.forwardMatches = np.zeros((np.count_nonzero(bindObj.nSequencesByLengths), bindObj.pstvdLen + 1), dtype = int)
-	bindObj.reverseMatchFname = ("reverse_matchings_%s_%s_tol%d.txt" % (bindObj.sRNAPoolFname[:-4], bindObj.pstvdFname[:-4], bindObj.tolerance))
+	bindObj.reverseMatchFname = ("./../data/output/reverse_matchings_%s_%s_tol%d.txt" % (bindObj.sRNAPoolFname[:-4], bindObj.pstvdFname[:-4], bindObj.tolerance))
 	bindObj.reverseMatches = np.zeros((np.count_nonzero(bindObj.nSequencesByLengths), bindObj.pstvdLen + 1), dtype = int)
 
-	bindObj.forwardMatches[:,0] = np.nonzero(bindObj.nSequencesByLengths)[0]
-	bindObj.reverseMatches[:,0] = np.nonzero(bindObj.nSequencesByLengths)[0]
+	# Ordering on the non-zero nucleotide lengths
+	bindObj.ordering = (-1) * np.ones(bindObj.pstvdLen, dtype = int)
+	nzlen = 0
+	for i in range(bindObj.pstvdLen):
+		if (bindObj.nSequencesByLengths[i] > 0):
+			bindObj.ordering[i] = nzlen
+			bindObj.forwardMatches[nzlen, 0] = i
+			bindObj.reverseMatches[nzlen, 1] = i
+			nzlen = nzlen + 1
 
 	bindObj.forwardMatchCounts = np.zeros(bindObj.pstvdLen, dtype = int)
 	bindObj.reverseMatchCounts = np.zeros(bindObj.pstvdLen, dtype = int)
@@ -271,7 +272,7 @@ def PartialBinding(bindObj, nSkip, startSeq, numSeqs, reverse, matches, counts):
 	reducedToTolerance = np.greater_equal(matchings, seqLenOffsets)
 	(localNucIndices, pstvdIndices) = np.nonzero(reducedToTolerance)
 	for i in range(localNucIndices.shape[0]):
-		matches[bindObj.ordering[sRNASeqLengths[localNucIndices[i]]] * i + pstvdIndices[i]] += 1
+		matches[bindObj.ordering[sRNASeqLengths[localNucIndices[i]]] * bindObj.pstvdLen + pstvdIndices[i]] += 1
 		counts[sRNASeqLengths[localNucIndices[i]]] += 1
 	return None
 
@@ -314,7 +315,7 @@ def WriteMatrixToFile(fname, mat, appendMode, sparse = 0, binary = 0):
 	if appendMode == 0:
 		if os.path.isfile(fname):
 			os.remove(fname)
-	with open(fname, 'a') as matFid:	
+	with open(fname, 'a') as matFid:
 		if appendMode == 0:
 			matFid.write("%d %d\n" % (nRows, nCols))
 		for ri in range(nRows):
@@ -371,7 +372,7 @@ if __name__ == '__main__':
 		while (completed < nBreaks):
 			start = time.time()
 			launchNow = min(nBreaks - completed, nCores)
-			
+
 			# Reset the counts and the matches arrays
 			for i in range(rnas.forwardMatchCounts.size):
 				counts[i] = 0
@@ -380,7 +381,6 @@ if __name__ == '__main__':
 
 			processes = []
 			if ((QUIET == 0)):
-				print("\033[93mGoing to launch %d cores at a time.\033[0m" % launchNow)
 				if (launchNow == 0):
 					sys.stderr.write("nCores = 0\n")
 
@@ -395,7 +395,7 @@ if __name__ == '__main__':
 
 			for pi in range(launchNow):
 				processes[pi].join()
-			
+
 			# Gathering results
 			if (di == 0):
 				# for i in range(rnas.forwardMatches.shape[0]):
@@ -429,7 +429,7 @@ if __name__ == '__main__':
 
 		if (QUIET > 0):
 			print("")
-	
+
 	endTime = time.time()
 	rnas.runtime = (endTime - startTime)
 	rnas.dateStamp = time.strftime("%d/%m/%Y %H:%M:%S")
@@ -446,7 +446,7 @@ if __name__ == '__main__':
 			print("\033[92m%d\t%d\t%d\t%d\033[0m" % (li, rnas.nSequencesByLengths[li], rnas.forwardMatchCounts[li], rnas.reverseMatchCounts[li]))
 	print("\033[92m--------------\033[0m")
 	print("\033[92mTotal:\t%d\t%d\t%d\033[0m" % (rnas.totalNucleotides, np.sum(rnas.forwardMatchCounts), np.sum(rnas.reverseMatchCounts)))
-	
+
 	# Save the matching information to a file
 	RecordBinding(rnas)
 	LogBinding(rnas)

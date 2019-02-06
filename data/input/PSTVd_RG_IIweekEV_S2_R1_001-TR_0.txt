@@ -1,3 +1,0 @@
-IIweekEV_S2_R1_001-TR.fastq
-PSTVd_RG.txt
-0

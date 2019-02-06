@@ -20,7 +20,7 @@ class Submission():
 		# Display all the parameters and their current values
 		print("\033[92m******************************************\033[0m")
 		print("\033[93mjob --> \033[92m%s\033[0m" % (self.job))
-		
+
 		print("\033[93mBinding pairs --> \033[92m%d\033[0m" % (len(self.bindingPairs)))
 		print("\033[92mgene\tpool\ttolerance\033[0m")
 		for pi in range(len(self.bindingPairs)):
@@ -93,6 +93,7 @@ def WriteToSlurm(submit):
 	#SBATCH --time=submit.wall:00:00
 	#SBATCH --mem=submit.mem
 	#SBATCH --job-name=submit.job
+	cd vbind/src/
 	python Binder.py pairs_submit.datestamp 2>&1 | tee -a log_<job-name>.txt
 	where pairs_submit.datestamp.txt is formatted as a text file with columns: <gene.txt> <pool.txt> <tol> <cores>.
 	'''
@@ -110,6 +111,7 @@ def WriteToSlurm(submit):
 		lf.write("#SBATCH --mem=%d\n" % (submit.mem))
 		lf.write("#SBATCH --nodes=1\n")
 		lf.write("#SBATCH --time=%d:00:00\n" % (submit.wall))
+		lf.write("cd vbind/src\n")
 		lf.write("python Binder.py ./../data/input/pairs_%s.txt $SLURM_ARRAY_TASK_ID 2>&1 | tee -a log_%s.txt" % (submit.datestamp, submit.datestamp))
 	return None
 

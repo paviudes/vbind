@@ -1,2 +1,0 @@
-PSTVd_RG.txt IIIweekEV_S5_R1_001-TR.fastq 0 10
-PSTVd_RG.txt IIIweekEV_S5_R1_001-TR.fastq 1 10

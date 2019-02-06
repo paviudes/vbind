@@ -115,7 +115,6 @@ class Plot():
 		self.xlabel = "Neucleotide index"
 		self.ylabeltop = "Forward matching reads"
 		self.ylabelbottom = "Forward matching reads"
-	
 
 	def View(self):
 		# View the settings of plot.

@@ -49,14 +49,14 @@ class Canvas():
 	reverseMatchData = data for the reverse mapping
 	"""
 
-	def __init__(self, interfaceFile):
+	def __init__(self, gene, pool, tol):
 		with open(interfaceFile, 'r') as uiFid:
 			# 1. file name of nucleotides in the pool
 			# 2. file name of pstvd sequence
 			# 3. tolerance
-			self.sRNAPoolFname = uiFid.readline().strip("\n")
-			self.pstvdFname = uiFid.readline().strip("\n")
-			self.tolerance = int(uiFid.readline().strip("\n"))
+			self.sRNAPoolFname = ("./../data/input/%s" % pool)
+			self.pstvdFname = ("./../data/input/%s" % gene)
+			self.tolerance = int(tol)
 
 		self.name = ("PSTVd sequence: %s and sRNA Pool used: %s." % (self.pstvdFname, self.sRNAPoolFname))
 		self.forwMatchPlotFile = ("./../plots/forward_matchings_%s_%s_tol%d.pdf" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
@@ -72,7 +72,7 @@ class Canvas():
 		self.scaledForwPlotFile = ("./../data/output/norm_forward_matchings_%s_%s_tol%d.pdf" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
 		self.scaledRevPlotFile = ("./../data/output/norm_reverse_matchings_%s_%s_tol%d.pdf" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
 
-		
+
 		self.title = ("Mapping nucleotides in %s with PSTVd sequence in %s, allowing at most %d mismatches" % (self.sRNAPoolFname, self.pstvdFname, self.tolerance))
 		self.xLabel = ("Index on PSTVd sequence")
 		self.yLabel = ("Number of bound nucleotides")
@@ -86,13 +86,13 @@ class Canvas():
 		self.scaling = 1
 		self.isSeparate = 1
 		self.isReverse = 0
-		
+
 		if os.path.isfile(self.forwMatchDataFile):
 			self.forwardMatchData = ReadMatrixFromFile(self.forwMatchDataFile)
 			self.pstvdLength = self.forwardMatchData.shape[1] - 1
 		else:
 			print("\033[95m!! Forward matching data file %s does not exist.\033[0m" % self.forwMatchDataFile)
-		
+
 		if os.path.isfile(self.scaledForwDataFile):
 			self.nForw = ReadMatrixFromFile(self.scaledForwDataFile, dataType = 'f')
 		else:
@@ -146,15 +146,15 @@ def ReadMatrixFromFile(fname, dataType = 'i', atol = 10E-7):
 def WriteMatrixToFile(fname, mat, appendMode, sparse = 0, binary = 0, dataType = 'i'):
 	# Write a matrix to file
 	(nRows, nCols) = mat.shape
-	
+
 	if appendMode == 0:
 		if os.path.isfile(fname):
 			os.remove(fname)
 
-	with open(fname, 'a') as matFid:	
+	with open(fname, 'a') as matFid:
 		if appendMode == 0:
 			matFid.write("%d %d\n" % (nRows, nCols))
-		
+
 		for ri in range(nRows):
 			for ci in range(nCols):
 				if ((sparse == 1) and (binary == 1)):
@@ -177,7 +177,7 @@ def WriteMatrixToFile(fname, mat, appendMode, sparse = 0, binary = 0, dataType =
 			matFid.write("\n")
 
 	return None
-		
+
 
 def Load(plobj):
 	# Load the data required for plotting from a file
@@ -195,7 +195,7 @@ def Save(plobj):
 def PromptAdvancedParameters(plobj):
 	# Prompt the user for selecting advanced parameters in the plot. There are parameters that typically need not be modified.
 	availableFormats = ["pdf", "jpg", "jpeg", "png"]
-	
+
 	print("\033[2m###############\033[0m")
 	print("\033[93m0. Don't modify anything\033[0m")
 	print("\033[93m1. Separate forward and reverse plots: \033[92m%d.\033[0m" % plobj.isSeparate)
@@ -222,7 +222,7 @@ def PromptAdvancedParameters(plobj):
 
 		if (option == 0):
 			completed = 1
-		
+
 		elif (option == 1):
 			plobj.isSeparate = int(newValue.strip(" "))
 		elif (option == 2):
@@ -299,7 +299,7 @@ def PromptPlotParameters(plobj):
 				sys.stderr.write("\033[2mThe scale will only contain %d points.\033[0m" % (nPts))
 		elif (option == 6):
 			newScale = map(lambda yi: float(yi.strip(" ")), newValue.split(","))
-			
+
 			# If the y scale is negative, we will interprett it as the scale for reverse mapping and if positive, we will interpret it as the scale for forward matching.
 			# If it has both negative and positive numbers, we will interpret it as an axes scale for the combined matching
 			for di in range(1):
@@ -654,27 +654,9 @@ if __name__ == '__main__':
 		if (userChoice == 0):
 			completed = 1
 		elif (userChoice == 1):
-			# This is a patch for now. Should be removed later.
-			# files = ["clc_control1.txt", "clc_sRNAI.txt", "clc_sRNARG.txt", "40S13_control1.txt", "40S13_sRNAI.txt", "40S13_sRNARG.txt", "5S_control1.txt", "5S_sRNAI.txt", "5S_sRNARG.txt", "sl7_I.txt", "ubi3_I.txt", "sl7_RG.txt", "ubi3_RG.txt", "ubi3_control1.txt", "sl7_control1.txt", "starch_RG.txt", "starch_I.txt", "starch_Control1.txt", "PPR_I.txt", "PPR_Control1.txt", "PPR_RG.txt", "CBL_Control1.txt","CBL_I.txt", "CBL_RG.txt", "myb_control1.txt", "myb_I.txt", "myb_RG.txt"]
-			files = ["./../data/input/PSTVd_RG_IIIweekEV_S5_R1_001-TR_1.txt"] #, "5S_control1.txt", "5S_sRNAI.txt", "5S_sRNARG.txt"]
-			# files = ["sRNA_M_clc_0.txt", "sRNA_M_40S_004241413_0.txt"]
-			for interfaceFile in files:
-				isNewName = 0
-				while (isNewName == 0):
-					print("\033[93mGive a name to recal the plot in future.\033[0m")
-					print(">>"),
-					# name = input().strip("\n").strip(" ")
-					name = interfaceFile
-					if name in canvanses:
-						isNewName = 0
-						print("\033[95mData under this name already exists. Given a new name.\033[0m")
-					else:
-						isNewName = 1
-
-				print("\033[93mEnter the file that contains the matching details.\033[0m")
-				print(">>"),
-				# interfaceFile = input().strip("\n").strip(" ")
-				newCan = Canvas(interfaceFile)
+			inputs = [("PSTVd_RG.txt", "IIIWeek.fastq", 0)]
+			for (gene, pool, tol) in inputs:
+				newCan = Canvas(gene, pool, tol)
 				Load(newCan)
 				canvanses.update({name:newCan})
 
