@@ -15,6 +15,7 @@ class Submission():
 		self.job = "JOB"
 		self.queue = "qwork"
 		self.wall = 0
+		self.email = "charith.adkar@gmail.com"
 
 	def Display(self):
 		# Display all the parameters and their current values
@@ -111,6 +112,8 @@ def WriteToSlurm(submit):
 		lf.write("#SBATCH --mem=%d\n" % (submit.mem))
 		lf.write("#SBATCH --nodes=1\n")
 		lf.write("#SBATCH --time=%d:00:00\n" % (submit.wall))
+		lf.write("#SBATCH --mail-type=ALL\n")
+		lf.write("#SBATCH --mail-user=%s\n" % (submit.email))
 		lf.write("cd vbind/src\n")
 		lf.write("python Binder.py ./../data/input/pairs_%s.txt $SLURM_ARRAY_TASK_ID 2>&1 | tee -a log_%s.txt" % (submit.datestamp, submit.datestamp))
 	return None
@@ -140,10 +143,10 @@ def WriteToBQSubmit(submit):
 	with open(submit.sourceFiles[2], 'w') as postFid:
 		postFid.write("cat %s_*.BQ/input.txt >> SimulationInputs_%s.txt\n" % (submit.job, dateStamp))
 		postFid.write("cat %s_*.BQ/details.txt >> SimulationResults_%s.txt\n" % (submit.job, dateStamp))
-		
+
 		postFid.write("mkdir %s\n" % resultsDir)
 		postFid.write("cp -r SimulationResults_%s.txt SimulationInputs_%s.txt bqsubmit.dat %s/\n" % (dateStamp, dateStamp, resultsDir))
-		
+
 		# Raw matching files
 		postFid.write("cp -r %s_*.BQ/raw_*.txt %s/\n" % (submit.job, resultsDir))
 		# Forward matching files
@@ -152,7 +155,7 @@ def WriteToBQSubmit(submit):
 		postFid.write("cp -r %s_*.BQ/reverse_*.txt %s/\n" % (submit.job, resultsDir))
 
 		postFid.write("tar -zcvf %s.tar.gz %s/\n" % (resultsDir, resultsDir))
-	
+
 	os.system("chmod +x %s" % submit.sourceFiles[2])
 
 	geneFiles = [submit.bindingPairs[pi][0] for pi in range(len(submit.bindingPairs))]

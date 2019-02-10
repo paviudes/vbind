@@ -67,6 +67,7 @@ class Binder():
 		self.totalNucleotides = 0
 		self.tolerance = 0
 		self.maxNucleotideLength = 0
+		self.isCircular = 0
 
 		self.pstvdMatrix = np.array([])
 		self.forwardMatches = np.array([])
@@ -163,7 +164,7 @@ def ComputeDerivedParameters(bindObj):
 	# Construct the relevant arrays
 	bindObj.pstvdMatrix = np.zeros((4 * bindObj.maxNucleotideLength, bindObj.pstvdLen), dtype = int)
 	for i in range(bindObj.pstvdLen):
-		bindObj.pstvdMatrix[:, i] = NucleotideEncoder(StringSlice(bindObj.pstvdSeq, i, bindObj.maxNucleotideLength), bindObj.maxNucleotideLength, 0)
+		bindObj.pstvdMatrix[:, i] = NucleotideEncoder(StringSlice(bindObj.pstvdSeq, i, bindObj.maxNucleotideLength, bindObj.isCircular), bindObj.maxNucleotideLength, 0)
 
 	bindObj.rawForwMatchFname = ("./../data/output/raw_forward_matchings_%s_%s_tol%d.txt" % (bindObj.sRNAPoolFname[:-4], bindObj.pstvdFname[:-4], bindObj.tolerance))
 	with open(bindObj.rawForwMatchFname, 'w') as rawFid:
@@ -193,10 +194,13 @@ def ComputeDerivedParameters(bindObj):
 	return None
 
 
-def StringSlice(seqStr, start, width):
+def StringSlice(seqStr, start, width, iscirc):
 	# Return the substring of a string that starts at a given index and has a given number of characters. The output can be a substring when the string is cyclic.
 	substring = []
 	for si in range(start, start + width):
+		if (iscirc == 0):
+			if (si == len(seqStr)):
+				break
 		substring.append(seqStr[(si % len(seqStr))])
 	return substring
 
