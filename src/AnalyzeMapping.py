@@ -50,13 +50,17 @@ class Canvas():
 	"""
 
 	def __init__(self, gene, pool, tol):
-		with open(interfaceFile, 'r') as uiFid:
-			# 1. file name of nucleotides in the pool
-			# 2. file name of pstvd sequence
-			# 3. tolerance
-			self.sRNAPoolFname = ("./../data/input/%s" % pool)
-			self.pstvdFname = ("./../data/input/%s" % gene)
-			self.tolerance = int(tol)
+		# with open(interfaceFile, 'r') as uiFid:
+		# 1. file name of nucleotides in the pool
+		# 2. file name of pstvd sequence
+		# 3. tolerance
+		# self.sRNAPoolFname = ("./../data/input/%s" % pool)
+		# self.pstvdFname = ("./../data/input/%s" % gene)
+		# self.tolerance = int(tol)
+
+		self.sRNAPoolFname = pool
+		self.pstvdFname = gene
+		self.tolerance = int(tol)
 
 		self.name = ("PSTVd sequence: %s and sRNA Pool used: %s." % (self.pstvdFname, self.sRNAPoolFname))
 		self.forwMatchPlotFile = ("./../plots/forward_matchings_%s_%s_tol%d.pdf" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
@@ -97,7 +101,7 @@ class Canvas():
 			self.nForw = ReadMatrixFromFile(self.scaledForwDataFile, dataType = 'f')
 		else:
 			self.nForw = np.zeros((self.forwardMatchData.shape[0], self.forwardMatchData.shape[1]), dtype = np.float)
-			self.nForw[:, 0] = self.forwardMatchData[:, 0]
+			self.nForw = self.forwardMatchData
 			# print("self.nForw\n%s" % np.array_str(self.nForw))
 
 		if os.path.isfile(self.revMatchDataFile):
@@ -109,10 +113,10 @@ class Canvas():
 			self.nRev = ReadMatrixFromFile(self.scaledRevDataFile, dataType = 'f')
 		else:
 			self.nRev = np.zeros((self.reverseMatchData.shape[0], self.reverseMatchData.shape[1]), dtype = np.float)
-			self.nRev[:, 0] = self.reverseMatchData[:, 0]
+			self.nRev = self.reverseMatchData
 			# print("self.nForw\n%s" % np.array_str(self.nForw))
 
-		self.lengths = np.array([[21, 22, 23, 24]], dtype = int)
+		self.lengths = np.array([[3]], dtype = int)
 		self.xscale = np.array([0, self.pstvdLength, self.pstvdLength/5], dtype = int)
 		self.yscale = np.array([[1, np.max(np.sum(self.forwardMatchData[:, 1:], axis = 0)), 10],
 								[np.min(np.sum(self.reverseMatchData[:, 1:], axis = 0)), 10, -1]], dtype = int)
@@ -183,6 +187,7 @@ def Load(plobj):
 	# Load the data required for plotting from a file
 	plobj.forwardMatchData = ReadMatrixFromFile(plobj.forwMatchDataFile)
 	plobj.reverseMatchData = ReadMatrixFromFile(plobj.revMatchDataFile)
+	print("Loading forward\n{}\nLoading reverse\n{}".format(plobj.forwardMatchData, plobj.reverseMatchData))
 	return None
 
 def Save(plobj):
@@ -327,10 +332,11 @@ def PromptPlotParameters(plobj):
 
 def Plot(plobj, isScaled = 0, quiet = 0):
 	# Produce plots with the selected data files and the plot parameters
-	xreps = 2
-	shift = 20
+	print("Forward\n{}\nReverse\n{}".format(plobj.nForw, plobj.nRev))
+	xreps = 1
+	shift = 0
 	plotfname = ("./../plots/%s_%s.pdf" % (plobj.pstvdFname[:plobj.pstvdFname.index(".")], plobj.sRNAPoolFname[:plobj.sRNAPoolFname.index(".")]))
-	xaxis = range(plobj.pstvdLength + shift)
+	xaxis = np.arange(plobj.pstvdLength + shift)
 	with PdfPages(plotfname) as pdf:
 		for l in range(plobj.lengths.shape[0]):
 			for d in range(2):
@@ -340,37 +346,58 @@ def Plot(plobj, isScaled = 0, quiet = 0):
 				else:
 					nuclens = np.where(np.in1d(plobj.nRev[:, 0], plobj.lengths[l]))[0]
 					yaxis = (-1) * np.tile(np.sum(plobj.nRev[nuclens, 1:], axis = 0), xreps)[:len(xaxis)]
-				# print "yaxis"
-				# print yaxis
+				
+				# If there is a matching at position i, for length l nucleotide, then we want to set: y[i + j] = max(y[i + j], y[i]).
+				print("yaxis\n{}\nlength\n{}".format(yaxis, plobj.lengths[0][l]))
+				scaled_yaxis = np.zeros_like(yaxis)
+				for i in range(yaxis.shape[0] - plobj.lengths[0][l]):
+					if (yaxis[i] > 0):
+						for j in range(plobj.lengths[0][l]):
+							scaled_yaxis[i + j] = max(yaxis[i], yaxis[i + j])
+				print("scaled yaxis\n{}\nlength\n{}".format(scaled_yaxis, plobj.lengths[0][l]))
+				# yaxis = scaled_yaxis
+
 				fig = plt.figure(figsize = (26, 18))
-				plt.plot(xaxis, yaxis, color = "0.5")
+				# plt.plot(xaxis, yaxis, color = "0.5")
 				currax = plt.gca()
 				currax.set_xlabel(plobj.pstvdFname, fontsize = 36)
 				currax.set_ylabel(plobj.sRNAPoolFname, fontsize = 36)
 				rightax = currax.twinx()
 				topax = currax.twiny()
 				if (d == 0):
-					currax.set_ylim([0, 140000])
-					rightax.set_ylim([0, 140000])
+					currax.set_ylim([0, 5])
+					rightax.set_ylim([0, 5])
+					currax.plot(xaxis, scaled_yaxis, marker="o", markersize=30, alpha=0.75, color="red", linestyle="None")
+					# Draw a line from at y, from x to x + l
+					# for i in range(len(xaxis)):
+					# 	if (yaxis[i] > 0):
+					# 		currax.plot([xaxis[i], xaxis[i] + plobj.lengths[0][l] - 1], [yaxis[i], yaxis[i]], color="red", linestyle="-", linewidth=5)
 				else:
-					currax.set_ylim([-15000, 0])
-					rightax.set_ylim([-15000, 0])
-				currax.set_xticks([tc for tc in range(len(xaxis)) if ((tc % 50 == 0) or (tc == plobj.pstvdLength - 1))])
+					currax.set_ylim([-5, 0])
+					rightax.set_ylim([-5, 0])
+					topax.plot(xaxis, yaxis, marker="o", markersize=30, alpha=0.75, color="red", linestyle="None")
+					# for i in range(len(xaxis)):
+					# 	if (yaxis[i] > 0):
+					# 		topax.plot([xaxis[i], xaxis[i] + plobj.lengths[0][l] - 1], [yaxis[i], yaxis[i]], color="red", linestyle="-", linewidth=5)
+				currax.set_xticks(xaxis, [tc for tc in range(1, 1 + len(xaxis))])
+				topax.set_xticks(xaxis, [tc for tc in range(1, 1 + len(xaxis))])
 				# currax.set_yticks(np.linspace(0, 20000, 10))
 				# currax.grid(which = 'both', color = '0.9', linestyle = '-', linewidth = 2)
 
 				plt.title("direction = %d, length %s" % (d, np.array_str(plobj.lengths[l])), fontsize = 48, y = 1.05)
-				plt.fill_between(xaxis, np.zeros(yaxis.shape[0], dtype = np.float), yaxis, color = "0.5")
+				print("xaxis\n{}\nnonzero\n{}".format(xaxis, np.nonzero(scaled_yaxis)))
 				
-				currax.tick_params(axis='y', which='both', pad = 20, left = 'on', right = 'off', direction = 'out', length = 10, width = 3)
-				rightax.tick_params(axis='y', which='both', pad = 20, left = 'off', right = 'off', labeltop = 'off', labelbottom = 'off', labelright = 'off', labelleft = 'off', direction = 'in', length = 10, width = 3)
+				plt.fill_between(xaxis, np.zeros(scaled_yaxis.shape[0], dtype = np.float), scaled_yaxis, color = "0.5")
+				
+				currax.tick_params(axis='y', which='both', pad = 20, direction = 'out', length = 10, width = 3)
+				# rightax.tick_params(axis='y', which='both', pad = 20, left = 'off', right = 'off', labeltop = 'off', labelbottom = 'off', labelright = 'off', labelleft = 'off', direction = 'in', length = 10, width = 3)
 				if (d == 0):
-					currax.tick_params(axis='x', which='both', pad = 20, bottom = 'on', top = 'off', direction = 'out', length = 10, width = 3)
-					topax.tick_params(axis='x', which='both', pad = 20, bottom = 'off', top = 'on', labeltop = 'off', labelbottom = 'off', labelright = 'off', labelleft = 'off', direction = 'in', length = 10, width = 3)
+					currax.tick_params(axis='x', which='both', pad = 20, direction = 'out', length = 10, width = 3)
+					topax.tick_params(axis='x', which='both', pad = 20, direction = 'in', length = 10, width = 3)
 				else:
-					currax.tick_params(axis='x', which='both', pad = 20, bottom = 'on', top = 'off', direction = 'in', length = 10, width = 3)
-					topax.tick_params(axis='x', which='both', pad = 20, bottom = 'off', top = 'on', labeltop = 'off', labelbottom = 'off', labelright = 'off', labelleft = 'off', direction = 'out', length = 10, width = 3)
-				topax.set_xticks(currax.get_xticks())
+					currax.tick_params(axis='x', which='both', pad = 20, direction = 'in', length = 10, width = 3)
+					topax.tick_params(axis='x', which='both', pad = 20, direction = 'out', length = 10, width = 3)
+				# topax.set_xticks(currax.get_xticks())
 				# rightax.set_yticks(currax.get_yticks())
 				
 				print("Saving plot for length %s." % (np.array_str(plobj.lengths[l])))
@@ -654,7 +681,8 @@ if __name__ == '__main__':
 		if (userChoice == 0):
 			completed = 1
 		elif (userChoice == 1):
-			inputs = [("PSTVd_RG.txt", "IIIWeek.fastq", 0)]
+			inputs = [("example_gene.txt", "example_pool.txt", 0)]
+			name = "default"
 			for (gene, pool, tol) in inputs:
 				newCan = Canvas(gene, pool, tol)
 				Load(newCan)

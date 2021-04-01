@@ -186,8 +186,10 @@ def ComputeDerivedParameters(bindObj):
 		if (bindObj.nSequencesByLengths[i] > 0):
 			bindObj.ordering[i] = nzlen
 			bindObj.forwardMatches[nzlen, 0] = i
-			bindObj.reverseMatches[nzlen, 1] = i
+			bindObj.reverseMatches[nzlen, 0] = i
 			nzlen = nzlen + 1
+
+	# print("Initialization\nForward\n{}\nReverse\n{}".format(bindObj.forwardMatches, bindObj.reverseMatches))
 
 	bindObj.forwardMatchCounts = np.zeros(bindObj.pstvdLen, dtype = int)
 	bindObj.reverseMatchCounts = np.zeros(bindObj.pstvdLen, dtype = int)
@@ -255,6 +257,7 @@ def PartialBinding(bindObj, nSkip, startSeq, numSeqs, reverse, matches, counts):
 			else:
 				if ((lNo % 4) == 1):
 					sRNASeq = line.strip("\n").strip(" ")
+					# print("Read\n{}".format(sRNASeq))
 					if ('N' in sRNASeq):
 						pass
 					else:
@@ -278,12 +281,18 @@ def PartialBinding(bindObj, nSkip, startSeq, numSeqs, reverse, matches, counts):
 	for i in range(localNucIndices.shape[0]):
 		matches[bindObj.ordering[sRNASeqLengths[localNucIndices[i]]] * bindObj.pstvdLen + pstvdIndices[i]] += 1
 		counts[sRNASeqLengths[localNucIndices[i]]] += 1
+	
+	# print("sRNAPoolMatrix\n{}".format(sRNAPoolMatrix))
+	# print("bindObj.pstvdMatrix\n{}".format(bindObj.pstvdMatrix))
+	# print("matchings\n{}".format(matchings))
+	# print("reducedToTolerance\n{}".format(np.where(reducedToTolerance, 1, 0)))
 	return None
 
 
 def RecordBinding(bindObj):
 	# Save the matching frequency array
 	WriteMatrixToFile(bindObj.forwardMatchFname, bindObj.forwardMatches, 0, 0, 0)
+	# print("Reverse matches\n{}".format(bindObj.reverseMatches))
 	WriteMatrixToFile(bindObj.reverseMatchFname, bindObj.reverseMatches, 0, 0, 0)
 	return None
 
@@ -350,8 +359,9 @@ if __name__ == '__main__':
 	with open(sys.argv[1], "r") as fp:
 		for (l, line) in enumerate(fp):
 			if (l == int(sys.argv[2])):
-				#print("Found relevant input in line: {}".format(line))
-				linecontents = list(map(lambda ln: ln.strip("\n").strip(" "), line.split()))
+				# print("Found relevant input in line: {}".format(line))
+				linecontents = list(map(lambda ln: ln.strip("\n").strip(" "), line.split(" ")))
+				# print("linecontents = {}".format(linecontents))
 				rnas.pstvdFname = linecontents[0]
 				rnas.sRNAPoolFname = linecontents[1]
 				rnas.tolerance = int(linecontents[2])
@@ -450,6 +460,9 @@ if __name__ == '__main__':
 			print("\033[92m%d\t%d\t%d\t%d\033[0m" % (li, rnas.nSequencesByLengths[li], rnas.forwardMatchCounts[li], rnas.reverseMatchCounts[li]))
 	print("\033[92m--------------\033[0m")
 	print("\033[92mTotal:\t%d\t%d\t%d\033[0m" % (rnas.totalNucleotides, np.sum(rnas.forwardMatchCounts), np.sum(rnas.reverseMatchCounts)))
+
+	print("Forward matchings\n{}".format(rnas.forwardMatches))
+	print("Reverse matchings\n{}".format(rnas.reverseMatches))
 
 	# Save the matching information to a file
 	RecordBinding(rnas)
