@@ -152,7 +152,8 @@ def ComputeDerivedParameters(bindObj):
 	bindObj.nSequencesByLengths = np.zeros(bindObj.pstvdLen, dtype = int)
 	with open(("./../data/input/%s" % bindObj.sRNAPoolFname), 'r') as sRNAFid:
 		for (lNo, line) in enumerate(sRNAFid):
-			if ((lNo % 4) == 1):
+			if ((lNo % 2) == 1):
+				print("line = {}".format(line))
 				nNucs = nNucs + 1
 				seqLen = len(line.strip("\n").strip(" "))
 				bindObj.nSequencesByLengths[seqLen] = bindObj.nSequencesByLengths[seqLen] + 1
@@ -356,16 +357,17 @@ if __name__ == '__main__':
 	#print("Received signal: {}".format(sys.argv))
 	rnas = Binder()
 	# Reading the gene, pool files and tolerance.
-	with open(sys.argv[1], "r") as fp:
-		for (l, line) in enumerate(fp):
-			if (l == int(sys.argv[2])):
-				# print("Found relevant input in line: {}".format(line))
-				linecontents = list(map(lambda ln: ln.strip("\n").strip(" "), line.split(" ")))
-				# print("linecontents = {}".format(linecontents))
-				rnas.pstvdFname = linecontents[0]
-				rnas.sRNAPoolFname = linecontents[1]
-				rnas.tolerance = int(linecontents[2])
-				nCores = int(linecontents[3])
+	if os.path.isfile(sys.argv[1], "r"):
+		with open(sys.argv[1], "r") as fp:
+			for (l, line) in enumerate(fp):
+				if (l == int(sys.argv[2])):
+					# print("Found relevant input in line: {}".format(line))
+					linecontents = list(map(lambda ln: ln.strip("\n").strip(" "), line.split(" ")))
+					# print("linecontents = {}".format(linecontents))
+					rnas.pstvdFname = linecontents[0]
+					rnas.sRNAPoolFname = linecontents[1]
+					rnas.tolerance = int(linecontents[2])
+					nCores = int(linecontents[3])
 	ComputeDerivedParameters(rnas)
 	breakpoints = SetBreakPoints(rnas)
 	nBreaks = len(breakpoints)
