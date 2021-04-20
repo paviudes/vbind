@@ -152,7 +152,8 @@ def ComputeDerivedParameters(bindObj):
 	bindObj.nSequencesByLengths = np.zeros(bindObj.gene_length, dtype = int)
 	with open(("./../data/input/%s" % bindObj.poolfname), 'r') as sRNAFid:
 		for (lNo, line) in enumerate(sRNAFid):
-			if ((lNo % 4) == 1):
+			if ((lNo % 2) == 1):
+				print("line = {}".format(line))
 				nNucs = nNucs + 1
 				seqLen = len(line.strip("\n").strip(" "))
 				bindObj.nSequencesByLengths[seqLen] = bindObj.nSequencesByLengths[seqLen] + 1
@@ -276,13 +277,13 @@ def PartialBinding(bindObj, nSkip, startSeq, numSeqs, reverse, matches, counts):
 
 	# matchings = matrix whose i,j entry is equal to the number of locations at which the ith nucleotide in the sRNA pool matched with the pstvd sequence of length L starting at index j.
 	matchings = np.dot(sRNAPoolMatrix, bindObj.gene_matrix)
-	# reducedToTolerance = matrix whose i,j entry is 1 if the ith nucleotide matched with the pstvd sequence (of length L) starting at index j.     
+	# reducedToTolerance = matrix whose i,j entry is 1 if the ith nucleotide matched with the pstvd sequence (of length L) starting at index j.
 	reducedToTolerance = np.greater_equal(matchings, seqLenOffsets)
 	(localNucIndices, pstvdIndices) = np.nonzero(reducedToTolerance)
 	for i in range(localNucIndices.shape[0]):
 		matches[bindObj.ordering[sRNASeqLengths[localNucIndices[i]]] * bindObj.gene_length + pstvdIndices[i]] += 1
 		counts[sRNASeqLengths[localNucIndices[i]]] += 1
-	
+
 	# print("sRNAPoolMatrix\n{}".format(sRNAPoolMatrix))
 	# print("bindObj.gene_matrix\n{}".format(bindObj.gene_matrix))
 	# print("matchings\n{}".format(matchings))
@@ -357,7 +358,7 @@ if __name__ == '__main__':
 	#print("Received signal: {}".format(sys.argv))
 	rnas = Binder()
 	# Reading the gene, pool files and tolerance.
-	if os.path.isfile(sys.argv[1]):
+	if os.path.isfile(sys.argv[1], "r"):
 		with open(sys.argv[1], "r") as fp:
 			for (l, line) in enumerate(fp):
 				if (l == int(sys.argv[2])):
