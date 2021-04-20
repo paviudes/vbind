@@ -12,6 +12,7 @@ try:
 	matplotlib.rcParams['ytick.major.width'] = 1.5
 	matplotlib.rcParams['xtick.labelsize'] = 48
 	matplotlib.rcParams['ytick.labelsize'] = 48
+	matplotlib.rcParams["font.family"] = "arial"
 except Exception:
 	sys.stderr.write("\033[91mMatplotlib does not exist, cannot make plots.\n\033[0m")
 
@@ -54,30 +55,30 @@ class Canvas():
 		# 1. file name of nucleotides in the pool
 		# 2. file name of pstvd sequence
 		# 3. tolerance
-		# self.sRNAPoolFname = ("./../data/input/%s" % pool)
-		# self.pstvdFname = ("./../data/input/%s" % gene)
-		# self.tolerance = int(tol)
+		# self.pool = ("./../data/input/%s" % pool)
+		# self.gene = ("./../data/input/%s" % gene)
+		# self.tol = int(tol)
 
-		self.sRNAPoolFname = pool
-		self.pstvdFname = gene
-		self.tolerance = int(tol)
+		self.pool = pool
+		self.gene = gene
+		self.tol = int(tol)
 
-		self.name = ("PSTVd sequence: %s and sRNA Pool used: %s." % (self.pstvdFname, self.sRNAPoolFname))
-		self.forwMatchPlotFile = ("./../plots/forward_matchings_%s_%s_tol%d.pdf" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
-		self.revMatchPlotFile = ("./../plots/reverse_matchings_%s_%s_tol%d.pdf" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
-		self.matchPlotFile = ("./../plots/matchings_%s_%s_tol%d.pdf" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
+		self.name = ("PSTVd sequence: %s and sRNA Pool used: %s." % (self.gene, self.pool))
+		self.forwMatchPlotFile = ("./../plots/forward_matchings_%s_%s_tol%d.pdf" % (self.pool[:-4], self.gene[:-4], self.tol))
+		self.revMatchPlotFile = ("./../plots/reverse_matchings_%s_%s_tol%d.pdf" % (self.pool[:-4], self.gene[:-4], self.tol))
+		self.matchPlotFile = ("./../plots/matchings_%s_%s_tol%d.pdf" % (self.pool[:-4], self.gene[:-4], self.tol))
 
-		self.forwMatchDataFile = ("./../data/output/forward_matchings_%s_%s_tol%d.txt" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
-		self.revMatchDataFile = ("./../data/output/reverse_matchings_%s_%s_tol%d.txt" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
+		self.forwMatchDataFile = ("./../data/output/forward_matchings_%s_%s_tol%d.txt" % (self.pool[:-4], self.gene[:-4], self.tol))
+		self.revMatchDataFile = ("./../data/output/reverse_matchings_%s_%s_tol%d.txt" % (self.pool[:-4], self.gene[:-4], self.tol))
 
 		# Scaled data files can be decided later, depending of the data repspect to which the scaling is to be done
-		self.scaledForwDataFile = ("./../data/output/norm_forward_matchings_%s_%s_tol%d.txt" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
-		self.scaledRevDataFile = ("./../data/output/norm_reverse_matchings_%s_%s_tol%d.txt" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
-		self.scaledForwPlotFile = ("./../data/output/norm_forward_matchings_%s_%s_tol%d.pdf" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
-		self.scaledRevPlotFile = ("./../data/output/norm_reverse_matchings_%s_%s_tol%d.pdf" % (self.sRNAPoolFname[:-4], self.pstvdFname[:-4], self.tolerance))
+		self.scaledForwDataFile = ("./../data/output/norm_forward_matchings_%s_%s_tol%d.txt" % (self.pool[:-4], self.gene[:-4], self.tol))
+		self.scaledRevDataFile = ("./../data/output/norm_reverse_matchings_%s_%s_tol%d.txt" % (self.pool[:-4], self.gene[:-4], self.tol))
+		self.scaledForwPlotFile = ("./../data/output/norm_forward_matchings_%s_%s_tol%d.pdf" % (self.pool[:-4], self.gene[:-4], self.tol))
+		self.scaledRevPlotFile = ("./../data/output/norm_reverse_matchings_%s_%s_tol%d.pdf" % (self.pool[:-4], self.gene[:-4], self.tol))
 
 
-		self.title = ("Mapping nucleotides in %s with PSTVd sequence in %s, allowing at most %d mismatches" % (self.sRNAPoolFname, self.pstvdFname, self.tolerance))
+		self.title = ("Mapping nucleotides in %s with PSTVd sequence in %s, allowing at most %d mismatches" % (self.pool, self.gene, self.tol))
 		self.xLabel = ("Index on PSTVd sequence")
 		self.yLabel = ("Number of bound nucleotides")
 		self.forwMarker = "s"
@@ -116,7 +117,7 @@ class Canvas():
 			self.nRev = self.reverseMatchData
 			# print("self.nForw\n%s" % np.array_str(self.nForw))
 
-		self.lengths = np.array([[3]], dtype = int)
+		self.lengths = np.array([[21]], dtype = int)
 		self.xscale = np.array([0, self.pstvdLength, self.pstvdLength/5], dtype = int)
 		self.yscale = np.array([[1, np.max(np.sum(self.forwardMatchData[:, 1:], axis = 0)), 10],
 								[np.min(np.sum(self.reverseMatchData[:, 1:], axis = 0)), 10, -1]], dtype = int)
@@ -332,11 +333,12 @@ def PromptPlotParameters(plobj):
 
 def Plot(plobj, isScaled = 0, quiet = 0):
 	# Produce plots with the selected data files and the plot parameters
-	print("Forward\n{}\nReverse\n{}".format(plobj.nForw, plobj.nRev))
+	# print("Forward\n{}\nReverse\n{}".format(plobj.nForw, plobj.nRev))
 	xreps = 1
 	shift = 0
-	plotfname = ("./../plots/%s_%s.pdf" % (plobj.pstvdFname[:plobj.pstvdFname.index(".")], plobj.sRNAPoolFname[:plobj.sRNAPoolFname.index(".")]))
+	plotfname = ("./../plots/%s_%s.pdf" % (plobj.gene[:plobj.gene.index(".")], plobj.pool[:plobj.pool.index(".")]))
 	xaxis = np.arange(plobj.pstvdLength + shift)
+	xtick_step = 50
 	with PdfPages(plotfname) as pdf:
 		for l in range(plobj.lengths.shape[0]):
 			for d in range(2):
@@ -360,43 +362,50 @@ def Plot(plobj, isScaled = 0, quiet = 0):
 				fig = plt.figure(figsize = (26, 18))
 				# plt.plot(xaxis, yaxis, color = "0.5")
 				currax = plt.gca()
-				currax.set_xlabel(plobj.pstvdFname, fontsize = 36)
-				currax.set_ylabel(plobj.sRNAPoolFname, fontsize = 36)
-				rightax = currax.twinx()
+				currax.set_xlabel(plobj.gene, fontsize = 36)
+				currax.set_ylabel(plobj.pool, fontsize = 36)
+				# rightax = currax.twinx()
 				topax = currax.twiny()
 				if (d == 0):
-					currax.set_ylim([0, 5])
-					rightax.set_ylim([0, 5])
-					currax.plot(xaxis, scaled_yaxis, marker="o", markersize=30, alpha=0.75, color="red", linestyle="None")
+					currax.set_ylim([0, 12000])
+					# rightax.set_ylim([0, 5])
+					currax.plot(xaxis, scaled_yaxis, alpha=0.75, color="red", linestyle="None")
 					# Draw a line from at y, from x to x + l
 					# for i in range(len(xaxis)):
 					# 	if (yaxis[i] > 0):
 					# 		currax.plot([xaxis[i], xaxis[i] + plobj.lengths[0][l] - 1], [yaxis[i], yaxis[i]], color="red", linestyle="-", linewidth=5)
 				else:
-					currax.set_ylim([-5, 0])
-					rightax.set_ylim([-5, 0])
-					topax.plot(xaxis, yaxis, marker="o", markersize=30, alpha=0.75, color="red", linestyle="None")
+					currax.set_ylim([-np.max(yaxis), 0])
+					# rightax.set_ylim([-5, 0])
+					topax.plot(xaxis, yaxis, alpha=0.75, color="red", linestyle="None")
 					# for i in range(len(xaxis)):
 					# 	if (yaxis[i] > 0):
 					# 		topax.plot([xaxis[i], xaxis[i] + plobj.lengths[0][l] - 1], [yaxis[i], yaxis[i]], color="red", linestyle="-", linewidth=5)
-				currax.set_xticks(xaxis, [tc for tc in range(1, 1 + len(xaxis))])
-				topax.set_xticks(xaxis, [tc for tc in range(1, 1 + len(xaxis))])
+				currax.set_xticks(np.concatenate((xaxis[::xtick_step], [xaxis[-1]])))
+				currax.set_xticklabels([1] + [tc for tc in range(xtick_step, 1 + len(xaxis), xtick_step)] + [len(xaxis)], rotation=45)
+				currax.set_xlim([0, len(xaxis)])
+
+				topax.set_xticks(np.concatenate((xaxis[::xtick_step], [xaxis[-1]])))
+				topax.set_xticklabels([tc for tc in range(1, 1 + len(xaxis), xtick_step)] + [len(xaxis)], rotation=45)
+				topax.set_xlim([0, len(xaxis)])
+				# topax.set_xticks(xaxis[::xtick_step], [tc for tc in range(1, 1 + len(xaxis), xtick_step)])
 				# currax.set_yticks(np.linspace(0, 20000, 10))
 				# currax.grid(which = 'both', color = '0.9', linestyle = '-', linewidth = 2)
 
-				plt.title("direction = %d, length %s" % (d, np.array_str(plobj.lengths[l])), fontsize = 48, y = 1.05)
+				# plt.title("direction = %d, length %s" % (d, np.array_str(plobj.lengths[l])), fontsize = 48, y = 1.05)
 				print("xaxis\n{}\nnonzero\n{}".format(xaxis, np.nonzero(scaled_yaxis)))
 				
 				plt.fill_between(xaxis, np.zeros(scaled_yaxis.shape[0], dtype = np.float), scaled_yaxis, color = "0.5")
 				
-				currax.tick_params(axis='y', which='both', pad = 20, direction = 'out', length = 10, width = 3)
+				currax.tick_params(axis='y', which='both', pad = 20, direction = 'inout', length = 10, width = 3)
 				# rightax.tick_params(axis='y', which='both', pad = 20, left = 'off', right = 'off', labeltop = 'off', labelbottom = 'off', labelright = 'off', labelleft = 'off', direction = 'in', length = 10, width = 3)
+				# rightax.tick_params(axis='y', which='both', pad = 20, direction = 'in', length = 10, width = 3)
 				if (d == 0):
-					currax.tick_params(axis='x', which='both', pad = 20, direction = 'out', length = 10, width = 3)
+					currax.tick_params(axis='x', which='both', pad = 20, direction = 'inout', length = 10, width = 3)
 					topax.tick_params(axis='x', which='both', pad = 20, direction = 'in', length = 10, width = 3)
 				else:
-					currax.tick_params(axis='x', which='both', pad = 20, direction = 'in', length = 10, width = 3)
-					topax.tick_params(axis='x', which='both', pad = 20, direction = 'out', length = 10, width = 3)
+					currax.tick_params(axis='x', which='both', pad = 20, direction = 'inout', length = 10, width = 3)
+					topax.tick_params(axis='x', which='both', pad = 20, direction = 'in', length = 10, width = 3)
 				# topax.set_xticks(currax.get_xticks())
 				# rightax.set_yticks(currax.get_yticks())
 				
@@ -414,27 +423,19 @@ def Plot(plobj, isScaled = 0, quiet = 0):
 	return None
 
 
-def Normalize(plotObjs, genes, pools, tols):
+def Normalize(dataset):
 	# Multiply the number of reads at every position by a constant that depends on the nucleatide length.
 	# This is to ensure that all reads are scaled for a pool size that is 1,000,000.
 	# Scaling array provides the scaling constants by pool gene tol length.
-	# refer by: scaling[pool][gene][tol][nuclen]
-	scaling = {"pool":{"gene":{0:{0:0}}}}
-	with open("scalings.txt", 'r') as sfp:
-		for line in sfp:
-			if (not (line[0] == "#")):
-				contents = map(lambda cont: cont.strip(" "), line.strip("\n").strip(" ").split(" "))
-				# print "contents"
-				# print contents
-				if (not (contents[0] in scaling)):
-					scaling.update({contents[0]:{}})
-				if (not (contents[1] in scaling[contents[0]])):
-					scaling[contents[0]].update({contents[1]:{}})
-				if (not (contents[2] in scaling[contents[0]][contents[1]])):
-					scaling[contents[0]][contents[1]].update({contents[2]:{}})
-				if (not (contents[3] in scaling[contents[0]][contents[1]][contents[2]])):
-					scaling[contents[0]][contents[1]][contents[2]].update({int(contents[3]):[np.float(contents[4]), np.float(contents[5])]})
-
+	# refer by: scaling[nuclen]
+	scaling = {0:0}
+	million = 1E6
+	# Compute the scalings
+	for l in range(plt.lengths.shape[0]):
+		nuclens = np.where(np.in1d(plobj.nForw[:, 0], plt.lengths[l]))[0]
+		total_matches = np.sum(dataset.forwardMatchData[nuclens, 1:])
+		scaling.update({plt.lengths[l]: total_matches/million})
+		scaled = dataset.forwardMatchData[nuclens, 1:] * scaling[pool][gene][tol][plt.lengths[l]]
 	# print "pool"
 	# print pools
 	# print "genes"
@@ -444,31 +445,118 @@ def Normalize(plotObjs, genes, pools, tols):
 	print("scaling")
 	print(scaling)
 
-	# Write values into the normalized datasets
-	for i in range(len(pools)):
-		if (pools[i] in scaling.keys()):
-			for j in range(len(genes)):
-				if (genes[j] in scaling[pools[i]].keys()):
-					for t in range(len(tols)):
-						if (tols[t] in map(int, scaling[pools[i]][genes[j]].keys())):
-							# print("lengths\n%s" % (np.array_str(plotObjs[i][j].forwardMatchData[:, 0])))
-							# print("scaling[pool][genes][tols]")
-							# print scaling[pools[i]][genes[j]][str(tols[t])]
-							for l in range(plotObjs[i][j].forwardMatchData.shape[0]):
-								if (plotObjs[i][j].forwardMatchData[l, 0] in scaling[pools[i]][genes[j]][str(tols[t])].keys()):
-									# print "plotObjs[i][j].forwardMatchData[l, 1:]"
-									# print plotObjs[i][j].forwardMatchData[l, 1:]
-									# print "scaling[pools[i]][genes[j]][str(tols[t])][plotObjs[i][j].forwardMatchData[l, 0]]"
-									# print scaling[pools[i]][genes[j]][str(tols[t])][plotObjs[i][j].forwardMatchData[l, 0]]
-									plotObjs[i][j].nForw[l, 0] = plotObjs[i][j].forwardMatchData[l, 0]
-									plotObjs[i][j].nForw[l, 1:] = plotObjs[i][j].forwardMatchData[l, 1:] * scaling[pools[i]][genes[j]][str(tols[t])][plotObjs[i][j].forwardMatchData[l, 0]][0]
-									plotObjs[i][j].nRev[l, 0] = plotObjs[i][j].reverseMatchData[l, 0]
-									plotObjs[i][j].nRev[l, 1:] = plotObjs[i][j].reverseMatchData[l, 1:] * scaling[pools[i]][genes[j]][str(tols[t])][plotObjs[i][j].reverseMatchData[l, 0]][1]
-									# print("%s" % (np.array_str(plotObjs[i][j].nForw[l, :], max_line_width = 150)))
-					# Write the normalized matching data into file
-					WriteMatrixToFile(plotObjs[i][j].scaledForwDataFile, plotObjs[i][j].nForw, 0, 0, 0, dataType = 'f')
-					WriteMatrixToFile(plotObjs[i][j].scaledRevDataFile, plotObjs[i][j].nRev, 0, 0, 0, dataType = 'f')
+	# # Write values into the normalized datasets
+	# for i in range(len(pools)):
+	# 	if (pools[i] in scaling.keys()):
+	# 		for j in range(len(genes)):
+	# 			if (genes[j] in scaling[pools[i]].keys()):
+	# 				for t in range(len(tols)):
+	# 					if (tols[t] in map(int, scaling[pools[i]][genes[j]].keys())):
+	# 						# print("lengths\n%s" % (np.array_str(plotObjs[i][j].forwardMatchData[:, 0])))
+	# 						# print("scaling[pool][genes][tols]")
+	# 						# print scaling[pools[i]][genes[j]][str(tols[t])]
+	# 						for l in range(plotObjs[i][j].forwardMatchData.shape[0]):
+	# 							if (plotObjs[i][j].forwardMatchData[l, 0] in scaling[pools[i]][genes[j]][str(tols[t])].keys()):
+	# 								# print "plotObjs[i][j].forwardMatchData[l, 1:]"
+	# 								# print plotObjs[i][j].forwardMatchData[l, 1:]
+	# 								# print "scaling[pools[i]][genes[j]][str(tols[t])][plotObjs[i][j].forwardMatchData[l, 0]]"
+	# 								# print scaling[pools[i]][genes[j]][str(tols[t])][plotObjs[i][j].forwardMatchData[l, 0]]
+	# 								plotObjs[i][j].nForw[l, 0] = plotObjs[i][j].forwardMatchData[l, 0]
+	# 								plotObjs[i][j].nForw[l, 1:] = plotObjs[i][j].forwardMatchData[l, 1:] * scaling[pools[i]][genes[j]][str(tols[t])][plotObjs[i][j].forwardMatchData[l, 0]][0]
+	# 								plotObjs[i][j].nRev[l, 0] = plotObjs[i][j].reverseMatchData[l, 0]
+	# 								plotObjs[i][j].nRev[l, 1:] = plotObjs[i][j].reverseMatchData[l, 1:] * scaling[pools[i]][genes[j]][str(tols[t])][plotObjs[i][j].reverseMatchData[l, 0]][1]
+	# 								# print("%s" % (np.array_str(plotObjs[i][j].nForw[l, :], max_line_width = 150)))
+	# 				# Write the normalized matching data into file
+	# 				WriteMatrixToFile(plotObjs[i][j].scaledForwDataFile, plotObjs[i][j].nForw, 0, 0, 0, dataType = 'f')
+	# 				WriteMatrixToFile(plotObjs[i][j].scaledRevDataFile, plotObjs[i][j].nRev, 0, 0, 0, dataType = 'f')
 	return None
+
+
+def VerifyForwardMatching(dset):
+	# Verify the matching output from the dataset.
+	# If the forward matching array element, F[i][j] = x, then we need to check if indeed the gene-substring gene[i:(i + lengths[i])] occurs x times in the pool.
+	with open("./../data/input/%s" % (dset.gene), "r") as gf:
+		gene_seq = gf.readline().strip(" ").strip("\n")
+
+	for l in range(dset.lengths.shape[0]):
+		is_valid = 1
+		nuc_len = dset.lengths[l][0]
+		for i in range(1, dset.forwardMatchData.shape[1]):
+			nuc_len_idx = np.where(np.in1d(dset.forwardMatchData[:, 0], dset.lengths[l]))[0]
+			gene_subseq = gene_seq[(i - 1)  : (i - 1 + nuc_len) % len(gene_seq)]
+			given_matches = dset.forwardMatchData[nuc_len_idx, i]
+			found_matches = MatchesInFile("./../data/input/%s" % (dset.pool), gene_subseq)
+			
+			if given_matches == found_matches:
+				is_match = 1
+				# print("[_/] Matches for {} of length {} at position {} on the gene.\nReported: {} and Found: {}.".format(gene_subseq, nuc_len, l, given_matches, found_matches))
+			else:
+				is_match = 0
+				print("[X] Matches for {} of length {} at position {} on the gene.\nReported: {} and Found: {}.".format(gene_subseq, nuc_len, l, given_matches, found_matches))
+			
+			is_valid *= is_match
+		
+		if (is_valid == 1):
+			print("vbind gave correct forward matching output for pool sequences with {} nucleotides.")
+		else:
+			print("vbind gave incorrect forward matching output for pool sequences with {} nucleotides.")
+	return is_valid
+
+
+def VerifyReverseMatching(dset):
+	# Verify the reverse matching output
+	# If the reverse matching array element, R[i][j] = x, then we need to check if indeed the reverse complement of the gene-substring gene[i:(i + lengths[i])] occurs x times in the pool.
+	with open("./../data/input/%s" % (dset.gene), "r") as gf:
+		gene_seq = gf.readline().strip(" ").strip("\n")
+
+	for l in range(dset.lengths.shape[0]):
+		is_valid = 1
+		nuc_len = dset.lengths[l][0]
+		for i in range(1, dset.reverseMatchData.shape[1]):
+			nuc_len_idx = np.where(np.in1d(dset.reverseMatchData[:, 0], dset.lengths[l]))[0]
+			gene_subseq = ReverseComplement(gene_seq[(i - 1)  : (i - 1 + nuc_len) % len(gene_seq)])
+			given_matches = dset.reverseMatchData[nuc_len_idx, i]
+			found_matches = MatchesInFile("./../data/input/%s" % (dset.pool), gene_subseq)
+			
+			if given_matches == found_matches:
+				is_match = 1
+				# print("[_/] Matches for {} of length {} at position {} on the gene.\nReported: {} and Found: {}.".format(gene_subseq, nuc_len, l, given_matches, found_matches))
+			else:
+				is_match = 0
+				print("[X] Matches for {} of length {} at position {} on the gene.\nReported: {} and Found: {}.".format(gene_subseq, nuc_len, l, given_matches, found_matches))
+			
+			is_valid *= is_match
+		
+		if (is_valid == 1):
+			print("vbind gave correct reverse matching output for pool sequences with {} nucleotides.")
+		else:
+			print("vbind gave incorrect reverse matching output for pool sequences with {} nucleotides.")
+	return is_valid
+
+def ReverseComplement(nuc_seq):
+	# Compute the reverse complement of a nucleotide sequence
+	mapping = {"A":"T", "T":"A", "G":"C", "C":"G"}
+	complement = []
+	for char in nuc_seq[::-1]:
+		complement.append(mapping[char])
+	return "".join(complement)
+
+
+def VerifyMatching(dset):
+	# Verify the forward and reverse matching output.
+	is_valid = VerifyForwardMatching(dset) * VerifyReverseMatching(dset)
+	return is_valid
+
+
+def MatchesInFile(fname, search_string):
+	# Find the number of lines in a file which contain a given string.
+	occurrences = 0
+	# print("Searching for a matching for {} in the file {}".format(search_string, fname))
+	with open(fname, "r") as f:
+		for line in f:
+			if (line.strip(" ").strip("\n") == search_string):
+				occurrences += 1
+	return occurrences
 
 
 def ReadListFromFile(fname, ignore = 0):
@@ -502,8 +590,8 @@ def CompileLaTex(fname):
 def Report(plobj):
 	# Write the list of all sRNA sequences that matched at a given index on the mRNA sequence
 	# Read the raw forward and reverse matching files associated to this matching and write the list of sRNA sequences whose index is recorded.
-	rawForwMatchingFname = ("raw_forward_matchings_%s_%s_tol%d.txt" % (plobj.sRNAPoolFname[:-4], plobj.pstvdFname[:-4], plobj.tolerance))
-	rawRevMatchingFname = ("raw_reverse_matchings_%s_%s_tol%d.txt" % (plobj.sRNAPoolFname[:-4], plobj.pstvdFname[:-4], plobj.tolerance))
+	rawForwMatchingFname = ("raw_forward_matchings_%s_%s_tol%d.txt" % (plobj.pool[:-4], plobj.gene[:-4], plobj.tol))
+	rawRevMatchingFname = ("raw_reverse_matchings_%s_%s_tol%d.txt" % (plobj.pool[:-4], plobj.gene[:-4], plobj.tol))
 
 	(rawForwData, __)  = ReadListFromFile(rawForwMatchingFname, ignore = 1)
 	# (rawRevData, __)  = ReadListFromFile(rawRevMatchingFname, ignore = 1)
@@ -519,7 +607,7 @@ def Report(plobj):
 	nNucs = 0
 	forwMatchCount = 0
 	lineMapping = []
-	with open(plobj.sRNAPoolFname, 'r') as sRNAFid:
+	with open(plobj.pool, 'r') as sRNAFid:
 		for (lNo, line) in enumerate(sRNAFid):
 			if ((lNo % 4) == 1):
 				sRNASeq = line.strip("\n").strip(" ")		
@@ -545,10 +633,10 @@ def Report(plobj):
 	# Write the list of sequences to a latex file in the following manner.
 	# The first page will have the full mRNA sequence in with a number to each index. Each nucleotide in the mRNA sequence will be a hyperlink to the page that contains the list of all sRNA sequences (lengthwise) that match with the particular mRNA sequence.
 	# Read the mRNA sequence
-	with open(plobj.pstvdFname, 'r') as mRNAFid:
+	with open(plobj.gene, 'r') as mRNAFid:
 		mRNASequence = mRNAFid.readline().strip("\n").strip(" ")
 
-	explicitMatchFname = ("explicit_forward_%s_%s_tol%d.tex" % (plobj.sRNAPoolFname[:-4], plobj.pstvdFname[:-4], plobj.tolerance))
+	explicitMatchFname = ("explicit_forward_%s_%s_tol%d.tex" % (plobj.pool[:-4], plobj.gene[:-4], plobj.tol))
 
 	with open(explicitMatchFname, 'w') as expFid:
 		# Latex preamble
@@ -580,9 +668,9 @@ def Report(plobj):
 		expFid.write("\\begin{center}\n")
 		expFid.write("\\begin{tabular}{c|c}\n")
 		expFid.write("\\toprule\n")
-		expFid.write("mRNA sequence & %s \\\\ \\midrule\n" % (plobj.pstvdFname.replace("_", "\\_")))
-		expFid.write("sRNA Pool & %s \\\\ \\midrule\n" % plobj.sRNAPoolFname.replace("_", "\\_"))
-		expFid.write("Number of mismatches allowed & %d \\\\ \\bottomrule\n" % (plobj.tolerance))
+		expFid.write("mRNA sequence & %s \\\\ \\midrule\n" % (plobj.gene.replace("_", "\\_")))
+		expFid.write("sRNA Pool & %s \\\\ \\midrule\n" % plobj.pool.replace("_", "\\_"))
+		expFid.write("Number of mismatches allowed & %d \\\\ \\bottomrule\n" % (plobj.tol))
 		expFid.write("\end{tabular}\n")
 		# expFid.write("\caption{Details of the simulation.}\n")
 		expFid.write("\end{center}\n")
@@ -658,9 +746,11 @@ if __name__ == '__main__':
 	completed = 0
 	isMenu = 1
 	canvanses = {}
+	alive_time = 0
 	# list of plot data for which normalized versions are available
 	scaledAvailable = []
 	while completed == 0:
+
 		if (isMenu == 1):
 			print("\033[92m**** MENU ****\033[0m")
 			print("\033[93m0 -- Quit\033[0m")
@@ -676,19 +766,29 @@ if __name__ == '__main__':
 			print("\033[92mDone, what next? choose from Menu.\033[0m")
 
 		print(">>"),
-		userChoice = int(input().strip("\n").strip(" "))
+		# user_choice = int(input().strip("\n").strip(" "))
 
-		if (userChoice == 0):
+		####### Temporary
+		if alive_time == 0:
+			user_choice = 1
+		elif alive_time == 1:
+			user_choice = 8
+		else:
+			user_choice = 0
+		#######s
+
+		if (user_choice == 0):
 			completed = 1
-		elif (userChoice == 1):
-			inputs = [("example_gene.txt", "example_pool.txt", 0)]
+
+		elif (user_choice == 1):
+			inputs = [("PSTVd.txt", "GSM1717894_PSTVd_RG1.txt", 0)]
 			name = "default"
 			for (gene, pool, tol) in inputs:
 				newCan = Canvas(gene, pool, tol)
 				Load(newCan)
 				canvanses.update({name:newCan})
 
-		elif (userChoice == 2):
+		elif (user_choice == 2):
 			print("\033[93mOf the %d available matching data sets, which one would you like to plot?\033[0m" % len(canvanses.keys()))
 			scaled = 0
 			for (ni, name) in enumerate(canvanses):
@@ -701,7 +801,9 @@ if __name__ == '__main__':
 			print("\033[92m* -- Normalized forms available.\033[0m")
 			
 			print(">>"),
-			userSelection = input().strip("\n").strip(" ")
+			# userSelection = input().strip("\n").strip(" ")
+			userSelection = 0 # Temporary, remove finally.
+
 			if (userSelection == "all"):
 				plotDataChoice = range(len(canvanses.keys()))
 			else:
@@ -710,39 +812,42 @@ if __name__ == '__main__':
 			for pdi in plotDataChoice:
 				Plot(canvanses[list(canvanses.keys())[pdi]], isScaled = 1, quiet = 1)
 
-		elif (userChoice == 3):
+		elif (user_choice == 3):
 			print("\033[93mOf the %d available matching data sets, which ones do you want to include?\033[0m" % len(canvanses.keys()))
 			for (ni, name) in enumerate(canvanses):
 				print("\033[93m%d -- %s\033[0m" % (ni, name))
 			print(">>"),
-			userSelection = input().strip("\n").strip(" ")
+			# userSelection = int(input().strip("\n").strip(" "))
+
+			userSelection = 0 ### temporary
 			
 			if (userSelection == "all"):
 				normDataSets = range(len(canvanses.keys()))
 			else:
 				normDataSets = map(int, userSelection.split(","))
 
-			normObjects = [canvanses[canvanses.keys()[ds]] for ds in normDataSets]
+			dataset = canvanses[list(canvanses.keys())[userSelection]]
+			Normalize(dataset)
 
-			genes = list(set([plo.pstvdFname[:plo.pstvdFname.index(".")] for plo in normObjects]))
-			pools = list(set([plo.sRNAPoolFname[:plo.sRNAPoolFname.index(".")] for plo in normObjects]))
+			genes = list(set([plo.gene[:plo.gene.index(".")] for plo in normObjects]))
+			pools = list(set([plo.pool[:plo.pool.index(".")] for plo in normObjects]))
 			tols = [0]
 			
-			normMatrix = [[None for pl in pools] for gn in genes]
+			normMatrix = [None for pl in pools]
 			for li in range(len(normObjects)):
-				gidx = genes.index(normObjects[li].pstvdFname[:normObjects[li].pstvdFname.index(".")])
-				pidx = pools.index(normObjects[li].sRNAPoolFname[:normObjects[li].sRNAPoolFname.index(".")])
+				gidx = genes.index(normObjects[li].gene[:normObjects[li].gene.index(".")])
+				pidx = pools.index(normObjects[li].pool[:normObjects[li].pool.index(".")])
 				normMatrix[gidx][pidx] = normObjects[li]
 
 			# plotting is not included.
 			Normalize(normMatrix, genes, pools, tols)
 			
-			normDataNames = [canvanses.keys()[ds] for ds in normDataSets]
+			normDataNames = [list(canvanses.keys())[ds] for ds in normDataSets]
 			for di in range(len(normDataNames)):
 				if not (normDataNames[di] in scaledAvailable):
 					scaledAvailable.append(normDataNames[di])
 
-		elif (userChoice == 4):
+		elif (user_choice == 4):
 			print("\033[93mOf the %d available matching data sets, which ones would you like to compare and modify?\033[0m" % len(canvanses.keys()))
 			for (ni, name) in enumerate(canvanses):
 				print("\033[93m%d -- %s\033[0m" % (ni, name))
@@ -750,7 +855,7 @@ if __name__ == '__main__':
 			print(">>"),
 			compareChoices = map(int, input().strip("\n").strip(" ").split(",")[:2])
 
-			plotsToCompare = [canvanses[canvanses.keys()[compareChoices[0]]], canvanses[canvanses.keys()[compareChoices[1]]]]
+			plotsToCompare = [canvanses[list(canvanses.keys())[compareChoices[0]]], canvanses[list(canvanses.keys())[compareChoices[1]]]]
 
 			isReverse = 1
 			isForward = 1
@@ -774,7 +879,7 @@ if __name__ == '__main__':
 				pass
 			Juxtapose(plotsToCompare[0], plotsToCompare[1], compareDir)
 		
-		elif (userChoice == 5):
+		elif (user_choice == 5):
 			print("\033[93mOf the %d available matching data sets, which one would you like to plot?\033[0m" % len(canvanses.keys()))
 			for (ni, name) in enumerate(canvanses):
 				print("\033[93m%d -- %s\033[0m" % (ni, name)),
@@ -786,25 +891,38 @@ if __name__ == '__main__':
 			print(">>"),
 			saveDataChoice = int(input().strip("\n").strip(" "))
 
-			print("\033[95m!! This will overwrite the existing data for %s.\n0 -- Cancel\n1 -- OK.\033[0m" % canvanses.keys()[saveDataChoice])
+			print("\033[95m!! This will overwrite the existing data for %s.\n0 -- Cancel\n1 -- OK.\033[0m" % list(canvanses.keys())[saveDataChoice])
 			print(">>"),
 			isOverwrite = int(input().strip("\n").strip(" "))
 			if (isOverwrite == 1):
-				Save(canvanses[canvanses.keys()[saveDataChoice]])
+				Save(canvanses[list(canvanses.keys())[saveDataChoice]])
 
-		elif (userChoice == 6):
+		elif (user_choice == 6):
 			print("\033[93mOf the %d available matching data sets, for which one would you like to a report?\033[0m" % len(canvanses.keys()))
 			for (ni, name) in enumerate(canvanses):
 				print("\033[93m%d -- %s\033[0m" % (ni, name))
 			
 			print(">>"),
 			reportDataChoice = int(input().strip("\n").strip(" "))
-			Report(canvanses[canvanses.keys()[reportDataChoice]])
+			Report(canvanses[list(canvanses.keys())[reportDataChoice]])
 
-		elif (userChoice == 7):
+		elif (user_choice == 7):
 			isMenu = 1
+
+		elif (user_choice == 8):
+			print("\033[93mOf the %d available matching data sets, for which one would you like to verify?\033[0m" % len(canvanses.keys()))
+			for (n, name) in enumerate(canvanses):
+				print("\033[93m%d -- %s\033[0m" % (n, name))
+			
+			# print(">>"),
+			# dset_choice = int(input().strip("\n").strip(" "))
+			# Temporary
+			dset_choice = 0
+			VerifyMatching(canvanses[list(canvanses.keys())[dset_choice]])
 
 		else:
 			print("\033[91mUnknown option!\033[0m")
+
+		alive_time += 1
 
 	print("\033[92mDone.\033[0m")

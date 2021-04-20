@@ -1,16 +1,18 @@
 
 ***************************************
-Log file for simulations done on, at, 18/03/2021 20:58:14.
-Length of the PSTVd sequence in example_gene.txt: 10.
-Number of nucleotides in the sRNA pool in example_pool.txt: 12.
+Log file for simulations done on, at, 11/04/2021 22:59:31.
+Length of the PSTVd sequence in PSTVd.txt: 359.
+Number of nucleotides in the sRNA pool in GSM1717894_PSTVd_RG1.txt: 730499.
 Number of mismatches allowed: 0.
 Length	In pool	Foward	Reverse
-3	10	4	5
-4	2	1	1
+21	160262	35533	5788
+22	145487	24528	3913
+23	124625	1448	197
+24	300125	3135	374
 -------
-Total:	12	5	6
+Total:	730499	64644	10272
 
 
 
-Total simulation time: 0 seconds.
+Total simulation time: 186 seconds.
 ***************************************

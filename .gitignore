@@ -1,2 +1,2 @@
 # Ignore all fastq files since they're insanely big
-data/input/*.fastq
+data/input/*
