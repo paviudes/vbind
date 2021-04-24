@@ -1,2 +1,3 @@
 # Ignore all fastq files since they're insanely big
 data/input/*
+!data/input/pairs.txt

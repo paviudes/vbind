@@ -1,6 +1,7 @@
 import os
 from sys import stdout
 import datetime as dt
+from tqdm import tqdm
 import numpy as np
 try:
 	import matplotlib
@@ -481,7 +482,7 @@ def VerifyForwardMatching(dset):
 	for l in range(dset.lengths.shape[0]):
 		is_valid = 1
 		nuc_len = dset.lengths[l][0]
-		for i in range(1, dset.forwardMatchData.shape[1]):
+		for i in tqdm(range(1, dset.forwardMatchData.shape[1]), desc="Forward matchings for length %d" % (nuc_len)):
 			nuc_len_idx = np.where(np.in1d(dset.forwardMatchData[:, 0], dset.lengths[l]))[0]
 			gene_subseq = gene_seq[(i - 1)  : (i - 1 + nuc_len) % len(gene_seq)]
 			given_matches = dset.forwardMatchData[nuc_len_idx, i]
@@ -497,9 +498,9 @@ def VerifyForwardMatching(dset):
 			is_valid *= is_match
 		
 		if (is_valid == 1):
-			print("vbind gave correct forward matching output for pool sequences with {} nucleotides.")
+			print("vbind gave correct forward matching output for pool sequences with {} nucleotides.".format(nuc_len))
 		else:
-			print("vbind gave incorrect forward matching output for pool sequences with {} nucleotides.")
+			print("vbind gave incorrect forward matching output for pool sequences with {} nucleotides.".format(nuc_len))
 	return is_valid
 
 
@@ -512,7 +513,7 @@ def VerifyReverseMatching(dset):
 	for l in range(dset.lengths.shape[0]):
 		is_valid = 1
 		nuc_len = dset.lengths[l][0]
-		for i in range(1, dset.reverseMatchData.shape[1]):
+		for i in tqdm(range(1, dset.reverseMatchData.shape[1]), desc="Reverse matchings for length %d" % (nuc_len)):
 			nuc_len_idx = np.where(np.in1d(dset.reverseMatchData[:, 0], dset.lengths[l]))[0]
 			gene_subseq = ReverseComplement(gene_seq[(i - 1)  : (i - 1 + nuc_len) % len(gene_seq)])
 			given_matches = dset.reverseMatchData[nuc_len_idx, i]
@@ -781,7 +782,7 @@ if __name__ == '__main__':
 			completed = 1
 
 		elif (user_choice == 1):
-			inputs = [("PSTVd.txt", "GSM1717894_PSTVd_RG1.txt", 0)]
+			inputs = [("PSTVd-I.txt", "sRNA_intermediate.txt", 0)]
 			name = "default"
 			for (gene, pool, tol) in inputs:
 				newCan = Canvas(gene, pool, tol)
