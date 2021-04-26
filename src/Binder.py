@@ -561,6 +561,9 @@ if __name__ == '__main__':
 	while (stop == 0):
 		line = input_fp.readline().strip("\n").strip(" ")
 		if not (line[0] == "#"):
+			if ("quit" in line):
+				stop = 1
+				continue
 			n_task += 1
 			if ((n_task == task) or (task == -1)):
 				linecontents = list(map(lambda ln: ln.strip("\n").strip(" "), line.split(" ")))
@@ -568,9 +571,10 @@ if __name__ == '__main__':
 				rnas = Binder()
 				rnas.genefname = linecontents[0]
 				rnas.poolfname = linecontents[1]
-				rnas.tolerance = int(linecontents[2])
-				rnas.is_circular = int(linecontents[3])
-				ncores = int(linecontents[4])
+				rnas.file_skip = int(linecontents[2])
+				rnas.tolerance = int(linecontents[3])
+				rnas.is_circular = int(linecontents[4])
+				ncores = int(linecontents[5])
 				
 				# If the task is not specified, do all the tasks in the input file.
 				if (task > -1):
