@@ -1,5 +1,7 @@
 # vbind
 
+![Logo](https://github.com/paviudes/vbind/blob/master/logo.jpg?raw=true)
+
 vbind is a userfriedly tool for RNA sequencing. In particular, it is used to compute and visualize the bindings between a pool of nuleotides and a gene sequence.
 
 ## Usage
