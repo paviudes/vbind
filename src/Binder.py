@@ -416,9 +416,9 @@ def ShowOutput(rnas, ncores):
 	# Print the output of the matchings to the console.
 	print("_/ Matching was completed in %d seconds on each of %d cores." % (rnas.runtime, ncores))
 	# print("Length\tIn pool\tFoward\tReverse\tTotal")
-	print("================================================================")
-	print("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}".format("Length", "In pool", "Forward", "Reverse", "Total", "% mapped"))
-	print("----------------------------------------------------------------")
+	print("=====================================================================")
+	print("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}".format("Length", "In pool", "Forward", "Reverse", "Total", "Reads per 100"))
+	print("---------------------------------------------------------------------")
 	total = 0
 	for l in range(rnas.gene_length):
 		if (rnas.nSequencesByLengths[l] > 0):
@@ -431,7 +431,7 @@ def ShowOutput(rnas, ncores):
 	total_matches = np.sum(rnas.forwardMatchCounts) + np.sum(rnas.reverseMatchCounts)
 	percentage_mapped = total_matches/rnas.poolsize * 100
 	print("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}".format("", total, np.sum(rnas.forwardMatchCounts), np.sum(rnas.reverseMatchCounts), total_matches, "%.2f" % percentage_mapped))
-	print("================================================================")
+	print("=====================================================================")
 	return None
 
 

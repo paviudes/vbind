@@ -248,7 +248,7 @@ def Plot(plobj, isScaled = 0, quiet = 0):
 	# print("Forward\n{}\nReverse\n{}".format(plobj.nForw, plobj.nRev))
 	alignments = ["forward", "reverse"]
 	# fill_shade: RG: 0.3, I: 0.65, example: 0.65
-	fill_shade = "0.65"
+	fill_shade = "0.3"
 	xreps = 1
 	shift = 0
 	plotfname = ("./../plots/%s_%s_tol_%d.pdf" % (plobj.gene[:plobj.gene.index(".")], plobj.pool[:plobj.pool.index(".")], plobj.tol))
