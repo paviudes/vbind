@@ -5,3 +5,7 @@ data/output/*
 !data/output/*_example_*.txt
 plots/*
 !plots/*_example_*
+# Ignore the contents of paper/
+paper/*
+# Ignore the cluster submission files
+cluster/*

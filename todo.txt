@@ -1,5 +1,0 @@
-X axis ticks: every 50
-No line color for forward and reverse.
-Frame thick and black.
-For pools containing "EV", use forward shade: 75 and reverse: 75
-For pools containing "RDR", use forward share: 25 and reverse: 25
