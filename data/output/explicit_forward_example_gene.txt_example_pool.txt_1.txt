@@ -17,7 +17,6 @@ Length: 5
    GGAAA     |    2    
    GAAAC     |    2    
    AAACC     |    7    
-   TCGGC     |    1    
 *************************
 
 Length: 6
@@ -27,6 +26,5 @@ Length: 6
    CAGGGA    |    3    
    CGGGGA    |    4    
    GGGGAA    |    1    
-   CGGCTT    |    2    
 *************************
 

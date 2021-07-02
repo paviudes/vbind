@@ -3,6 +3,7 @@ from multiprocessing import Process, Array
 import os
 import time
 import numpy as np
+from startup import DisplayLogoLicense, CheckDependencies, Usage
 
 DEBUG = 0
 QUIET = 0
@@ -434,24 +435,6 @@ def ShowOutput(rnas, ncores):
 	return None
 
 
-def Usage():
-	# print the usage of the binder.py script as well as the input file format.
-	print("\033[2mUsage:\033[0m")
-	print("\033[2mpython binder.py <input_file> <line_number>\033[0m")
-	print("\033[2mwhere:\033[0m")
-	print("\033[2m\t<input_file> should be a readable in vbind/data/input, formatted as follows.\033[0m")
-	print("\033[2m\t\tEach line not beginning with \"#\" is: <gene> <pool> <tolerance> <circular> <cores>\033[0m")
-	print("\033[2m\t\tsuch that\033[0m")
-	print("\033[2m\t\t\t1. <gene>: name of the readable file in vbind/data/input that contains the gene sequence.\033[0m")
-	print("\033[2m\t\t\t2. <pool>: name of the readable file in vbind/data/input that contains the pool.\033[0m")
-	print("\033[2m\t\t\t3. <tolerance>: integer specifying the maximum number of mismatches allowed.\033[0m")
-	print("\033[2m\t\t\t4. <circular>: binary (0 or 1) indicating circular (1) or linear (0) matching.\033[0m")
-	print("\033[2m\t\t\t5. <cores>: integer specifying the number of cores reserved for the script.\033[0m")	
-	print("\033[2m\t\tAny line beginning with \"#\" is a comment and will be ignored by the script.\033[0m")
-	print("\033[2m\t<line_number> should be an integer specifying the line number of the matching task in the input file.\033[0m")
-	return None
-
-
 def RunMatchings(rnas, ncores):
 	# Run the matchings with the inputs loaded into the object
 	topology = ["linear", "circular"]
@@ -536,6 +519,12 @@ def RunMatchings(rnas, ncores):
 
 
 if __name__ == '__main__':
+	
+	# Display the logo and license information
+	DisplayLogoLicense()
+	# Check if all the required packages exist
+	CheckDependencies()
+
 	# Complete the binding mechanism by pattern matching batches of the sRNA nucleotides with the PSTVd sequence. The batches are taken such that no batch is greater in size than MAXCONCURRENT and all the batches together constitute all the nucleotides in the sRNA pool.
 	if (len(sys.argv) < 2):
 		Usage()

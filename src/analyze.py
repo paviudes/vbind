@@ -556,26 +556,26 @@ if __name__ == '__main__':
 			print("\033[93m1 -- Load new data for matching\033[0m")
 			print("\033[93m2 -- Plot a previously loaded data\033[0m")
 			print("\033[93m3 -- Relative scaling of matching data\033[0m")
-			print("\033[93m4 -- Write matching data to a file\033[0m")
+			print("\033[93m4 -- Write matching summary to a file\033[0m")
 			print("\033[93m5 -- Verify matching")
 			print("\033[93m6 -- Menu")
 			isMenu = 0
 		else:
-			print("\033[92mDone, what next? choose from Menu.\033[0m")
+			print("\033[2m---enter 6 for the menu---\033[0m")
 
 		print(">>"),
-		# user_choice = int(input().strip("\n").strip(" "))
+		user_choice = int(input().strip("\n").strip(" "))
 
-		####### Temporary
-		if alive_time == 0:
-			user_choice = 1
-		elif alive_time == 1:
-			user_choice = 4
-		elif alive_time == 2:
-			user_choice = 2
-		else:
-			user_choice = 0
-		#######
+		# ####### Temporary
+		# if alive_time == 0:
+		# 	user_choice = 1
+		# elif alive_time == 1:
+		# 	user_choice = 4
+		# elif alive_time == 2:
+		# 	user_choice = 2
+		# else:
+		# 	user_choice = 0
+		# #######
 
 		if (user_choice == 0):
 			completed = 1
@@ -662,4 +662,4 @@ if __name__ == '__main__':
 
 		alive_time += 1
 
-	print("\033[92mDone.\033[0m")
+	print("\033[92mxxxxxxxx\033[0m")
