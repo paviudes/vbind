@@ -48,4 +48,4 @@ vbind is entriely written in Python. The following packages are required for its
 
 Please contact the following developers for any additional help or requests for customization.
 * Pavithran Iyer: pavithran.iyer@uwaterloo.ca .
-* Charith Adkar: Charith.Raj.Adkar.Purushothama@USherbrooke.ca .
+* Charith Adkar: Charith.Adkar@USherbrooke.ca .
