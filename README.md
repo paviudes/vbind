@@ -33,3 +33,10 @@ vbind is entriely written in Python. The following packages are required for its
 | tqdm            | [Progress bar](https://tqdm.github.io)                                       |
 | multiprocessing | [Parallel execution](https://docs.python.org/3/library/multiprocessing.html) |
 | datetime        | [Date and Time](https://docs.python.org/3/library/datetime.html)             |
+
+
+## Contact
+
+Please contact the following developers for any additional help or requests for customization.
+* Pavithran Iyer: pavithran.iyer@uwaterloo.ca .
+* Charith Adkar: Charith.Raj.Adkar.Purushothama@USherbrooke.ca .
