@@ -1,3 +1,7 @@
-# Ignore all input files since they're insanely big
+# Ignore all input and output files, except for the example.
 data/input/*
-!data/input/pairs.txt
+!data/input/example_*.txt
+data/output/*
+!data/output/*_example_*.txt
+plots/*
+!plots/*_example_*

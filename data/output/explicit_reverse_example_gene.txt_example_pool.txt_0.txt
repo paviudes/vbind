@@ -1,0 +1,27 @@
+Reverse matchings
+
+Gene: example_gene.txt
+Pool: example_pool.txt
+Mismatches: 0
+*************************
+
+Length: 5
+  Sequence   | Frequency
+-------------------------
+   ATCCC     |    2    
+   GGGAT     |    3    
+   TTCCC     |    1    
+   CGACC     |    2    
+   AGCCG     |    1    
+   AAGCC     |    2    
+*************************
+
+Length: 6
+  Sequence   | Frequency
+-------------------------
+   CCTGAA    |    1    
+   CGGGGA    |    3    
+   CAGGTT    |    1    
+   AGCCGA    |    1    
+*************************
+

@@ -1,0 +1,23 @@
+Forward matchings
+
+Gene: example_gene.txt
+Pool: example_pool.txt
+Mismatches: 0
+*************************
+
+Length: 5
+  Sequence   | Frequency
+-------------------------
+   GGGAT     |    3    
+   ATCCC     |    2    
+   AAACC     |    5    
+*************************
+
+Length: 6
+  Sequence   | Frequency
+-------------------------
+   TTCAGG    |    1    
+   CGGGGA    |    3    
+   CGGCTT    |    1    
+*************************
+

@@ -119,7 +119,7 @@ class Canvas():
 			# print("self.nForw\n%s" % np.array_str(self.nForw))
 		# 
 		# self.lengths = [[21], [22], [23], [24], [21, 22, 23, 24]]
-		self.lengths = [[3], [4], [3, 4]] # Only for example
+		self.lengths = [[5], [6], [5, 6]] # Only for example
 		self.xscale = np.array([0, self.gene_length, self.gene_length/5], dtype = int)
 		self.yscale = np.array([[1, np.max(np.sum(self.forwardMatchData[:, 1:], axis = 0)), 10],
 								[np.min(np.sum(self.reverseMatchData[:, 1:], axis = 0)), 10, -1]], dtype = int)
@@ -142,12 +142,12 @@ def ScaleMatchings(plobj):
 		for i in range(plobj.gene_length):
 			if (np.abs(plobj.nForw[l, 1 + i]) > 0):
 				for j in range(int(plobj.nForw[l, 0])):
-					# scaled_forward[l, (i + j) % plobj.gene_length] = max(plobj.nForw[l, 1 + i], scaled_forward[l, (i + j) % plobj.gene_length])
-					scaled_forward[l, (i + j) % plobj.gene_length] += plobj.nForw[l, 1 + i]
+					scaled_forward[l, (i + j) % plobj.gene_length] = max(plobj.nForw[l, 1 + i], scaled_forward[l, (i + j) % plobj.gene_length])
+					# scaled_forward[l, (i + j) % plobj.gene_length] += plobj.nForw[l, 1 + i]
 			if (np.abs(plobj.nRev[l, 1 + i]) > 0):
 				for j in range(int(plobj.nRev[l, 0])):
-					# scaled_reverse[l, (i + j) % plobj.gene_length] = max(plobj.nRev[l, 1 + i], scaled_reverse[l, (i + j) % plobj.gene_length])
-					scaled_reverse[l, (i + j) % plobj.gene_length] += plobj.nRev[l, 1 + i]
+					scaled_reverse[l, (i + j) % plobj.gene_length] = max(plobj.nRev[l, 1 + i], scaled_reverse[l, (i + j) % plobj.gene_length])
+					# scaled_reverse[l, (i + j) % plobj.gene_length] += plobj.nRev[l, 1 + i]
 		# if (plobj.nForw[l, 0] > 0):
 		# 	print("length: {}\nscaled_forward\n{}".format(plobj.nForw[l, 0], scaled_forward[l, 1:]))
 		# if (plobj.nRev[l, 0] > 0):
@@ -247,8 +247,8 @@ def Plot(plobj, isScaled = 0, quiet = 0):
 	# Produce plots with the selected data files and the plot parameters
 	# print("Forward\n{}\nReverse\n{}".format(plobj.nForw, plobj.nRev))
 	alignments = ["forward", "reverse"]
-	# fill_shade = "0.3" # 0.65
-	fill_shade = "0.65" # for example
+	# fill_shade: RG: 0.3, I: 0.65, example: 0.65
+	fill_shade = "0.65"
 	xreps = 1
 	shift = 0
 	plotfname = ("./../plots/%s_%s_tol_%d.pdf" % (plobj.gene[:plobj.gene.index(".")], plobj.pool[:plobj.pool.index(".")], plobj.tol))
@@ -266,34 +266,16 @@ def Plot(plobj, isScaled = 0, quiet = 0):
 					nuclens = np.where(np.in1d(scaled_reverse[:, 0], plobj.lengths[l]))[0]
 					yaxis = (-1) * np.tile(np.sum(scaled_reverse[nuclens, 1:], axis = 0), xreps)[:len(xaxis)]
 				
-				# If there is a matching at position i, for length l nucleotide,
-				# then we want to set: y[i + j] = max(y[i + j], y[i]), for all 0 < j < l.
-				# print("yaxis\n{}\nlength\n{}".format(yaxis, plobj.lengths[l]))
-				# scaled_yaxis = np.zeros_like(yaxis)
-				# for i in range(yaxis.shape[0]):
-				# 	if (np.abs(yaxis[i]) > 0):
-				# 		for j in range(np.sum(plobj.lengths[l])):
-				# 			if (d == 0):
-				# 				scaled_yaxis[(i + j) % plobj.gene_length] = max(yaxis[i], scaled_yaxis[(i + j) % plobj.gene_length])
-				# 			else:
-				# 				scaled_yaxis[(i + j) % plobj.gene_length] = min(yaxis[i], scaled_yaxis[(i + j) % plobj.gene_length])
-				# print("scaled yaxis\n{}\nlength\n{}".format(scaled_yaxis, plobj.lengths[l]))
-				# yaxis = scaled_yaxis
+				# Non-zero indices on the gene
+				nonzero_gene_indicator = np.where(yaxis != 0, 1, 0)
 
 				fig = plt.figure(figsize = (32, 24))
 				# plt.plot(xaxis, yaxis, color = "0.5")
 				currax = plt.gca()
-				# currax.set_xlabel(plobj.gene, fontsize = 36)
-				# currax.set_ylabel(plobj.pool, fontsize = 36)
-				# print("xaxis\n{}\nyaxis\n{}".format(xaxis, yaxis))
-				plt.fill_between(xaxis, np.zeros(yaxis.shape[0], dtype = np.float), yaxis, color=fill_shade)
+				plt.fill_between(xaxis, np.zeros(yaxis.shape[0], dtype = np.float), yaxis, where=nonzero_gene_indicator, color=fill_shade)
 				if (d == 0):
-					# currax.plot(xaxis, yaxis, alpha=fill_shade, linestyle="None")
 					# ######
 					# Only for example
-					# currax.bar(xaxis, yaxis, color=fill_shade, align="edge", width=1.03)
-					currax.set_xticks(xaxis)
-					currax.set_xticklabels(1 + np.array(xaxis, dtype = np.int), rotation=45, fontsize = 54)
 					currax.set_yticks(np.arange(0, 6, 1, dtype = np.int))
 					currax.set_yticklabels(np.arange(0, 6, 1, dtype = np.int), fontsize = 54)
 					currax.set_ylim([0, 5])
@@ -305,12 +287,8 @@ def Plot(plobj, isScaled = 0, quiet = 0):
 					# currax.set_ylim([0, LeastGreatestMultiple(1.05 * np.max(yaxis), 500)])
 				else:
 					currax.xaxis.tick_top()
-					# currax.plot(xaxis, yaxis, alpha=fill_shade, linestyle="None")
 					######
 					# Only for example
-					# currax.bar(xaxis, yaxis, color=fill_shade, align="edge", width=1.03) # only for example
-					currax.set_xticks(xaxis)
-					currax.set_xticklabels(1 + np.array(xaxis, dtype = np.int), rotation=45, fontsize = 54)
 					currax.set_yticks(np.arange(0, -6, -1, dtype = np.int))
 					currax.set_yticklabels(np.arange(0, -6, -1, dtype = np.int), fontsize = 54)
 					currax.set_ylim([-5, 0])
@@ -322,18 +300,18 @@ def Plot(plobj, isScaled = 0, quiet = 0):
 					# currax.set_ylim([LeastGreatestMultiple(1.05 * np.min(yaxis), 500), 0])
 				
 				# xticks and limits
-				# xticks = [(1 + xt) for xt in xaxis[::50]]
-				# if ((xticks[-1] % 50) > 0):
-				# 	xticks.append(1 + xaxis[-1])
-				######
-				# For example
-				xticks = [(1 + xt) for xt in xaxis]
-				######
-				currax.set_xticks(xticks)
-				currax.set_xticklabels(xticks, rotation=45, fontsize = 54)
+				# xticks = list(xaxis[::50])
+				# xticks.append(xaxis[-1])
+				# currax.set_xticks(xticks)
+				# currax.set_xticklabels([1 + xticks[0]] + xticks[1:-1] + [1 + xticks[-1]], rotation=45, fontsize = 54)
+				# currax.set_xlim([0, None])
+				#######
+				# # For example
+				currax.set_xticks(xaxis)
+				currax.set_xticklabels(1 + np.array(xaxis, dtype = np.int), rotation=45, fontsize = 54)
 				currax.set_xlim([0, len(xaxis) - 1])
+				#######
 				
-
 				plt.title("%s matching for lengths %s" % (alignments[d], IntArrayToString(plobj.lengths[l])), fontsize = 48, y = 1.1)
 				# print("xaxis\n{}\nnonzero\n{}".format(xaxis, np.nonzero(yaxis)))
 				
@@ -401,6 +379,78 @@ def Normalize(dataset):
 		scaled_reverse[nuclens, 1:] = dataset.reverseMatchData[nuclens, 1:] * scaling
 
 	WriteMatrixToFile(dataset.scaledRevDataFile, scaled_reverse, is_append = 0, dataType='f')
+	return None
+
+
+def ListForwardMatching(dset):
+	# List all the forward matching sequences
+	# If the forward matching array element, F[i][j] = x, then we need the gene-substring gene[i:(i + lengths[i])] and x.
+	with open("./../data/input/%s" % (dset.gene), "r") as gf:
+		gene_seq = gf.readline().strip(" ").strip("\n")
+
+	forward_matches_log = "./../data/output/explicit_forward_%s_%s_%d.txt" % (dset.gene, dset.pool, dset.tol)
+	with open(forward_matches_log, "w") as fl:
+		fl.write("Forward matchings\n\n")
+		fl.write("Gene: %s\n" % (dset.gene))
+		fl.write("Pool: %s\n" % (dset.pool))
+		fl.write("Mismatches: %d\n" % (dset.tol))
+		fl.write("*************************\n\n")
+		for l in range(dset.forwardMatchData.shape[0]):
+			nuc_len = int(dset.forwardMatchData[l, 0])
+			gene_indices, = np.nonzero(dset.forwardMatchData[l, 1:])
+			match_freq = dset.forwardMatchData[l, 1 + gene_indices].astype(np.int)
+			if (gene_indices.shape[0] > 0):
+				fl.write("Length: %d\n" % (nuc_len))
+				fl.write("{:^12} | {:^8}\n".format("Sequence", "Frequency"))
+				fl.write("-------------------------\n")
+				for s in range(gene_indices.shape[0]):
+					gene_subseq = [gene_seq[(gene_indices[s] + g) % len(gene_seq)] for g in range(nuc_len)]
+					fl.write("{:^12} | {:^8}\n".format("".join(gene_subseq), match_freq[s]))
+				fl.write("*************************\n\n")
+	return None
+
+
+def ReverseComplement(seq):
+	# Compute the reverse complement encoding.
+	reverse_encoding = {"A":"T", "T":"A", "G":"C", "C":"G"}
+	revcomp = [seq[s] for s in range(len(seq))]
+	for s in range(len(seq)):
+		revcomp[s] = reverse_encoding[seq[s]]
+	return "".join(revcomp[::-1])
+
+
+def ListReverseMatching(dset):
+	# List all the reverse matching sequences
+	# If the reverse matching array element, F[i][j] = x, then we need the gene-substring gene[i:(i + lengths[i])] and x.
+	with open("./../data/input/%s" % (dset.gene), "r") as gf:
+		gene_seq = gf.readline().strip(" ").strip("\n")
+
+	reverse_matches_log = "./../data/output/explicit_reverse_%s_%s_%d.txt" % (dset.gene, dset.pool, dset.tol)
+	with open(reverse_matches_log, "w") as fl:
+		fl.write("Reverse matchings\n\n")
+		fl.write("Gene: %s\n" % (dset.gene))
+		fl.write("Pool: %s\n" % (dset.pool))
+		fl.write("Mismatches: %d\n" % (dset.tol))
+		fl.write("*************************\n\n")
+		for l in range(dset.reverseMatchData.shape[0]):
+			nuc_len = int(dset.reverseMatchData[l, 0])
+			gene_indices, = np.nonzero(dset.reverseMatchData[l, 1:])
+			match_freq = dset.reverseMatchData[l, 1 + gene_indices].astype(np.int)
+			if (gene_indices.shape[0] > 0):
+				fl.write("Length: %d\n" % (nuc_len))
+				fl.write("{:^12} | {:^8}\n".format("Sequence", "Frequency"))
+				fl.write("-------------------------\n")
+				for s in range(gene_indices.shape[0]):
+					gene_subseq = ReverseComplement([gene_seq[(gene_indices[s] + g) % len(gene_seq)] for g in range(nuc_len)])
+					fl.write("{:^12} | {:^8}\n".format("".join(gene_subseq), match_freq[s]))
+				fl.write("*************************\n\n")
+	return None
+
+
+def ListMatching(dset):
+	# List the forward and reverse matching output.
+	ListForwardMatching(dset)
+	ListReverseMatching(dset)
 	return None
 
 
@@ -506,7 +556,7 @@ if __name__ == '__main__':
 			print("\033[93m1 -- Load new data for matching\033[0m")
 			print("\033[93m2 -- Plot a previously loaded data\033[0m")
 			print("\033[93m3 -- Relative scaling of matching data\033[0m")
-			print("\033[93m4 -- Save matching data to a file\033[0m")
+			print("\033[93m4 -- Write matching data to a file\033[0m")
 			print("\033[93m5 -- Verify matching")
 			print("\033[93m6 -- Menu")
 			isMenu = 0
@@ -520,6 +570,8 @@ if __name__ == '__main__':
 		if alive_time == 0:
 			user_choice = 1
 		elif alive_time == 1:
+			user_choice = 4
+		elif alive_time == 2:
 			user_choice = 2
 		else:
 			user_choice = 0
@@ -535,8 +587,8 @@ if __name__ == '__main__':
 			# inputs = [("pstvdI.txt", "sRNA_intermediate.txt", 1)]
 			# inputs = [("PSTVd_RG.txt", "GSM1717894_PSTVd_RG1.txt", 0)]
 			# inputs = [("PSTVd_RG.txt", "GSM1717894_PSTVd_RG1.txt", 1)]
-			inputs = [("example_gene.txt", "example_pool.txt", 0)]
-			# inputs = [("example_gene.txt", "example_pool.txt", 1)]
+			# inputs = [("example_gene.txt", "example_pool.txt", 0)]
+			inputs = [("example_gene.txt", "example_pool.txt", 1)]
 			name = "default"
 			for (gene, pool, tol) in inputs:
 				newCan = Canvas(gene, pool, tol)
@@ -580,22 +632,7 @@ if __name__ == '__main__':
 			Normalize(dataset)
 
 		elif (user_choice == 4):
-			print("\033[93mOf the %d available matching data sets, which one would you like to plot?\033[0m" % len(canvanses.keys()))
-			for (ni, name) in enumerate(canvanses):
-				print("\033[93m%d -- %s\033[0m" % (ni, name)),
-				if (name in scaledAvailable):
-					print("\033[92m\t (*)\033[0m")
-				else:
-					print("")
-
-			print(">>"),
-			saveDataChoice = int(input().strip("\n").strip(" "))
-
-			print("\033[95m!! This will overwrite the existing data for %s.\n0 -- Cancel\n1 -- OK.\033[0m" % list(canvanses.keys())[saveDataChoice])
-			print(">>"),
-			isOverwrite = int(input().strip("\n").strip(" "))
-			if (isOverwrite == 1):
-				Save(canvanses[list(canvanses.keys())[saveDataChoice]])
+			ListMatching(canvanses["default"])
 
 		elif (user_choice == 5):
 			print("\033[93mOf the %d available matching data sets, for which one would you like to a report?\033[0m" % len(canvanses.keys()))
