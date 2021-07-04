@@ -11,40 +11,6 @@ QUIET = 0
 class Binder():
 	"""
 	Binder class: Contains all the information required to perform a round of Pattern matching
-
-	string types
-	poolfname = name of the file containing the nucleotide sequences
-	genefname = name of the file containing the pstvd sequences
-	gene = pstvd sequence
-	dateStamp = date and time when the pattern matching simulation was completed
-	rawForwMatchFname = name of the file containing the raw forward matching data -- matrix (i,j) entry is 1 iff ith sRNA sequence matched with in the forward alignment with the PSTVd subsequence starting at index j.
-	rawRevMatchFname =  name of the file containing the raw reverse matching data -- matrix (i,j) entry is 1 iff ith sRNA sequence matched with in the reverse alignment with the PSTVd subsequence starting at index j.
-	forwardMatchFname = name of the file containing the matching data -- matrix whose (i,j) entry is the number of times a sequence of length j forward-matched with a PSTVd subsequence starting at index j.
-	reverseMatchFname = name of the file containing the matching data -- matrix whose (i,j) entry is the number of times a sequence of length j reverse-matched with a PSTVd subsequence starting at index j.
-
-	forwMappingFname = name of the file containing the forward mapping data
-	revMappingFname = name of the file containing the reverse mapping data
-
-	integer types
-	max_nuc_length = maximum length of a nucleotide sequence
-	gene_length = length of the pstvd sequence
-	MAXCONCURRENT = 100,000
-	poolsize = number of nucleotides (of all lengths) in the sRNA pool. The sRNA pool is the one that is currently being matched for. This will be limited to a maximum of MAXCONCURRENT. To handle a pool of a larger size, we must repeat the matching separately for smaller pools and gather the matching data.
-	tolerance = maximum number of mismatches authorized to validate a matching.
-
-	floating types
-	runtime = total running time of the pattern matching algorithm
-
-	Integer arrays
-	breakpoints = nucleotide indices and number of nucleotides that define a chunk
-	gene_matrix = matrix whose column j is the binary encoding of the pstvd sequence of length L starting at position j. L is the maximum length of a nucleotide in the current sRNA pool.
-	sRNAPoolMatrix = matrix whose jth row is the binary encoding of the jth nucleotide in the sRNA pool.
-	sRNASeqLengths = matrix whose ith row contains the length of the ith sRNA nucleotide (minus the tolerance) repeated as many times as the length of the length of the PSTVd sequence
-	nSequencesByLengths = number of nucleotide sequences in the pool of every length.
-	forwardMatches = matrix whose i,j entry denotes the number of nucleotides of length j that matched in the forward alignment direction with the pstvd substring starting at index i.
-	reverseMatches = matrix whose i,j entry denotes the number of nucleotides of length j that matched in the reverse alignment direction with the pstvd substring starting at index i.
-	forwardMapping = vector whose ith index specifies how many times the ith character in the PSTVd sequence appeared in a forward matching with any nucleotide
-	reverseMapping = vector whose ith index specifies how many times the ith character in the PSTVd sequence appeared in a reverse matching with any nucleotide
 	"""
 
 	def __init__(self):
@@ -154,7 +120,6 @@ def GroupByLength(bindObj):
 	bindObj.poolsize = nNucs
 	bindObj.max_nuc_length = maxSeqLen
 	n_pool_lengths = np.count_nonzero(bindObj.nSequencesByLengths >= 0)
-	# print("Sequence read")
 	return n_pool_lengths
 
 
@@ -237,17 +202,14 @@ def SetBreakPoints(bindObj):
 				else:
 					if (nSeqsPartialPool < bindObj.MAXCONCURRENT):
 						nSeqsPartialPool = nSeqsPartialPool + 1
-						# nSeqsRead = nSeqsRead + 1
 					else:
 						breakpoints[-1][-1] = nSeqsPartialPool
 						# Start a new pool
 						nSeqsPartialPool = 1
 						breakpoints.append([l, 0])
-					# nSeqsRead = nSeqsRead + 1
 
 		if (breakpoints[-1][-1] == 0):
 			breakpoints[-1][-1] = nSeqsPartialPool
-	# print("nSeqsPartialPool = {}, ninvalid = {}, breakpoints = {}".format(nSeqsPartialPool, ninvalid, breakpoints))
 	if (ninvalid > 0):
 		print("\033[2mThere were %d invalid sequences -- having \"N\" in them.\033[0m" % (ninvalid))
 	return breakpoints
@@ -267,8 +229,6 @@ def PartialBinding(pool_matrix, gene_matrix, gene_length, length_offsets, pool_l
 	for i in range(pool_indices.shape[0]):
 		matches[ordering[pool_lengths[pool_indices[i]]] * gene_length + gene_indices[i]] += 1
 		counts[pool_lengths[pool_indices[i]]] += 1
-	# print("matchings\n{}".format(matchings))
-	# print("reduced\n{}".format(np.where(reduced, 1, 0)))
 	return None
 
 
@@ -297,7 +257,6 @@ def	PreparePartialBinding(n_seqs, skip_lines, reverse, rnas):
 			# Others contain data irrelevant to this algorithm.
 			if ((line_number % rnas.file_skip) == 1):
 				sRNASeq = line.strip("\n").strip(" ")
-				# print("sequence at line {}: {}".format(line_number, sRNASeq))
 				if ('N' in sRNASeq):
 					pass
 				else:
@@ -305,46 +264,6 @@ def	PreparePartialBinding(n_seqs, skip_lines, reverse, rnas):
 					pool_lengths[nRead] = len(sRNASeq)
 					length_offsets[nRead, :] = (len(sRNASeq) - rnas.tolerance) * np.ones(rnas.gene_length, dtype = int)
 					nRead += 1
-
-		# for (l, line) in enumerate(pool_fp):
-		# 	# every 4th line contains a nucleotide sequence. Others contain data irrelevant to this algorithm
-		# 	# Skip the nucleotides that have been read previously, i.e, those which appear before seqStartLineNo
-		# 	# We need to skip seqStart*4 lines.
-		# 	if (l < skip_lines):
-		# 		continue
-		# 	else:
-		# 		if ((l % rnas.file_skip) == 1):
-		# 			sRNASeq = line.strip("\n").strip(" ")
-		# 			# print("Read\n{}".format(sRNASeq))
-		# 			if ('N' in sRNASeq):
-		# 				pass
-		# 			else:
-		# 				if (nRead < n_seqs):
-		# 					pool_matrix[nRead, :] = NucleotideEncoder(sRNASeq, rnas.max_nuc_length, reverse)
-		# 					pool_lengths[nRead] = len(sRNASeq)
-		# 					seqLenOffsets[nRead, :] = (len(sRNASeq) - rnas.tolerance) * np.ones(rnas.gene_length, dtype = int)
-		# 					nRead = nRead + 1
-
-	# Compute the frequency of matchings in the sRNA pool with every continuous PSTVd subsequence.
-	# First, compute the Pattern matchings by matrix multiplication of the sRNA sequence encoding matrix with the PSTVd sequences encoding matrix.
-	# If there was a perfect matching between a PSTVd subsequene and the sRNA nucleotide in the pool, the corresponding element generated in the product will be equal to the length of the sRNA nucleotide.
-	# The amount by which the product element is lesser than the length of the sRNA nucleotide, is precisely the number of mismatches.
-	# If the product doescribes matching upto the right tolerence, then reduce the product to 1, or else to 0.
-
-	# matchings = matrix whose i,j entry is equal to the number of locations at which the ith nucleotide in the sRNA pool matched with the pstvd sequence of length L starting at index j.
-	# matchings = np.dot(pool_matrix, rnas.gene_matrix)
-	# # reduced = matrix whose i,j entry is 1 if the ith nucleotide matched with the pstvd sequence (of length L) starting at index j.
-	# reduced = np.greater_equal(matchings, length_offsets)
-	# (pool_indices, gene_indices) = np.nonzero(reduced)
-	# for i in range(pool_indices.shape[0]):
-	# 	# print("rnas.ordering[pool_lengths[pool_indices[{}]]] = {}".format(i, rnas.ordering[pool_lengths[pool_indices[i]]]))
-	# 	matches[ordering[pool_lengths[pool_indices[i]]] * rnas.gene_length + gene_indices[i]] += 1
-	# 	counts[pool_lengths[pool_indices[i]]] += 1
-
-	# print("pool_matrix\n{}".format(pool_matrix))
-	# print("rnas.gene_matrix\n{}".format(rnas.gene_matrix))
-	# print("matchings\n{}".format(matchings))
-	# print("reduced\n{}".format(np.where(reduced, 1, 0)))
 	return (pool_matrix, length_offsets, pool_lengths)
 
 
@@ -545,7 +464,7 @@ if __name__ == '__main__':
 
 	# Reading the gene, pool files and tolerance.
 	if not os.path.isfile(input_file):
-		print("\033[2mError: Input file %s does not exist in vbind/data/input.\033[0m" % (input_file))
+		print("\033[2mError: Input file %s does not exist in data/input.\033[0m" % (input_file))
 		exit(0);
 	else:
 		input_fp = open(input_file, "r")
@@ -569,7 +488,8 @@ if __name__ == '__main__':
 				rnas.file_skip = int(linecontents[2])
 				rnas.tolerance = int(linecontents[3])
 				rnas.is_circular = int(linecontents[4])
-				ncores = int(linecontents[5])
+				ncores = 1
+				# ncores = int(linecontents[5])
 				
 				# If the task is not specified, do all the tasks in the input file.
 				if (task > -1):

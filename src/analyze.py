@@ -6,8 +6,9 @@ from normalize import RecordNormalizedData, Normalize
 from verify import VerifyMatching
 from utils import ArrayToString, IntArrayToString, ReverseComplement, LeastGreatestMultiple, ReadMatrixFromFile
 from plot import PlotSettings, Plot
+from startup import DisplayLogoLicense, CheckDependencies
 
-class Canvas():
+class RNAPostProcessor():
 	"""
 	Contains all the information required for post processing the output of the sRNA profiler.
 	"""
@@ -44,7 +45,14 @@ class Canvas():
 		self.normalized_reverse = None
 		self.norm_RevDataFile = ("./../data/output/norm_reverse_matchings_%s_%s_tol%d.txt" % (self.poolfname[:-4], self.genefname[:-4], self.tolerance))
 		return None
-		
+
+
+def Usage():
+	# Print the usage.
+	print("\033[2m./analyze.py <input file>\033[0m")
+	print("\033[2mwhere the input file should be in data/input/ and the same format as for vbind.sh.\033[0m")
+	return None
+
 
 def IdentifyInstance(rnap, input_file, line_number):
 	# Extract the parameters from an input file that specify an instance for post-processing.
@@ -182,9 +190,16 @@ def ParseNucLengths(lengths_encoding):
 
 
 if __name__ == '__main__':
-	rnap = Canvas()
+	
+	# Display the logo and license information
+	DisplayLogoLicense()
+	# Check if all the required packages exist
+	CheckDependencies()
+
+	rnap = RNAPostProcessor()
 	# Read the parameters to identify the instance for post-processing
 	if (len(sys.argv) < 2):
+		Usage()
 		exit(0)
 	else:
 		input_file = ("./../data/input/%s" % sys.argv[1].strip("\n"))
