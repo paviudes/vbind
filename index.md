@@ -1,39 +1,50 @@
 ## Welcome to GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/paviudes/vbind/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
 ![Logo](https://github.com/paviudes/vbind/blob/master/logo.png?raw=true)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+__vbind__ is a userfriedly tool for RNA sequencing. In particular, it can be used to compute and visualize the bindings between a pool of sRNA nuleotides and a genome sequence.
 
-### Markdown
+## Usage
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+In what follows, we will describe the two parts of our software tool. The first part computes matchings between a gene and a nucleotide pool. Second, presents some tools to visualize the solution to the mapping problem.
 
-```markdown
-Syntax highlighted code block
+### Part one: Computing matchings between a gene and a nuleotide pool
+1. Key ingriedients: The __gene__ and the __pool__.
+  * __gene__: The gene sequence should be a string of characters from the alphabet {`A`, `T`, `G`, `C`}. We require the gene sequence to be specified in a text file without any line-breaks.
+  * __pool__: The pool is a collection of several sRNA nucleotides, each represented as a string of characters from the alphabet {`A`, `T`, `G`, `C`}. Ideally, we require a text file, wherein each new line identifies a nucleotide sequence. However, since a pool is typically derived from a gene bank, we accomodate some other formats for specifying the pool. In particular, we accept a text file containing the nueotides of the pool, interleaved by other information that is irrelevant for sequencing. Hence, the pool should be specified by a text file, wherein every `k`-th line, for some `k > 0`.
+2. Other settings:
+  * __lines to skip__: number of lines to skip (denoted above by `k`) in the text file describing the pool, before reading a valid nuleoide sequence.
+  * __tolerance__: the maximum number of mismatches allowed
+  * __topology__ of the gene: an integer that takes the value 0 for linear matching and 1 for circular matching
+  * __cores__: the number of cores to be used by the software.
 
-# Header 1
-## Header 2
-### Header 3
+A problem instance is specified as: `<gene> <pool> <lines to skip> <tolerance> <topology> <cores>`.
 
-- Bulleted
-- List
+   For example, `gene.txt pool.txt 4 1 1 1` is a complete input specification, indicating that the problem of computing bindings, in the circular topology while allowing for at most one mismatch, between the sequence in `gene.txt` with those in the `pool.txt`. Furthermore, every fourth sequence in `pool.txt` is a valid sRNA nuleotide.
 
-1. Numbered
-2. List
+All such instances of the matching problem can be gathered in a text file, placed in vbind/data/input.
 
-**Bold** and _Italic_ and `Code` text
+To solve the instances of the matching problem in a text file “example.txt”, we need to run the following command:
+`./vbind.sh example.txt`
+and to solve only a particular instance, we can specify its line number: `x`, by
+`./vbind.sh example.txt x` .
 
-[Link](url) and ![Logo](https://github.com/paviudes/vbind/blob/master/logo.png?raw=true)
-```
+### Part two: Postprocessing -- Visualize matching results
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Matching results computed from part one can be visualized using plots in our software tool. In addition to plotting, we also offer the capability of normalizing to reads per million. The post processing steps can be executed from `./analyze.sh`.
 
-### Jekyll Themes
+## Installation
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/paviudes/vbind/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+vbind is entriely written in Python. The following packages are required for its seamless functioning.
+
+| Package         | Description                                                                  |
+|-----------------|------------------------------------------------------------------------------|
+| numpy           | [Linear algebra](https://www.numpy.org)                                      |
+| scipy           | [Linear algebra](https://www.scipy.org)                                      |
+| tqdm            | [Progress bar](https://tqdm.github.io)                                       |
+| multiprocessing | [Parallel execution](https://docs.python.org/3/library/multiprocessing.html) |
+| datetime        | [Date and Time](https://docs.python.org/3/library/datetime.html)             |
 
 ### Support or Contact
 
-Having trouble with vbind? Check out our [documentation](https://github.com/paviudes/vbind) or [contact us](mailto:pavithran.iyer@uwaterloo.ca?subject=[vbind%20querry]) and we’ll help you sort it out.
+Having trouble with vbind? Check out our [documentation](https://github.com/paviudes/vbind) or [contact us](mailto:pavithran.iyer@uwaterloo.ca,charith.adkar@usherbrooke.ca?subject=[vbind%20querry]) and we’ll help you sort it out.
