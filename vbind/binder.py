@@ -8,13 +8,13 @@ from startup import DisplayLogoLicense, CheckDependencies, Usage
 DEBUG = 0
 QUIET = 0
 
-class Binder():
+class RNAProfiler():
 	"""
-	Binder class: Contains all the information required to perform a round of Pattern matching
+	RNAProfiler class: Contains all the information required to perform a round of Pattern matching
 	"""
 
 	def __init__(self):
-		# Initialize all the variables in the scope of the Binder class
+		# Initialize all the variables in the scope of the RNAProfiler class
 		self.interfaceFile = "NAN"
 		self.poolfname = "NAN"
 		self.genefname = "NAN"
@@ -45,9 +45,9 @@ class Binder():
 		return None
 
 
-# Load a Binder object
+# Load a RNAProfiler object
 def Load(bindObj, interfaceFile = "NAN"):
-	# Load all the information required in the Binder object for Pattern matching
+	# Load all the information required in the RNAProfiler object for Pattern matching
 	# Read the interface file and load the parameters for Binding
 	if os.path.isfile(interfaceFile):
 		bindObj.interfaceFile = interfaceFile
@@ -64,12 +64,12 @@ def Load(bindObj, interfaceFile = "NAN"):
 			bindObj.tolerance = int(uiFid.readline().strip("\n").strip(" "))
 			bindObj.is_circular = int(uiFid.readline().strip("\n").strip(" "))
 	else:
-		LoadBinderFromConsole(bindObj)
+		LoadRNAProfilerFromConsole(bindObj)
 	return None
 
 
-def LoadBinderFromConsole(bindObj):
-	# Load a Binder object from taking console inputs
+def LoadRNAProfilerFromConsole(bindObj):
+	# Load a RNAProfiler object from taking console inputs
 	print("\033[93mEnter the name of the file containing the sRNA pool.\033[0m")
 	print(">>"),
 	bindObj.poolfname = raw_input().strip("\n")
@@ -232,14 +232,14 @@ def PartialBinding(pool_matrix, gene_matrix, gene_length, length_offsets, pool_l
 	return None
 
 
-def	PreparePartialBinding(n_seqs, skip_lines, reverse, rnas):
+def	PreparePartialBinding(n_seqs, skip_lines, reverse, rnap):
 	# Partially load the sRNA pool with either the remaining or the next MAXCONCURRENT nucleotides, from the main pool, whichever is lesser.
 	# The number of nucleotide sequences to be read can be less than the above estimate -- because valid nucleotide sequences should not have 'N' in them.
-	pool_matrix = np.zeros((n_seqs, 4 * rnas.max_nuc_length), dtype = int)
-	length_offsets = np.zeros((n_seqs, rnas.gene_length), dtype = int)
+	pool_matrix = np.zeros((n_seqs, 4 * rnap.max_nuc_length), dtype = int)
+	length_offsets = np.zeros((n_seqs, rnap.gene_length), dtype = int)
 	pool_lengths = np.zeros(n_seqs, dtype = int)
 	
-	with open(("./../data/input/%s" % rnas.poolfname), 'r') as pool_fp:
+	with open(("./../data/input/%s" % rnap.poolfname), 'r') as pool_fp:
 		nSkipped = 0
 		nRead = 0
 		completed = 1
@@ -255,57 +255,57 @@ def	PreparePartialBinding(n_seqs, skip_lines, reverse, rnas):
 			line = pool_fp.readline()
 			# Every k-th (k = file_skip) line contains a nucleotide sequence.
 			# Others contain data irrelevant to this algorithm.
-			if ((line_number % rnas.file_skip) == 1):
+			if ((line_number % rnap.file_skip) == 1):
 				sRNASeq = line.strip("\n").strip(" ")
 				if ('N' in sRNASeq):
 					pass
 				else:
-					pool_matrix[nRead, :] = NucleotideEncoder(sRNASeq, rnas.max_nuc_length, reverse)
+					pool_matrix[nRead, :] = NucleotideEncoder(sRNASeq, rnap.max_nuc_length, reverse)
 					pool_lengths[nRead] = len(sRNASeq)
-					length_offsets[nRead, :] = (len(sRNASeq) - rnas.tolerance) * np.ones(rnas.gene_length, dtype = int)
+					length_offsets[nRead, :] = (len(sRNASeq) - rnap.tolerance) * np.ones(rnap.gene_length, dtype = int)
 					nRead += 1
 	return (pool_matrix, length_offsets, pool_lengths)
 
 
-def RecordBinding(rnas):
+def RecordBinding(rnap):
 	# Save the matching frequency array
-	WriteMatrixToFile(rnas.forwardMatchFname, rnas.forwardMatches, 0, 0, 0)
-	# print("Reverse matches\n{}".format(rnas.reverseMatches))
-	WriteMatrixToFile(rnas.reverseMatchFname, rnas.reverseMatches, 0, 0, 0)
-	print("\033[2mResults written to %s and %s.\033[0m" % (rnas.forwardMatchFname, rnas.reverseMatchFname))
+	WriteMatrixToFile(rnap.forwardMatchFname, rnap.forwardMatches, 0, 0, 0)
+	# print("Reverse matches\n{}".format(rnap.reverseMatches))
+	WriteMatrixToFile(rnap.reverseMatchFname, rnap.reverseMatches, 0, 0, 0)
+	print("\033[2mResults written to %s and %s.\033[0m" % (rnap.forwardMatchFname, rnap.reverseMatchFname))
 	return None
 
 
-def LogBinding(rnas):
+def LogBinding(rnap):
 	# Store the details of the pattern matching run into a log file. The file is to be appened.
 	topology = ["linear", "circular"]
 	with open("log.txt", 'a') as logfp:
 		logfp.write("\n***********************************************************************\n")
-		logfp.write("Details for simulations done on %s at %s.\n" % tuple(rnas.dateStamp.split(" ")))
+		logfp.write("Details for simulations done on %s at %s.\n" % tuple(rnap.dateStamp.split(" ")))
 
-		logfp.write("Length of the PSTVd sequence in %s: %d.\n" % (rnas.genefname, rnas.gene_length))
-		logfp.write("Number of nucleotides in the sRNA pool in %s: %d.\n" % (rnas.poolfname, rnas.poolsize))
-		logfp.write("Number of mismatches allowed: %d.\n" % rnas.tolerance)
-		logfp.write("Topology of matching: %s.\n" % topology[rnas.is_circular])
+		logfp.write("Length of the PSTVd sequence in %s: %d.\n" % (rnap.genefname, rnap.gene_length))
+		logfp.write("Number of nucleotides in the sRNA pool in %s: %d.\n" % (rnap.poolfname, rnap.poolsize))
+		logfp.write("Number of mismatches allowed: %d.\n" % rnap.tolerance)
+		logfp.write("Topology of matching: %s.\n" % topology[rnap.is_circular])
 		
 		logfp.write("================================================================\n")
 
 		logfp.write("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}\n".format("Length", "In pool", "Forward", "Reverse", "Total", "% mapped"))
 		logfp.write("----------------------------------------------------------------\n")
 		total = 0
-		for l in range(rnas.gene_length):
-			if (rnas.nSequencesByLengths[l] > 0):
-				total += rnas.nSequencesByLengths[l]
-				total_matches = rnas.forwardMatchCounts[l] + rnas.reverseMatchCounts[l]
-				percentage_mapped = total_matches/rnas.nSequencesByLengths[l] * 100
-				logfp.write("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}\n".format(l, rnas.nSequencesByLengths[l], rnas.forwardMatchCounts[l], rnas.reverseMatchCounts[l], total_matches, "%.2f" % (percentage_mapped)))
+		for l in range(rnap.gene_length):
+			if (rnap.nSequencesByLengths[l] > 0):
+				total += rnap.nSequencesByLengths[l]
+				total_matches = rnap.forwardMatchCounts[l] + rnap.reverseMatchCounts[l]
+				percentage_mapped = total_matches/rnap.nSequencesByLengths[l] * 100
+				logfp.write("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}\n".format(l, rnap.nSequencesByLengths[l], rnap.forwardMatchCounts[l], rnap.reverseMatchCounts[l], total_matches, "%.2f" % (percentage_mapped)))
 		logfp.write("----------------------------------------------------------------\n")
-		total_matches = np.sum(rnas.forwardMatchCounts) + np.sum(rnas.reverseMatchCounts)
-		percentage_mapped = total_matches/rnas.poolsize * 100
-		logfp.write("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}\n".format("", total, np.sum(rnas.forwardMatchCounts), np.sum(rnas.reverseMatchCounts), total_matches, "%.2f" % percentage_mapped))
+		total_matches = np.sum(rnap.forwardMatchCounts) + np.sum(rnap.reverseMatchCounts)
+		percentage_mapped = total_matches/rnap.poolsize * 100
+		logfp.write("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}\n".format("", total, np.sum(rnap.forwardMatchCounts), np.sum(rnap.reverseMatchCounts), total_matches, "%.2f" % percentage_mapped))
 		logfp.write("================================================================\n")
 
-		logfp.write("Total simulation time: %d seconds." % rnas.runtime)
+		logfp.write("Total simulation time: %d seconds." % rnap.runtime)
 		logfp.write("\n***********************************************************************\n")
 	return None
 
@@ -338,35 +338,35 @@ def WriteMatrixToFile(fname, mat, appendMode, sparse = 0, binary = 0):
 	return None
 
 
-def ShowOutput(rnas, ncores):
+def ShowOutput(rnap, ncores):
 	# Print the output of the matchings to the console.
-	print("_/ Matching was completed in %d seconds on each of %d cores." % (rnas.runtime, ncores))
+	print("_/ Matching was completed in %d seconds on each of %d cores." % (rnap.runtime, ncores))
 	# print("Length\tIn pool\tFoward\tReverse\tTotal")
 	print("=====================================================================")
 	print("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}".format("Length", "In pool", "Forward", "Reverse", "Total", "Reads per 100"))
 	print("---------------------------------------------------------------------")
 	total = 0
-	for l in range(rnas.gene_length):
-		if (rnas.nSequencesByLengths[l] > 0):
-			# print("%d\t%d\t%d\t%d\t%d" % (l, rnas.nSequencesByLengths[l], rnas.forwardMatchCounts[l], rnas.reverseMatchCounts[l], rnas.forwardMatchCounts[l] + rnas.reverseMatchCounts[l]))
-			total += rnas.nSequencesByLengths[l]
-			total_matches = rnas.forwardMatchCounts[l] + rnas.reverseMatchCounts[l]
-			percentage_mapped = total_matches/rnas.nSequencesByLengths[l] * 100
-			print("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}".format(l, rnas.nSequencesByLengths[l], rnas.forwardMatchCounts[l], rnas.reverseMatchCounts[l], total_matches, "%.2f" % (percentage_mapped)))
+	for l in range(rnap.gene_length):
+		if (rnap.nSequencesByLengths[l] > 0):
+			# print("%d\t%d\t%d\t%d\t%d" % (l, rnap.nSequencesByLengths[l], rnap.forwardMatchCounts[l], rnap.reverseMatchCounts[l], rnap.forwardMatchCounts[l] + rnap.reverseMatchCounts[l]))
+			total += rnap.nSequencesByLengths[l]
+			total_matches = rnap.forwardMatchCounts[l] + rnap.reverseMatchCounts[l]
+			percentage_mapped = total_matches/rnap.nSequencesByLengths[l] * 100
+			print("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}".format(l, rnap.nSequencesByLengths[l], rnap.forwardMatchCounts[l], rnap.reverseMatchCounts[l], total_matches, "%.2f" % (percentage_mapped)))
 	print("----------------------------------------------------------------")
-	total_matches = np.sum(rnas.forwardMatchCounts) + np.sum(rnas.reverseMatchCounts)
-	percentage_mapped = total_matches/rnas.poolsize * 100
-	print("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}".format("", total, np.sum(rnas.forwardMatchCounts), np.sum(rnas.reverseMatchCounts), total_matches, "%.2f" % percentage_mapped))
+	total_matches = np.sum(rnap.forwardMatchCounts) + np.sum(rnap.reverseMatchCounts)
+	percentage_mapped = total_matches/rnap.poolsize * 100
+	print("{:^6} | {:^8} | {:^8} | {:^8} | {:^8} | {:^8}".format("", total, np.sum(rnap.forwardMatchCounts), np.sum(rnap.reverseMatchCounts), total_matches, "%.2f" % percentage_mapped))
 	print("=====================================================================")
 	return None
 
 
-def RunMatchings(rnas, ncores):
+def RunMatchings(rnap, ncores):
 	# Run the matchings with the inputs loaded into the object
 	topology = ["linear", "circular"]
-	print("Now Running\n\tgene: %s\n\tpool: %s\n\ttopology: %s\n\ttolerance: %d\n\tcores: %d" % (rnas.genefname, rnas.poolfname, topology[rnas.is_circular], rnas.tolerance, ncores))
+	print("Now Running\n\tgene: %s\n\tpool: %s\n\ttopology: %s\n\ttolerance: %d\n\tcores: %d" % (rnap.genefname, rnap.poolfname, topology[rnap.is_circular], rnap.tolerance, ncores))
 	
-	breakpoints = SetBreakPoints(rnas)
+	breakpoints = SetBreakPoints(rnap)
 	nBreaks = len(breakpoints)
 
 	start = time.time()
@@ -378,8 +378,8 @@ def RunMatchings(rnas, ncores):
 			print("\033[2mReverse matchings:")
 		
 		# Define the counts and the matches arrays
-		matches = Array('i', rnas.forwardMatches.size - rnas.forwardMatches.shape[0])
-		counts = Array('i', rnas.gene_length)
+		matches = Array('i', rnap.forwardMatches.size - rnap.forwardMatches.shape[0])
+		counts = Array('i', rnap.gene_length)
 		
 		completed = 0
 
@@ -388,9 +388,9 @@ def RunMatchings(rnas, ncores):
 			launch = min(nBreaks - completed, ncores)
 
 			# Reset the counts and matches array.
-			for i in range(rnas.forwardMatchCounts.size):
+			for i in range(rnap.forwardMatchCounts.size):
 				counts[i] = 0
-			for i in range(rnas.forwardMatches.size - rnas.forwardMatches.shape[0]):
+			for i in range(rnap.forwardMatches.size - rnap.forwardMatches.shape[0]):
 				matches[i] = 0
 
 			processes = []
@@ -401,9 +401,9 @@ def RunMatchings(rnas, ncores):
 			for p in range(launch):
 				lines_to_skip = breakpoints[completed + p][0]
 				seqs_to_read = breakpoints[completed + p][1]
-				(pool_matrix, length_offsets, pool_lengths) = PreparePartialBinding(seqs_to_read, lines_to_skip, d, rnas)
-				processes.append(Process(target = PartialBinding, args = (pool_matrix, rnas.gene_matrix, rnas.gene_length, length_offsets, pool_lengths, rnas.ordering, matches, counts)))
-				# PartialBinding(pool_matrix, rnas.gene_matrix, rnas.gene_length, length_offsets, pool_lengths, rnas.ordering, matches, counts)
+				(pool_matrix, length_offsets, pool_lengths) = PreparePartialBinding(seqs_to_read, lines_to_skip, d, rnap)
+				processes.append(Process(target = PartialBinding, args = (pool_matrix, rnap.gene_matrix, rnap.gene_length, length_offsets, pool_lengths, rnap.ordering, matches, counts)))
+				# PartialBinding(pool_matrix, rnap.gene_matrix, rnap.gene_length, length_offsets, pool_lengths, rnap.ordering, matches, counts)
 
 			for p in range(launch):
 				processes[p].start()
@@ -413,17 +413,17 @@ def RunMatchings(rnas, ncores):
 
 			# Gathering results
 			if (d == 0):
-				for i in range(rnas.forwardMatches.shape[0]):
-					for j in range(rnas.gene_length):
-						rnas.forwardMatches[i, j + 1] = rnas.forwardMatches[i, j + 1] + matches[i * rnas.gene_length + j]
-				for j in range(rnas.gene_length):
-					rnas.forwardMatchCounts[j] = rnas.forwardMatchCounts[j] + counts[j]
+				for i in range(rnap.forwardMatches.shape[0]):
+					for j in range(rnap.gene_length):
+						rnap.forwardMatches[i, j + 1] = rnap.forwardMatches[i, j + 1] + matches[i * rnap.gene_length + j]
+				for j in range(rnap.gene_length):
+					rnap.forwardMatchCounts[j] = rnap.forwardMatchCounts[j] + counts[j]
 			else:
-				for i in range(rnas.reverseMatches.shape[0]):
-					for j in range(rnas.gene_length):
-						rnas.reverseMatches[i, j + 1] = rnas.reverseMatches[i, j + 1] + matches[i * rnas.gene_length + j]
-				for j in range(rnas.gene_length):
-					rnas.reverseMatchCounts[j] = rnas.reverseMatchCounts[j] + counts[j]
+				for i in range(rnap.reverseMatches.shape[0]):
+					for j in range(rnap.gene_length):
+						rnap.reverseMatches[i, j + 1] = rnap.reverseMatches[i, j + 1] + matches[i * rnap.gene_length + j]
+				for j in range(rnap.gene_length):
+					rnap.reverseMatchCounts[j] = rnap.reverseMatchCounts[j] + counts[j]
 
 			completed = completed + launch
 
@@ -438,8 +438,26 @@ def RunMatchings(rnas, ncores):
 				print("\r\033[2m ......... %d%% done, about %d minutes %d seconds left\033[0m" % (100 * completed/float(nBreaks), (remaining/60), (int(remaining) % 60))),
 				sys.stdout.flush()
 
-	rnas.runtime = (time.time() - start)
-	rnas.dateStamp = time.strftime("%d/%m/%Y %H:%M:%S")
+	rnap.runtime = (time.time() - start)
+	rnap.dateStamp = time.strftime("%d/%m/%Y %H:%M:%S")
+	return None
+
+
+def Bind(rnap):
+	# Solve the Viroid binding problem.
+	# This is a wrapper function for the Python package.
+	# The input is an object of the RNAProfiler class. The attributes:
+	# genefname, poolfname, is_circular and tolerance should be loaded before this function call.
+	
+	# Compute derived parameters
+	ComputeDerivedParameters(rnap)
+	
+	# Run pattern matching
+	RunMatchings(rnap, ncores)
+
+	# Save the matching information to a file
+	RecordBinding(rnap)
+	LogBinding(rnap)
 	return None
 
 
@@ -481,13 +499,13 @@ if __name__ == '__main__':
 			n_task += 1
 			if ((n_task == task) or (task == -1)):
 				linecontents = list(map(lambda ln: ln.strip("\n").strip(" "), line.split(" ")))
-				# Initialization of the Binder object and its attributes
-				rnas = Binder()
-				rnas.genefname = linecontents[0]
-				rnas.poolfname = linecontents[1]
-				rnas.file_skip = int(linecontents[2])
-				rnas.tolerance = int(linecontents[3])
-				rnas.is_circular = int(linecontents[4])
+				# Initialization of the RNAProfiler object and its attributes
+				rnap = RNAProfiler()
+				rnap.genefname = linecontents[0]
+				rnap.poolfname = linecontents[1]
+				rnap.file_skip = int(linecontents[2])
+				rnap.tolerance = int(linecontents[3])
+				rnap.is_circular = int(linecontents[4])
 				ncores = 1
 				# ncores = int(linecontents[5])
 				
@@ -496,16 +514,16 @@ if __name__ == '__main__':
 					stop = 1
 
 				# Compute derived parameters
-				ComputeDerivedParameters(rnas)
+				ComputeDerivedParameters(rnap)
 	
 				# Run pattern matching
-				RunMatchings(rnas, ncores)
+				RunMatchings(rnap, ncores)
 
 				# Print output
-				ShowOutput(rnas, ncores)
+				ShowOutput(rnap, ncores)
 
 				# Save the matching information to a file
-				RecordBinding(rnas)
-				LogBinding(rnas)
+				RecordBinding(rnap)
+				LogBinding(rnap)
 
 	input_fp.close()

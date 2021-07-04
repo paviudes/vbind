@@ -181,3 +181,24 @@ def Plot(plobj, plot_settings):
 		pdfInfo['ModDate'] = dt.datetime.today()
 	print("\033[92mAll plots saved to %s.\033[0m" % plotfname)
 	return None
+
+
+def Visualize(rnap, lengths, is_scaled = 1, plot_settings = None):
+	# Plot the results of the sRNA profiler.
+	rnap.lengths = lengths
+	GatherMatchingData(rnap, rnap.nForw, rnap.nRev)
+	# Normalize the output if necessary
+	if (is_scaled == 1):
+		Normalize(rnap, rnap.gathered_forward, rnap.gathered_reverse)
+		(rnap.gathered_forward, rnap.gathered_reverse) = (rnap.normalized_forward, rnap.normalized_reverse)
+	ScaleMatchings(rnap, rnap.gathered_forward, rnap.gathered_reverse)
+	# Load plot settings
+	if plot_settings is None:
+		plot_settings = PlotSettings()
+		settings_fname = input(">>Settings file name (leave blank for default): ").strip("\n").strip(" ")
+		if (len(settings_fname) == 0):
+			settings_fname = "./../data/input/default_plot_settings.txt"
+		plot_settings.load(settings_fname)
+	# Plot
+	Plot(rnap, plot_settings)
+	return None
