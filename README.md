@@ -1,8 +1,8 @@
 # vbind
 
-![Logo](https://github.com/paviudes/vbind/blob/master/logo.jpg?raw=true)
+![Logo](https://github.com/paviudes/vbind/blob/master/logo.png?raw=true)
 
-vbind is a userfriedly tool for RNA sequencing. In particular, it is used to compute and visualize the bindings between a pool of nuleotides and a gene sequence.
+__vbind__ is a userfriedly tool for RNA sequencing. In particular, it can be used to compute and visualize the bindings between a pool of sRNA nuleotides and a genome sequence.
 
 ## Usage
 
