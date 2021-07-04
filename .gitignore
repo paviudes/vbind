@@ -11,3 +11,5 @@ paper/*
 cluster/*
 # Ignore pptx files
 scratch/*
+# Ignore mac specific files
+.DS_Store
