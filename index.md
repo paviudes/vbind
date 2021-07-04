@@ -45,6 +45,10 @@ vbind is entriely written in Python. The following packages are required for its
 | multiprocessing | [Parallel execution](https://docs.python.org/3/library/multiprocessing.html) |
 | datetime        | [Date and Time](https://docs.python.org/3/library/datetime.html)             |
 
-### Support or Contact
+## License
+
+This software is licensed under the [BSD Clause 3](https://opensource.org/licenses/BSD-3-Clause) license.
+
+## Support or Contact
 
 Having trouble with vbind? Check out our [documentation](https://github.com/paviudes/vbind) or [contact us](mailto:pavithran.iyer@uwaterloo.ca,charith.adkar@usherbrooke.ca?subject=[vbind%20querry]) and we’ll help you sort it out.
