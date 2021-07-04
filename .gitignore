@@ -1,6 +1,7 @@
 # Ignore all input and output files, except for the example.
 data/input/*
 !data/input/example_*.txt
+!data/input/default_plot_settings.txt
 data/output/*
 !data/output/*_example_*.txt
 plots/*

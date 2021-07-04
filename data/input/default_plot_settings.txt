@@ -1,0 +1,9 @@
+# This file contains default plot settings.
+# figsize: size of the frame for plot. Must be a pair of integers separated by a comma.
+figsize 32,24
+# fill: color for the fill or a grayscale number of the fill.
+fill 0.75
+# font: font family for the text in the plot.
+font arial
+# fontsize: font size for the text in the plot.
+fontsize 54
