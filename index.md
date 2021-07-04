@@ -36,4 +36,4 @@ Your Pages site will use the layout and styles from the Jekyll theme you have se
 
 ### Support or Contact
 
-Having trouble with vbind? Check out our [documentation](https://github.com/paviudes/vbind) or [contact us](mailto:pavithran.iyer@uwaterloo.ca?subject=[vbind querry]) and we’ll help you sort it out.
+Having trouble with vbind? Check out our [documentation](https://github.com/paviudes/vbind) or [contact us](mailto:pavithran.iyer@uwaterloo.ca?subject=[vbind%20querry]) and we’ll help you sort it out.
