@@ -9,3 +9,5 @@ plots/*
 paper/*
 # Ignore the cluster submission files
 cluster/*
+# Ignore pptx files
+scratch/*

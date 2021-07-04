@@ -1096,3 +1096,88 @@ Length | In pool  | Forward  | Reverse  |  Total   | % mapped
 ================================================================
 Total simulation time: 0 seconds.
 ***********************************************************************
+
+***********************************************************************
+Details for simulations done on 02/07/2021 at 14:56:43.
+Length of the PSTVd sequence in example_gene.txt: 30.
+Number of nucleotides in the sRNA pool in example_pool.txt: 49.
+Number of mismatches allowed: 0.
+Topology of matching: linear.
+================================================================
+Length | In pool  | Forward  | Reverse  |  Total   | % mapped
+----------------------------------------------------------------
+  5    |    35    |    10    |    8     |    18    |  51.43  
+  6    |    14    |    4     |    5     |    9     |  64.29  
+----------------------------------------------------------------
+       |    49    |    14    |    13    |    27    |  55.10  
+================================================================
+Total simulation time: 0 seconds.
+***********************************************************************
+
+***********************************************************************
+Details for simulations done on 02/07/2021 at 14:56:49.
+Length of the PSTVd sequence in example_gene.txt: 30.
+Number of nucleotides in the sRNA pool in example_pool.txt: 49.
+Number of mismatches allowed: 1.
+Topology of matching: linear.
+================================================================
+Length | In pool  | Forward  | Reverse  |  Total   | % mapped
+----------------------------------------------------------------
+  5    |    35    |    31    |    28    |    59    |  168.57 
+  6    |    14    |    10    |    8     |    18    |  128.57 
+----------------------------------------------------------------
+       |    49    |    41    |    36    |    77    |  157.14 
+================================================================
+Total simulation time: 0 seconds.
+***********************************************************************
+
+***********************************************************************
+Details for simulations done on 02/07/2021 at 15:01:31.
+Length of the PSTVd sequence in example_gene.txt: 30.
+Number of nucleotides in the sRNA pool in example_pool.txt: 49.
+Number of mismatches allowed: 0.
+Topology of matching: circular.
+================================================================
+Length | In pool  | Forward  | Reverse  |  Total   | % mapped
+----------------------------------------------------------------
+  5    |    35    |    10    |    11    |    21    |  60.00  
+  6    |    14    |    5     |    6     |    11    |  78.57  
+----------------------------------------------------------------
+       |    49    |    15    |    17    |    32    |  65.31  
+================================================================
+Total simulation time: 0 seconds.
+***********************************************************************
+
+***********************************************************************
+Details for simulations done on 02/07/2021 at 15:01:37.
+Length of the PSTVd sequence in example_gene.txt: 30.
+Number of nucleotides in the sRNA pool in example_pool.txt: 49.
+Number of mismatches allowed: 1.
+Topology of matching: circular.
+================================================================
+Length | In pool  | Forward  | Reverse  |  Total   | % mapped
+----------------------------------------------------------------
+  5    |    35    |    32    |    41    |    73    |  208.57 
+  6    |    14    |    12    |    10    |    22    |  157.14 
+----------------------------------------------------------------
+       |    49    |    44    |    51    |    95    |  193.88 
+================================================================
+Total simulation time: 0 seconds.
+***********************************************************************
+
+***********************************************************************
+Details for simulations done on 03/07/2021 at 16:04:04.
+Length of the PSTVd sequence in example_gene.txt: 30.
+Number of nucleotides in the sRNA pool in example_pool.txt: 49.
+Number of mismatches allowed: 0.
+Topology of matching: circular.
+================================================================
+Length | In pool  | Forward  | Reverse  |  Total   | % mapped
+----------------------------------------------------------------
+  5    |    35    |    10    |    11    |    21    |  60.00  
+  6    |    14    |    5     |    6     |    11    |  78.57  
+----------------------------------------------------------------
+       |    49    |    15    |    17    |    32    |  65.31  
+================================================================
+Total simulation time: 0 seconds.
+***********************************************************************

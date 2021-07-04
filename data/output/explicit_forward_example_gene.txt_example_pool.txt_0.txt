@@ -2,6 +2,7 @@ Forward matchings
 
 Gene: example_gene.txt
 Pool: example_pool.txt
+Topology: circular
 Mismatches: 0
 *************************
 
@@ -18,5 +19,6 @@ Length: 6
 -------------------------
    TTCAGG    |    1    
    CGGGGA    |    3    
+   CGGCTT    |    1    
 *************************
 

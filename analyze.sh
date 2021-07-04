@@ -1,3 +1,3 @@
 cd src
-python analyze.py
+python analyze.py "$@"
 cd ..

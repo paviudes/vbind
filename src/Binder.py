@@ -138,19 +138,8 @@ def NucleotideEncoder(nucleotide, blockSize, reverse):
 	return binaryNucleotide
 
 
-def ComputeDerivedParameters(bindObj):
-	# Compute parameters required for pattern matching, from the sRNA pool and pstvd sequences.
-	# Based on the computed parameters, intialize the respective arrays
-	# 1. maximum length of the pstvd sequence
-	# 2. total number of nucleotides in the pool.
-
-	# Read the pstvd sequence and compute its length
-	with open(("./../data/input/%s" % bindObj.genefname), 'r') as pstvdFid:
-		bindObj.gene = pstvdFid.readline().strip("\n")
-
-	bindObj.gene_length = len(bindObj.gene)
-
-	# Compute the total number of nucleotides and the maximum length of a nucleotide sequence
+def GroupByLength(bindObj):
+	# Group the sequences in the pool by nucleotide length
 	nNucs = 0
 	maxSeqLen = 0
 	bindObj.nSequencesByLengths = np.zeros(bindObj.gene_length, dtype = int)
@@ -166,6 +155,24 @@ def ComputeDerivedParameters(bindObj):
 	bindObj.max_nuc_length = maxSeqLen
 	n_pool_lengths = np.count_nonzero(bindObj.nSequencesByLengths >= 0)
 	# print("Sequence read")
+	return n_pool_lengths
+
+
+
+def ComputeDerivedParameters(bindObj):
+	# Compute parameters required for pattern matching, from the sRNA pool and pstvd sequences.
+	# Based on the computed parameters, intialize the respective arrays
+	# 1. maximum length of the pstvd sequence
+	# 2. total number of nucleotides in the pool.
+
+	# Read the pstvd sequence and compute its length
+	with open(("./../data/input/%s" % bindObj.genefname), 'r') as pstvdFid:
+		bindObj.gene = pstvdFid.readline().strip("\n")
+
+	bindObj.gene_length = len(bindObj.gene)
+
+	# Group the sequences in the pool by nucleotide length
+	n_pool_lengths = GroupByLength(bindObj)
 
 	# Construct the relevant arrays
 	bindObj.gene_matrix = np.zeros((4 * bindObj.max_nuc_length, bindObj.gene_length), dtype = int)
@@ -440,7 +447,6 @@ def RunMatchings(rnas, ncores):
 	topology = ["linear", "circular"]
 	print("Now Running\n\tgene: %s\n\tpool: %s\n\ttopology: %s\n\ttolerance: %d\n\tcores: %d" % (rnas.genefname, rnas.poolfname, topology[rnas.is_circular], rnas.tolerance, ncores))
 	
-	ComputeDerivedParameters(rnas)
 	breakpoints = SetBreakPoints(rnas)
 	nBreaks = len(breakpoints)
 
@@ -569,6 +575,9 @@ if __name__ == '__main__':
 				if (task > -1):
 					stop = 1
 
+				# Compute derived parameters
+				ComputeDerivedParameters(rnas)
+	
 				# Run pattern matching
 				RunMatchings(rnas, ncores)
 
