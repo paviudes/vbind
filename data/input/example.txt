@@ -1,0 +1,17 @@
+# Use this file to call the binder.py script with the following format.
+# Each line not beginning with \"#\" is: <gene> <pool> <tolerance> <circular> <cores>\033[0m")
+# where:
+# 	1. <gene>: name of the readable file in vbind/data/input that contains the gene sequence.\033[0m")
+# 	2. <pool>: name of the readable file in vbind/data/input that contains the pool.\033[0m")
+#	3. <skip>: number of lines to skip before reading every nucleotide sequence in the pool file.
+# 	4. <tolerance>: integer specifying the maximum number of mismatches allowed.\033[0m")
+# 	5. <circular>: binary (0 or 1) indicating circular (1) or linear (0) matching.\033[0m")
+# Any line beginning with \"#\" is a comment and will be ignored by the script.\033[0m")
+#
+#
+#
+# Task 1
+example_gene.txt example_pool.txt 4 0 1
+# Task 2
+example_gene.txt example_pool.txt 4 1 1
+quit
