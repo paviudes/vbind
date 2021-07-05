@@ -67,7 +67,7 @@ def IdentifyInstance(rnap, input_file, line_number):
 					rnap.file_skip = int(line[2])
 					rnap.tolerance = int(line[3])
 					rnap.is_circular = int(line[4])
-					ncores = int(line[5])
+					# ncores = int(line[5])
 					break
 				lno = lno + 1
 	rnap.load_output()
