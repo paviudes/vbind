@@ -53,3 +53,5 @@ This software is licensed under the [BSD Clause 3](https://opensource.org/licens
 Please contact the following developers for any additional help or requests for customization.
 * Pavithran Iyer: pavithran.iyer@uwaterloo.ca .
 * Charith Adkar: Charith.Adkar@USherbrooke.ca .
+* Jean-Pierre Perrault: Jean-Pierre.Perreault@USherbrooke.ca .
+* Teruo Sano: sano@hirosaki-u.ac.jp .
