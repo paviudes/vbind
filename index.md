@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Welcome to vbind
 
 ![Logo](https://github.com/paviudes/vbind/blob/master/logo.png?raw=true)
 
