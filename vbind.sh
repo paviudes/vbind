@@ -17,6 +17,11 @@ if [ "$default_check" -eq "0" ]; then
 		echo -e "\033[2mSkipping the default Python ${version_info} installation and running ${python_command} instead.\033[0m"
 	fi
 fi
+
+# Create the data output and plot folders.
+mkdir -p data/output
+mkdir -p data/plots
+
 cd vbind
 command=$(echo "${python_command} binder.py "$@"")
 eval $command

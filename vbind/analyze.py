@@ -180,10 +180,22 @@ def SummarizeMatching(dset):
 	return None
 
 
-def ParseNucLengths(lengths_encoding):
+def ParseNucLengths():
 	# Parse the string input specifying the nucleotide lengths.
 	# The nucleotide lengths is a list of lists.
 	# Each list in the string is separated by a semicolon ";" and each element of a list is separated by a comma ",".
+	is_help = 1
+	while (is_help == 1):
+		lengths_encoding = input(">>Lengths (enter \"Help\" for guidance): ").strip("\n").strip(" ")
+		if (lengths_encoding.lower() == "help"):
+			is_help = 1
+			print("\033[2mFormat for specifying lengths:\033[0m")
+			print("\033[2mWe can specify multiple sets of lengths as a string.\033[0m")
+			print("\033[2mEach set should be demarcated by a \";\" and the elements in every list should be separated by \",\".\033[0m")
+			print("\033[2mFor eg., the set of lengths 2,3,4 and 3,4,5 and 5 and 6 should be specified by the string: 2,3,4;3,4,5;5;6.\033[0m")
+		else:
+			is_help = 0
+
 	lengths_string = list(map(lambda ln: ln.strip("\n").strip(" ").split(","), lengths_encoding.strip("\n").strip(" ").split(";")))
 	lengths = [list(map(int, ln)) for ln in lengths_string]
 	return lengths
@@ -214,7 +226,7 @@ if __name__ == '__main__':
 			rnap.pool_lengths = GroupByLength(rnap)
 
 		elif (user_choice == 2):
-			rnap.lengths = ParseNucLengths(input(">>Lengths: ").strip("\n").strip(" "))
+			rnap.lengths = ParseNucLengths()
 			# print("lengths: {}".format(rnap.lengths))
 			GatherMatchingData(rnap, rnap.nForw, rnap.nRev)
 			is_scaled = int(input(">>Plot normalized data? [1]Yes, [0]No: ").strip("\n").strip(" "))
