@@ -1,5 +1,4 @@
 import os
-from sys import stdout
 import datetime as dt
 from tqdm import tqdm
 import numpy as np
