@@ -13,7 +13,7 @@ cluster/*
 # Ignore pptx files
 scratch/*
 # Ignore mac specific files
-.DS_Store
+**/.DS_Store
 # Ignore PyPi distribution
 dist/*
 # Ignore cache files
