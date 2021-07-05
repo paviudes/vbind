@@ -16,7 +16,6 @@ In what follows, we will describe the two parts of our software tool. The first 
   * __lines to skip__: number of lines to skip (denoted above by `k`) in the text file describing the pool, before reading a valid nuleoide sequence.
   * __tolerance__: the maximum number of mismatches allowed
   * __topology__ of the gene: an integer that takes the value 0 for linear matching and 1 for circular matching
-  * __cores__: the number of cores to be used by the software.
 
 A problem instance is specified as: `<gene> <pool> <lines to skip> <tolerance> <topology> <cores>`.
 
