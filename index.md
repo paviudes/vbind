@@ -34,7 +34,7 @@ Matching results computed from part one can be visualized using plots in our sof
 
 ## Installation
 
-vbind is entriely written in Python. The following packages are required for its seamless functioning.
+vbind is entriely developed and meant to be used with the _Python 3 interpretter_. The following packages are required for its seamless functioning.
 
 | Package         | Description                                                                  |
 |-----------------|------------------------------------------------------------------------------|
