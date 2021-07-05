@@ -15,7 +15,7 @@ class RNAProfiler():
 
 	def __init__(self):
 		# Initialize all the variables in the scope of the RNAProfiler class
-		self.interfaceFile = "NAN"
+		self.input_file = "NAN"
 		self.poolfname = "NAN"
 		self.genefname = "NAN"
 		self.matchFrequencyFname = "NAN"
@@ -45,44 +45,43 @@ class RNAProfiler():
 		return None
 
 
-# Load a RNAProfiler object
-def Load(bindObj, interfaceFile = "NAN"):
+def LoadInstance(rnap, input_string):
 	# Load all the information required in the RNAProfiler object for Pattern matching
 	# Read the interface file and load the parameters for Binding
-	if os.path.isfile(interfaceFile):
-		bindObj.interfaceFile = interfaceFile
-		if (QUIET == 0):
-			print("\033[2mLoading information required for pattern matching from %s.\033[0m" % bindObj.interfaceFile)
-
-		with open(bindObj.interfaceFile, 'r') as uiFid:
-			# 1. file name of pstvd sequence
-			# 2. file name of nucleotides in the pool
-			# 3. tolerance
-			# 4. circular or linear mapping
-			bindObj.genefname = uiFid.readline().strip("\n").strip(" ")
-			bindObj.poolfname = uiFid.readline().strip("\n").strip(" ")
-			bindObj.tolerance = int(uiFid.readline().strip("\n").strip(" "))
-			bindObj.is_circular = int(uiFid.readline().strip("\n").strip(" "))
+	is_error = 0
+	
+	rnap.genefname = input_string[0]
+	if (not os.path.isfile("./../data/input/%s" % rnap.genefname)):
+		print("\033[2mError: Genome file {} does not exist in data/input.\033[0m".format(rnap.genefname))
+		is_error = 1
+	
+	rnap.poolfname = input_string[1]
+	if (not os.path.isfile("./../data/input/%s" % rnap.poolfname)):
+		is_error = 1
+		print("\033[2mError: sRNA pool file {} does not exist in data/input.\033[0m".format(rnap.poolfname))
+	
+	file_skip_string = input_string[2]
+	if (file_skip_string.isnumeric()):
+		rnap.file_skip = int(file_skip_string)
 	else:
-		LoadRNAProfilerFromConsole(bindObj)
-	return None
+		is_error = 1
+		print("\033[2mError: Number of lines to skip must be a positive integer.\033[0m")
 
-
-def LoadRNAProfilerFromConsole(bindObj):
-	# Load a RNAProfiler object from taking console inputs
-	print("\033[93mEnter the name of the file containing the sRNA pool.\033[0m")
-	print(">>"),
-	bindObj.poolfname = raw_input().strip("\n")
-
-	print("\033[93mEnter the name of the file containing the PSTVd sequence.\033[0m")
-	print(">>"),
-	bindObj.genefname = raw_input().strip("\n")
-
-	print("\033[93mEnter the maximum number of mismatches allowed.\033[0m")
-	print(">>"),
-	bindObj.tolerance = int(raw_input().strip("\n"))
-
-	return None
+	tolerance_string = input_string[3]
+	if (tolerance_string.isnumeric()):
+		rnap.tolerance = int(tolerance_string)
+	else:
+		is_error = 1
+		print("\033[2mError: Tolerance must be a positive integer.\033[0m")
+	
+	is_circular_string = input_string[4]
+	if (is_circular_string.isnumeric()):
+		rnap.is_circular = int(is_circular_string)
+	else:
+		is_error = 1
+		print("\033[2mError: The choice between circular or linear must be specified by a positive integer.\033[0m")
+	
+	return is_error
 
 
 def NucleotideEncoder(nucleotide, blockSize, reverse):
@@ -104,73 +103,73 @@ def NucleotideEncoder(nucleotide, blockSize, reverse):
 	return binaryNucleotide
 
 
-def GroupByLength(bindObj):
+def GroupByLength(rnap):
 	# Group the sequences in the pool by nucleotide length
 	nNucs = 0
 	maxSeqLen = 0
-	bindObj.nSequencesByLengths = np.zeros(bindObj.gene_length, dtype = int)
-	with open(("./../data/input/%s" % bindObj.poolfname), 'r') as pool_fp:
+	rnap.nSequencesByLengths = np.zeros(rnap.gene_length, dtype = int)
+	with open(("./../data/input/%s" % rnap.poolfname), 'r') as pool_fp:
 		for (l, line) in enumerate(pool_fp):
-			if ((l % bindObj.file_skip) == 1):
+			if ((l % rnap.file_skip) == 1):
 				nNucs += 1
 				seqLen = len(line.strip("\n").strip(" "))
-				bindObj.nSequencesByLengths[seqLen] += 1
+				rnap.nSequencesByLengths[seqLen] += 1
 				if seqLen > maxSeqLen:
 					maxSeqLen = seqLen
-	bindObj.poolsize = nNucs
-	bindObj.max_nuc_length = maxSeqLen
-	n_pool_lengths = np.count_nonzero(bindObj.nSequencesByLengths >= 0)
+	rnap.poolsize = nNucs
+	rnap.max_nuc_length = maxSeqLen
+	n_pool_lengths = np.count_nonzero(rnap.nSequencesByLengths >= 0)
 	return n_pool_lengths
 
 
 
-def ComputeDerivedParameters(bindObj):
+def ComputeDerivedParameters(rnap):
 	# Compute parameters required for pattern matching, from the sRNA pool and pstvd sequences.
 	# Based on the computed parameters, intialize the respective arrays
 	# 1. maximum length of the pstvd sequence
 	# 2. total number of nucleotides in the pool.
 
 	# Read the pstvd sequence and compute its length
-	with open(("./../data/input/%s" % bindObj.genefname), 'r') as pstvdFid:
-		bindObj.gene = pstvdFid.readline().strip("\n")
+	with open(("./../data/input/%s" % rnap.genefname), 'r') as pstvdFid:
+		rnap.gene = pstvdFid.readline().strip("\n")
 
-	bindObj.gene_length = len(bindObj.gene)
+	rnap.gene_length = len(rnap.gene)
 
 	# Group the sequences in the pool by nucleotide length
-	n_pool_lengths = GroupByLength(bindObj)
+	n_pool_lengths = GroupByLength(rnap)
 
 	# Construct the relevant arrays
-	bindObj.gene_matrix = np.zeros((4 * bindObj.max_nuc_length, bindObj.gene_length), dtype = int)
-	for i in range(bindObj.gene_length):
-		bindObj.gene_matrix[:, i] = NucleotideEncoder(StringSlice(bindObj.gene, i, bindObj.max_nuc_length, bindObj.is_circular), bindObj.max_nuc_length, 0)
+	rnap.gene_matrix = np.zeros((4 * rnap.max_nuc_length, rnap.gene_length), dtype = int)
+	for i in range(rnap.gene_length):
+		rnap.gene_matrix[:, i] = NucleotideEncoder(StringSlice(rnap.gene, i, rnap.max_nuc_length, rnap.is_circular), rnap.max_nuc_length, 0)
 
-	bindObj.rawForwMatchFname = ("./../data/output/raw_forward_matchings_%s_%s_tol%d.txt" % (bindObj.poolfname[:-4], bindObj.genefname[:-4], bindObj.tolerance))
-	with open(bindObj.rawForwMatchFname, 'w') as rawFid:
-		rawFid.write("%d %d\n" % (bindObj.poolsize, bindObj.gene_length))
+	rnap.rawForwMatchFname = ("./../data/output/raw_forward_matchings_%s_%s_tol%d.txt" % (rnap.poolfname[:-4], rnap.genefname[:-4], rnap.tolerance))
+	with open(rnap.rawForwMatchFname, 'w') as rawFid:
+		rawFid.write("%d %d\n" % (rnap.poolsize, rnap.gene_length))
 
-	bindObj.rawRevMatchFname = ("./../data/output/raw_reverse_matchings_%s_%s_tol%d.txt" % (bindObj.poolfname[:-4], bindObj.genefname[:-4], bindObj.tolerance))
-	with open(bindObj.rawForwMatchFname, 'w') as rawFid:
-		rawFid.write("%d %d\n" % (bindObj.poolsize, bindObj.gene_length))
+	rnap.rawRevMatchFname = ("./../data/output/raw_reverse_matchings_%s_%s_tol%d.txt" % (rnap.poolfname[:-4], rnap.genefname[:-4], rnap.tolerance))
+	with open(rnap.rawForwMatchFname, 'w') as rawFid:
+		rawFid.write("%d %d\n" % (rnap.poolsize, rnap.gene_length))
 
-	bindObj.forwardMatchFname = ("./../data/output/forward_matchings_%s_%s_tol%d.txt" % (bindObj.poolfname[:-4], bindObj.genefname[:-4], bindObj.tolerance))
-	bindObj.forwardMatches = np.zeros((n_pool_lengths, bindObj.gene_length + 1), dtype = np.int32)
-	bindObj.reverseMatchFname = ("./../data/output/reverse_matchings_%s_%s_tol%d.txt" % (bindObj.poolfname[:-4], bindObj.genefname[:-4], bindObj.tolerance))
-	bindObj.reverseMatches = np.zeros((n_pool_lengths, bindObj.gene_length + 1), dtype = np.int32)
+	rnap.forwardMatchFname = ("./../data/output/forward_matchings_%s_%s_tol%d.txt" % (rnap.poolfname[:-4], rnap.genefname[:-4], rnap.tolerance))
+	rnap.forwardMatches = np.zeros((n_pool_lengths, rnap.gene_length + 1), dtype = np.int32)
+	rnap.reverseMatchFname = ("./../data/output/reverse_matchings_%s_%s_tol%d.txt" % (rnap.poolfname[:-4], rnap.genefname[:-4], rnap.tolerance))
+	rnap.reverseMatches = np.zeros((n_pool_lengths, rnap.gene_length + 1), dtype = np.int32)
 
 	# Ordering on the non-zero nucleotide lengths
-	bindObj.ordering = -1 * np.ones(bindObj.gene_length, dtype = int)
+	rnap.ordering = -1 * np.ones(rnap.gene_length, dtype = int)
 	nzlen = 0
-	for i in range(bindObj.gene_length):
-		if (bindObj.nSequencesByLengths[i] > 0):
-			bindObj.ordering[i] = nzlen
-			bindObj.forwardMatches[nzlen, 0] = i
-			bindObj.reverseMatches[nzlen, 0] = i
+	for i in range(rnap.gene_length):
+		if (rnap.nSequencesByLengths[i] > 0):
+			rnap.ordering[i] = nzlen
+			rnap.forwardMatches[nzlen, 0] = i
+			rnap.reverseMatches[nzlen, 0] = i
 			nzlen = nzlen + 1
 
-	# print("Initialization\nForward\n{}\nReverse\n{}\nOrdering\n{}".format(bindObj.forwardMatches, bindObj.reverseMatches, bindObj.ordering))
+	# print("Initialization\nForward\n{}\nReverse\n{}\nOrdering\n{}".format(rnap.forwardMatches, rnap.reverseMatches, rnap.ordering))
 
-	bindObj.forwardMatchCounts = np.zeros(bindObj.gene_length, dtype = np.int32)
-	bindObj.reverseMatchCounts = np.zeros(bindObj.gene_length, dtype = np.int32)
+	rnap.forwardMatchCounts = np.zeros(rnap.gene_length, dtype = np.int32)
+	rnap.reverseMatchCounts = np.zeros(rnap.gene_length, dtype = np.int32)
 	return None
 
 
@@ -185,22 +184,22 @@ def StringSlice(sequence, start, width, iscirc):
 	return substring
 
 
-def SetBreakPoints(bindObj):
+def SetBreakPoints(rnap):
 	# Set points which will separate the nucleotides in the sRNA pool into chunks.
 	# Each chunk will have at most MAXCONCURRENT nucleotides can be read by a core of the machine.
 	nSeqsPartialPool = 0
 	# nSeqsRead = 0
 	ninvalid = 0
 	breakpoints = [[1, 0]]
-	with open(("./../data/input/%s" % bindObj.poolfname), 'r') as pool_fp:
+	with open(("./../data/input/%s" % rnap.poolfname), 'r') as pool_fp:
 		for (l, line) in enumerate(pool_fp):
 			sRNASeq = line.strip("\n")
 			# every 4th line contains a nucleotide sequence. Others contain data irrelevant to this algorithm
-			if (l % bindObj.file_skip == 1):
+			if (l % rnap.file_skip == 1):
 				if ('N' in sRNASeq):
 					ninvalid = ninvalid + 1
 				else:
-					if (nSeqsPartialPool < bindObj.MAXCONCURRENT):
+					if (nSeqsPartialPool < rnap.MAXCONCURRENT):
 						nSeqsPartialPool = nSeqsPartialPool + 1
 					else:
 						breakpoints[-1][-1] = nSeqsPartialPool
@@ -473,6 +472,8 @@ if __name__ == '__main__':
 		Usage()
 		exit(0)
 	else:
+		if (len(sys.argv) > 3):
+			print("\033[2mWarning: Out of the {} parameters provided, only the first two: [\"{}\", \"{}\"], will be used.\033[0m".format(len(sys.argv), sys.argv[1], sys.argv[2]))
 		if (len(sys.argv) > 2):
 			task = int(sys.argv[2].strip("\n"))
 		else:
@@ -501,11 +502,7 @@ if __name__ == '__main__':
 				linecontents = list(map(lambda ln: ln.strip("\n").strip(" "), line.split(" ")))
 				# Initialization of the RNAProfiler object and its attributes
 				rnap = RNAProfiler()
-				rnap.genefname = linecontents[0]
-				rnap.poolfname = linecontents[1]
-				rnap.file_skip = int(linecontents[2])
-				rnap.tolerance = int(linecontents[3])
-				rnap.is_circular = int(linecontents[4])
+				is_error = LoadInstance(rnap, linecontents)
 				ncores = 1
 				# ncores = int(linecontents[5])
 				
@@ -513,17 +510,19 @@ if __name__ == '__main__':
 				if (task > -1):
 					stop = 1
 
-				# Compute derived parameters
-				ComputeDerivedParameters(rnap)
-	
-				# Run pattern matching
-				RunMatchings(rnap, ncores)
+				if (is_error == 0):
+					# Compute derived parameters
+					ComputeDerivedParameters(rnap)
+		
+					# Run pattern matching
+					RunMatchings(rnap, ncores)
 
-				# Print output
-				ShowOutput(rnap, ncores)
+					# Print output
+					ShowOutput(rnap, ncores)
 
-				# Save the matching information to a file
-				RecordBinding(rnap)
-				LogBinding(rnap)
+					# Save the matching information to a file
+					RecordBinding(rnap)
+					LogBinding(rnap)
 
+			print("\033[2m**********\033[0m")
 	input_fp.close()
