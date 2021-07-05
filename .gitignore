@@ -14,3 +14,8 @@ cluster/*
 scratch/*
 # Ignore mac specific files
 .DS_Store
+# Ignore PyPi distribution
+dist/*
+# Ignore cache files
+**/__pycache__/*
+**.pyc
