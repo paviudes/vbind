@@ -20,7 +20,7 @@ fi
 
 # Create the data output and plot folders.
 mkdir -p data/output
-mkdir -p data/plots
+mkdir -p plots
 
 cd vbind
 command=$(echo "${python_command} binder.py "$@"")

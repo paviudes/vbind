@@ -245,7 +245,7 @@ if __name__ == '__main__':
 			Plot(rnap, plot_settings)
 
 		elif (user_choice == 3):
-			rnap.lengths = ParseNucLengths(input(">>Lengths: ").strip("\n").strip(" "))
+			rnap.lengths = ParseNucLengths()
 			RecordNormalizedData(rnap)
 
 		elif (user_choice == 4):
@@ -257,7 +257,7 @@ if __name__ == '__main__':
 			SummarizeMatching(rnap)
 
 		elif (user_choice == 5):
-			rnap.lengths = ParseNucLengths(input(">>Lengths: ").strip("\n").strip(" "))
+			rnap.lengths = ParseNucLengths()
 			VerifyMatching(rnap)
 
 		elif (user_choice == 6):
